@@ -240,7 +240,7 @@ const Style = () => {
           bottom: 0;
           width: 300px;
           height: 250px;
-          z-index: 9999; !important;
+          z-index: 9999 !important;
       }
 
       // 导航栏 右侧 
@@ -248,77 +248,7 @@ const Style = () => {
           font-size: 0.7em;
           color: black;
       }
-
-
-      // 基础字体与质感设计
-      .shadow-text.text-lg {
-          /* 等宽字体模拟打字机机械感，带复古粗糙边缘 */
-          font-family: "Special Elite", "Courier New", monospace;
-          font-weight: 500; /* 中等字重增强清晰度 */
-          color: #f5f5f0; /* 柔和米白色，接近纸张颜色 */
-          text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); /* 增强文字立体感 */
-          letter-spacing: 0.05em; /* 等宽字间距微调，提升可读性 */
-          position: relative;
-          overflow: hidden; /* 隐藏未显示的字符 */
-          white-space: nowrap; /* 确保文本不换行 */
-      }
       
-
-
-      // 核心样式：强化粗体质感与真诚调性
-      .font-black.text-4xl.md:text-5xl.shadow-text {
-          /* 柔和白色选择：带暖调的奶白色，比纯白更温润 */
-          color: #f8f6f0; /* 主色：奶白色，含微量黄调，柔和不刺眼 */
-
-          /* 轻量阴影：强化文字边界，与玻璃背景自然融合（避免重阴影破坏通透感） */
-          text-shadow:
-                  0 1px 2px rgba(0, 0, 0, 0.08), /* 底层轻阴影：增加细微立体感 */
-                  0 0 1px rgba(0, 0, 0, 0.1); /* 极轻描边感：防止文字边缘与玻璃背景"融在一起" */
-
-          /* 文字通透感微调：轻微降低不透明度，增强与玻璃背景的融合度 */
-          opacity: 0.95;
-
-          /* 保留原字体特性，强化柔和质感 */
-          font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
-          font-weight: 900;
-          letter-spacing: -0.02em;
-      }
-
-
-      /* 入场动画：更柔和的淡入，避免突兀 */
-      @keyframes fadeInSoft {
-          0% {
-              opacity: 0;
-              transform: translateY(8px);
-              text-shadow: none;
-          }
-          100% {
-              opacity: 0.95;
-              transform: translateY(0);
-          }
-      }
-
-      /* 绑定动画：缓慢自然的出现节奏 */
-      .font-black.text-4xl.md:text-5xl.shadow-text {
-          animation: fadeInSoft 1s ease-out forwards;
-      }
-
-      /* 交互反馈：hover时保持柔和过渡，不破坏整体氛围 */
-      .font-black.text-4xl.md:text-5xl.shadow-text:hover {
-          transform: translateY(-1px); /* 极轻微上移，避免大幅动效 */
-          text-shadow:
-                  0 1px 3px rgba(0, 0, 0, 0.12), /* 阴影略深一点，增强互动感 */
-                  0 0 2px rgba(0, 0, 0, 0.15);
-          opacity: 1; /*  hover时轻微提升透明度，增加"聚焦感" */
-      }
-
-      /* 响应式调整：移动端保持柔和度 */
-      @media (max-width: 768px) {
-          .font-black.text-4xl.md:text-5xl.shadow-text {
-              letter-spacing: -0.01em; /* 字距略松，避免小字拥挤 */
-              opacity: 0.98; /* 移动端适当提高清晰度 */
-          }
-      }
 
       /* 推荐文章卡片间距 */
       #theme-hexo .grid-cols-2.md\\:grid-cols-3.gap-4 {
