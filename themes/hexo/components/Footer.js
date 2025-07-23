@@ -21,6 +21,7 @@ const Footer = ({ title }) => {
           className='underline font-bold  dark:text-gray-300 '>
           {siteConfig('AUTHOR')}
         </a>
+        <a href="https://icp.gov.moe/?keyword=20257012" target="_blank">萌ICP备20257012号</a>
         .<br />
         <BeiAnSite />
         <BeiAnGongAn />
