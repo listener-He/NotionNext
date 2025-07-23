@@ -21,7 +21,7 @@ export const BeiAnGongAn = props => {
       <LazyImage src='/images/gongan.png' width={15} height={15} />
       <a href={href} target='_blank' rel='noopener noreferrer' className='ml-1'>
         {BEI_AN_GONGAN}
-      </a> ｜
+      </a> &nbsp;
       <a href="https://icp.gov.moe/?keyword=20257012" target="_blank">萌ICP备20257012号</a>
     </div>
   )
