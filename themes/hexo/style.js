@@ -270,6 +270,38 @@ const Style = () => {
               font-size: 0.65rem;
           }
       }
+
+      /* 友链页面样式 */
+      #theme-hexo .links-page-card {
+        background-color: var(--card-bg-color);
+        border-radius: 0.5rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+      }
+
+      #theme-hexo .links-page-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+      }
+
+      #theme-hexo .links-page-avatar {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid var(--theme-color);
+      }
+
+      #theme-hexo .links-page-name {
+        font-size: 1.25rem;
+        font-weight: bold;
+        color: var(--text-primary-color);
+      }
+
+      #theme-hexo .links-page-description {
+        font-size: 0.875rem;
+        color: var(--text-secondary-color);
+      }
     `}</style>
   )
 }
