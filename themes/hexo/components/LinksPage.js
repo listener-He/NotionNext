@@ -9,24 +9,6 @@ import Comment from '@/components/Comment'
  * @returns {JSX.Element}
  */
 const LinksPage = (post) => {
-  const { locale } = useGlobal()
-
-  console.log('linksData', post)
-  // 模拟从 Notion 获取的友链数据
-  const linksData = [
-    {
-      name: '友链名称1',
-      description: '这是一段简短的描述文字。',
-      url: 'https://example.com',
-      avatar: '/images/avatar1.jpg'
-    },
-    {
-      name: '友链名称2',
-      description: '这是另一段描述文字。',
-      url: 'https://example.org',
-      avatar: '/images/avatar2.jpg'
-    }
-  ]
 
   return (
     <div className='min-h-screen bg-gray-50 dark:bg-gray-900 py-12' id='article-wrapper'>
@@ -35,7 +17,7 @@ const LinksPage = (post) => {
           友情链接
         </h1>
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
-          {linksData.map((link, index) => (
+          {post.map((link, index) => (
             <Link key={index} href={link.url} passHref legacyBehavior>
               <a
                 target='_blank'
