@@ -76,6 +76,10 @@ export async function getStaticProps({ params: { prefix, slug }, locale }) {
     // 无法获取文章
     props.post = null
   } else {
+    // 确保在处理文章数据前 allPages 是有效数组
+    if (!Array.isArray(props.allPages)) {
+      props.allPages = []
+    }
     await processPostData(props, from)
   }
   return {

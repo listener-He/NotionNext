@@ -33,9 +33,11 @@ const ArchiveIndex = props => {
 export async function getStaticProps({ locale }) {
   const props = await getGlobalData({ from: 'archive-index', locale })
   // 处理分页
-  props.posts = props.allPages?.filter(
-    page => page.type === 'Post' && page.status === 'Published'
-  ) || []
+  props.posts = Array.isArray(props.allPages) 
+    ? props.allPages.filter(
+        page => page.type === 'Post' && page.status === 'Published'
+      ) 
+    : []
 
   // 确保 postsSortByDate 是数组（避免 forEach 报错）
   const postsSortByDate = Array.isArray(props.posts) ? [...props.posts] : [];

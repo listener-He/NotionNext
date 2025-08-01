@@ -59,16 +59,20 @@ export async function getStaticProps({
   const props = await getGlobalData({ from, locale })
 
   // 在列表内查找文章
-  // 添加额外检查确保 allPages 存在
-  props.post = props?.allPages?.find(p => {
-    return (
-      p.type.indexOf('Menu') < 0 &&
-      (p.slug === suffix ||
-        p.slug === fullSlug.substring(fullSlug.lastIndexOf('/') + 1) ||
-        p.slug === fullSlug ||
-        p.id === idToUuid(fullSlug))
-    )
-  })
+  // 添加额外检查确保 allPages 存在且为数组
+  if (Array.isArray(props?.allPages)) {
+    props.post = props.allPages.find(p => {
+      return (
+        p.type.indexOf('Menu') < 0 &&
+        (p.slug === suffix ||
+          p.slug === fullSlug.substring(fullSlug.lastIndexOf('/') + 1) ||
+          p.slug === fullSlug ||
+          p.id === idToUuid(fullSlug))
+      )
+    })
+  } else {
+    props.post = null
+  }
 
   // 处理非列表内文章的内信息
   if (!props?.post) {
@@ -83,6 +87,10 @@ export async function getStaticProps({
     // 无法获取文章
     props.post = null
   } else {
+    // 确保在处理文章数据前 allPages 是有效数组
+    if (!Array.isArray(props.allPages)) {
+      props.allPages = []
+    }
     await processPostData(props, from)
   }
   return {
