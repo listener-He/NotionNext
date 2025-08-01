@@ -35,10 +35,11 @@ export async function getStaticProps({ locale }) {
   // 处理分页
   props.posts = props.allPages?.filter(
     page => page.type === 'Post' && page.status === 'Published'
-  )
-  delete props.allPages
+  ) || []
 
-  const postsSortByDate = Object.create(props.posts)
+
+  // 确保 postsSortByDate 是数组（避免 forEach 报错）
+  const postsSortByDate = Array.isArray(props.posts) ? [...props.posts] : [];
 
   postsSortByDate.sort((a, b) => {
     return b?.publishDate - a?.publishDate
@@ -55,8 +56,8 @@ export async function getStaticProps({ locale }) {
     }
   })
 
-  props.archivePosts = archivePosts
-  delete props.allPages
+  // 确保 archivePosts 不为 null 或 undefined
+  props.archivePosts = archivePosts || {}
 
   return {
     props,
