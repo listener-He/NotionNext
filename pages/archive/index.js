@@ -37,7 +37,6 @@ export async function getStaticProps({ locale }) {
     page => page.type === 'Post' && page.status === 'Published'
   ) || []
 
-
   // 确保 postsSortByDate 是数组（避免 forEach 报错）
   const postsSortByDate = Array.isArray(props.posts) ? [...props.posts] : [];
 

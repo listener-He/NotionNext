@@ -28,6 +28,7 @@ export async function getStaticPaths() {
 
   // 根据slug中的 / 分割成prefix和slug两个字段 ; 例如 article/test
   // 最终用户可以通过  [domain]/[prefix]/[slug] 路径访问，即这里的 [domain]/article/test
+  // 添加空值检查
   const paths = allPages
     ?.filter(row => checkSlugHasOneSlash(row))
     .map(row => ({
@@ -50,6 +51,7 @@ export async function getStaticProps({ params: { prefix, slug }, locale }) {
   const props = await getGlobalData({ from, locale })
 
   // 在列表内查找文章
+  // 添加额外检查确保 allPages 存在
   props.post = props?.allPages?.find(p => {
     return (
       p.type.indexOf('Menu') < 0 &&

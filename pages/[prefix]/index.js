@@ -105,6 +105,7 @@ export async function getStaticPaths() {
 
   const from = 'slug-paths'
   const { allPages } = await getGlobalData({ from })
+  // 添加空值检查
   const paths = allPages
     ?.filter(row => checkSlugHasNoSlash(row))
     .map(row => ({ params: { prefix: row.slug } }))
@@ -125,6 +126,7 @@ export async function getStaticProps({ params: { prefix }, locale }) {
   }
 
   // 在列表内查找文章
+  // 添加额外检查确保 allPages 存在
   props.post = props?.allPages?.find(p => {
     return (
       p.type.indexOf('Menu') < 0 &&
