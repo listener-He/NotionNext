@@ -30,10 +30,10 @@ export async function getStaticPaths() {
   // 最终用户可以通过  [domain]/[prefix]/[slug] 路径访问，即这里的 [domain]/article/test
   // 添加空值检查
   const paths = allPages
-    ?.filter(row => checkSlugHasOneSlash(row))
+    ?.filter(row => row?.slug && checkSlugHasOneSlash(row))
     .map(row => ({
       params: { prefix: row.slug.split('/')[0], slug: row.slug.split('/')[1] }
-    }))
+    })) || []
 
   // 增加一种访问路径 允许通过 [category]/[slug] 访问文章
   // 例如文章slug 是 test ，然后文章的分类category是 production
@@ -51,18 +51,22 @@ export async function getStaticProps({ params: { prefix, slug }, locale }) {
   const props = await getGlobalData({ from, locale })
 
   // 在列表内查找文章
-  // 添加额外检查确保 allPages 存在
-  props.post = props?.allPages?.find(p => {
-    return (
-      p.type.indexOf('Menu') < 0 &&
-      (p.slug === slug || p.slug === fullSlug || p.id === idToUuid(fullSlug))
-    )
-  })
+  // 添加额外检查确保 allPages 存在且为数组
+  if (Array.isArray(props?.allPages)) {
+    props.post = props.allPages.find(p => {
+      return (
+        p.type.indexOf('Menu') < 0 &&
+        (p.slug === slug || p.slug === fullSlug || p.id === idToUuid(fullSlug))
+      )
+    })
+  } else {
+    props.post = null
+  }
 
   // 处理非列表内文章的内信息
   if (!props?.post) {
     const pageId = slug.slice(-1)[0]
-    if (pageId.length >= 32) {
+    if (pageId && pageId.length >= 32) {
       const post = await getPost(pageId)
       props.post = post
     }
