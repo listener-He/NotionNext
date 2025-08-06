@@ -266,9 +266,14 @@ const LayoutSlug = props => {
   const { post, lock, validPassword } = props
   const router = useRouter()
   const waiting404 = siteConfig('POST_WAITING_TIME_FOR_404') * 1000
+  
+  // 检查是否为友情链接页面 - 从路由和post数据中判断
+  const isLinksPage = router.asPath === '/links' || router.asPath.startsWith('/links?') || 
+                      post?.slug === 'links' || post?.title === '友链' || post?.title === '友情链接'
+  
   useEffect(() => {
-    // 404
-    if (!post) {
+    // 404检测 - 但排除友情链接页面
+    if (!post && !isLinksPage) {
       setTimeout(
         () => {
           if (isBrowser) {
@@ -283,7 +288,20 @@ const LayoutSlug = props => {
         waiting404
       )
     }
-  }, [post])
+  }, [post, isLinksPage])
+  
+  // 如果是友情链接页面，使用特殊的LinksPage组件
+  if (isLinksPage) {
+    return (
+      <>
+        <div className='w-full lg:hover:shadow lg:border rounded-t-xl lg:rounded-xl lg:px-2 lg:py-4 bg-white dark:bg-hexo-black-gray dark:border-black article'>
+          {lock && <ArticleLock validPassword={validPassword} />}
+          {!lock && <LinksPage post={post || { title: '友情链接', slug: 'links' }} />}
+        </div>
+      </>
+    )
+  }
+  
   return (
     <>
       <div className='w-full lg:hover:shadow lg:border rounded-t-xl lg:rounded-xl lg:px-2 lg:py-4 bg-white dark:bg-hexo-black-gray dark:border-black article'>
