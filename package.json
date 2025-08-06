@@ -29,6 +29,7 @@
     "@clerk/localizations": "^3.0.4",
     "@clerk/nextjs": "^5.1.5",
     "@headlessui/react": "^1.7.15",
+    "@hpcc-js/wasm": "^2.25.0",
     "@next/bundle-analyzer": "^12.1.1",
     "@vercel/analytics": "^1.0.0",
     "algoliasearch": "^4.18.0",

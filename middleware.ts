@@ -40,10 +40,17 @@ const noAuthMiddleware = async (req: NextRequest, ev: any) => {
     try {
       const response = await fetch(`${req.nextUrl.origin}/redirect.json`)
       if (response.ok) {
-        redirectJson = (await response.json()) as Record<string, string>
+        const contentType = response.headers.get('content-type')
+        if (contentType && contentType.includes('application/json')) {
+          redirectJson = (await response.json()) as Record<string, string>
+        } else {
+          console.warn('⚠️ redirect.json returned non-JSON content type:', contentType)
+        }
+      } else {
+        console.warn('⚠️ Failed to fetch redirect.json, status:', response.status)
       }
     } catch (err) {
-      console.error('Error fetching static file:', err)
+      console.error('❌ Error fetching redirect.json:', err)
     }
     let lastPart = getLastPartOfUrl(req.nextUrl.pathname) as string
     if (checkStrIsNotionId(lastPart)) {

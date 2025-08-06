@@ -280,6 +280,13 @@
     "@tanstack/react-virtual" "^3.0.0-beta.60"
     client-only "^0.0.1"
 
+"@hpcc-js/wasm@^2.25.0":
+  version "2.25.0"
+  resolved "https://registry.npmmirror.com/@hpcc-js/wasm/-/wasm-2.25.0.tgz"
+  integrity sha512-UvYoAEbzwgkl3Oxgxde9DvHgQUrjBqnEl1R5An0w/4uxtjS0AiggX/gxjfCRe5ruJjv47IsR7owH3DK755EUZg==
+  dependencies:
+    yargs "18.0.0"
+
 "@humanwhocodes/config-array@^0.13.0":
   version "0.13.0"
   resolved "https://registry.npmmirror.com/@humanwhocodes/config-array/-/config-array-0.13.0.tgz"
@@ -802,6 +809,11 @@ ansi-styles@^6.1.0:
   resolved "https://registry.npmmirror.com/ansi-styles/-/ansi-styles-6.2.1.tgz"
   integrity sha512-bN798gFfQX+viw3R7yrGWRqnrN2oRkEkUjjl4JNn4E8GxxbjtG3FbrEIIY3l8/hrwUwIeCZvi4QuOTP4MErVug==
 
+ansi-styles@^6.2.1:
+  version "6.2.1"
+  resolved "https://registry.npmmirror.com/ansi-styles/-/ansi-styles-6.2.1.tgz"
+  integrity sha512-bN798gFfQX+viw3R7yrGWRqnrN2oRkEkUjjl4JNn4E8GxxbjtG3FbrEIIY3l8/hrwUwIeCZvi4QuOTP4MErVug==
+
 any-promise@^1.0.0:
   version "1.3.0"
   resolved "https://registry.npmmirror.com/any-promise/-/any-promise-1.3.0.tgz"
@@ -1097,6 +1109,15 @@ client-only@^0.0.1, client-only@0.0.1:
   resolved "https://registry.npmmirror.com/client-only/-/client-only-0.0.1.tgz"
   integrity sha512-IV3Ou0jSMzZrd3pZ48nLkT9DA7Ag1pnPzaiQhpW7c3RbcqqzvzzVu+L8gfqMp/8IM2MQtSiqaCxrrcfu8I8rMA==
 
+cliui@^9.0.1:
+  version "9.0.1"
+  resolved "https://registry.npmmirror.com/cliui/-/cliui-9.0.1.tgz"
+  integrity sha512-k7ndgKhwoQveBL+/1tqGJYNz097I7WOvwbmmU2AR5+magtbjPWQTS1C5vzGkBC8Ym8UWRzfKUzUUqFLypY4Q+w==
+  dependencies:
+    string-width "^7.2.0"
+    strip-ansi "^7.1.0"
+    wrap-ansi "^9.0.0"
+
 clsx@^2.0.0:
   version "2.1.1"
   resolved "https://registry.npmmirror.com/clsx/-/clsx-2.1.1.tgz"
@@ -1351,6 +1372,11 @@ electron-to-chromium@^1.5.41:
   resolved "https://registry.npmmirror.com/electron-to-chromium/-/electron-to-chromium-1.5.71.tgz"
   integrity sha512-dB68l59BI75W1BUGVTAEJy45CEVuEGy9qPVVQ8pnHyHMn36PLPPoE1mjLH+lo9rKulO3HC2OhbACI/8tCqJBcA==
 
+emoji-regex@^10.3.0:
+  version "10.4.0"
+  resolved "https://registry.npmmirror.com/emoji-regex/-/emoji-regex-10.4.0.tgz"
+  integrity sha512-EC+0oUMY1Rqm4O6LLrgjtYDvcVYTy7chDnM4Q7030tP4Kwj3u/pR6gP9ygnp2CJMK5Gq+9Q2oqmrFJAz01DXjw==
+
 emoji-regex@^8.0.0:
   version "8.0.0"
   resolved "https://registry.npmmirror.com/emoji-regex/-/emoji-regex-8.0.0.tgz"
@@ -1489,7 +1515,7 @@ es-to-primitive@^1.2.1:
     is-date-object "^1.0.5"
     is-symbol "^1.0.4"
 
-escalade@^3.2.0:
+escalade@^3.1.1, escalade@^3.2.0:
   version "3.2.0"
   resolved "https://registry.npmmirror.com/escalade/-/escalade-3.2.0.tgz"
   integrity sha512-WUj2qlxaQtO4g6Pq5c29GTcWGDyd8itL8zTlipgECz3JesAiiOKotd8JU6otB3PACgG6xkJUyVhboMS+bje/jA==
@@ -1918,6 +1944,16 @@ functions-have-names@^1.2.3:
   version "1.2.3"
   resolved "https://registry.npmmirror.com/functions-have-names/-/functions-have-names-1.2.3.tgz"
   integrity sha512-xckBUXyTIqT97tq2x2AMb+g163b5JFysYk0x4qxNFwbfQkmNZoiRHb6sPzI9/QV33WeuvVYBUIiD4NzNIyqaRQ==
+
+get-caller-file@^2.0.5:
+  version "2.0.5"
+  resolved "https://registry.npmmirror.com/get-caller-file/-/get-caller-file-2.0.5.tgz"
+  integrity sha512-DyFP3BM/3YHTQOCUL/w0OZHR0lpKeGrxotcHWcqNEdnltqFwXVfhEBQ94eIo34AfQpo0rGki4cyIiftY06h2Fg==
+
+get-east-asian-width@^1.0.0:
+  version "1.3.0"
+  resolved "https://registry.npmmirror.com/get-east-asian-width/-/get-east-asian-width-1.3.0.tgz"
+  integrity sha512-vpeMIQKxczTD/0s2CdEWHcb0eeJe6TFjxb+J5xgX7hScxqrGuyjmv4c1D4A/gelKfyox0gJJwIHF+fLjeaM8kQ==
 
 get-intrinsic@^1.2.1, get-intrinsic@^1.2.3, get-intrinsic@^1.2.4:
   version "1.2.5"
@@ -3533,6 +3569,15 @@ string-width@^5.0.1, string-width@^5.1.2:
     emoji-regex "^9.2.2"
     strip-ansi "^7.0.1"
 
+string-width@^7.0.0, string-width@^7.2.0:
+  version "7.2.0"
+  resolved "https://registry.npmmirror.com/string-width/-/string-width-7.2.0.tgz"
+  integrity sha512-tsaTIkKW9b4N+AEj+SVA+WhJzV7/zMhcSu78mLKWSk7cXMOSHsBKFWUs0fWwq8QyK3MgJBQRX6Gbi4kYbdvGkQ==
+  dependencies:
+    emoji-regex "^10.3.0"
+    get-east-asian-width "^1.0.0"
+    strip-ansi "^7.1.0"
+
 string.prototype.includes@^2.0.1:
   version "2.0.1"
   resolved "https://registry.npmmirror.com/string.prototype.includes/-/string.prototype.includes-2.0.1.tgz"
@@ -3611,6 +3656,13 @@ strip-ansi@^6.0.0, strip-ansi@^6.0.1:
     ansi-regex "^5.0.1"
 
 strip-ansi@^7.0.1:
+  version "7.1.0"
+  resolved "https://registry.npmmirror.com/strip-ansi/-/strip-ansi-7.1.0.tgz"
+  integrity sha512-iq6eVVI64nQQTRYq2KtEg2d2uU7LElhTJwsH4YzIHZshxlgZms/wIc4VoDQTlG/IvVIrBKG06CrZnp0qv7hkcQ==
+  dependencies:
+    ansi-regex "^6.0.1"
+
+strip-ansi@^7.1.0:
   version "7.1.0"
   resolved "https://registry.npmmirror.com/strip-ansi/-/strip-ansi-7.1.0.tgz"
   integrity sha512-iq6eVVI64nQQTRYq2KtEg2d2uU7LElhTJwsH4YzIHZshxlgZms/wIc4VoDQTlG/IvVIrBKG06CrZnp0qv7hkcQ==
@@ -4028,6 +4080,15 @@ wrap-ansi@^8.1.0:
     string-width "^5.0.1"
     strip-ansi "^7.0.1"
 
+wrap-ansi@^9.0.0:
+  version "9.0.0"
+  resolved "https://registry.npmmirror.com/wrap-ansi/-/wrap-ansi-9.0.0.tgz"
+  integrity sha512-G8ura3S+3Z2G+mkgNRq8dqaFZAuxfsxpBB8OCTGRTCtp+l/v9nbFNmCUP1BZMts3G1142MsZfn6eeUKrr4PD1Q==
+  dependencies:
+    ansi-styles "^6.2.1"
+    string-width "^7.0.0"
+    strip-ansi "^7.1.0"
+
 wrappy@1:
   version "1.0.2"
   resolved "https://registry.npmmirror.com/wrappy/-/wrappy-1.0.2.tgz"
@@ -4045,10 +4106,32 @@ xml-js@^1.6.11:
   dependencies:
     sax "^1.2.4"
 
+y18n@^5.0.5:
+  version "5.0.8"
+  resolved "https://registry.npmmirror.com/y18n/-/y18n-5.0.8.tgz"
+  integrity sha512-0pfFzegeDWJHJIAmTLRP2DwHjdF5s7jo9tuztdQxAhINCdvS+3nGINqPd00AphqJR/0LhANUS6/+7SCb98YOfA==
+
 yaml@^2.3.4:
   version "2.6.1"
   resolved "https://registry.npmmirror.com/yaml/-/yaml-2.6.1.tgz"
   integrity sha512-7r0XPzioN/Q9kXBro/XPnA6kznR73DHq+GXh5ON7ZozRO6aMjbmiBuKste2wslTFkC5d1dw0GooOCepZXJ2SAg==
+
+yargs-parser@^22.0.0:
+  version "22.0.0"
+  resolved "https://registry.npmmirror.com/yargs-parser/-/yargs-parser-22.0.0.tgz"
+  integrity sha512-rwu/ClNdSMpkSrUb+d6BRsSkLUq1fmfsY6TOpYzTwvwkg1/NRG85KBy3kq++A8LKQwX6lsu+aWad+2khvuXrqw==
+
+yargs@18.0.0:
+  version "18.0.0"
+  resolved "https://registry.npmmirror.com/yargs/-/yargs-18.0.0.tgz"
+  integrity sha512-4UEqdc2RYGHZc7Doyqkrqiln3p9X2DZVxaGbwhn2pi7MrRagKaOcIKe8L3OxYcbhXLgLFUS3zAYuQjKBQgmuNg==
+  dependencies:
+    cliui "^9.0.1"
+    escalade "^3.1.1"
+    get-caller-file "^2.0.5"
+    string-width "^7.2.0"
+    y18n "^5.0.5"
+    yargs-parser "^22.0.0"
 
 yocto-queue@^0.1.0:
   version "0.1.0"

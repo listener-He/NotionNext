@@ -1,0 +1,4 @@
+{
+  "_comment": "URL重定向配置文件 - 用于将Notion页面ID重定向到友好URL",
+  "example": "示例：notion-page-id -> friendly-url-path"
+}
