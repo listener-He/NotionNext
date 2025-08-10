@@ -292,7 +292,7 @@ const LinksPage = ({ post }) => {
                    <div className='absolute inset-0 bg-gradient-to-br from-blue-50/50 via-purple-50/30 to-pink-50/50 dark:from-blue-900/20 dark:via-purple-900/10 dark:to-pink-900/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500' />
                    
                    {/* 卡片内容 - 左右布局 */}
-                   <div className='relative flex items-stretch min-h-[160px]'>
+                   <div className='relative flex items-stretch min-h-[96px]'>
                      {/* 右侧内容区域背景层 - 完整覆盖 */}
                      <div className='absolute inset-0 rounded-2xl overflow-hidden'
                           style={{
@@ -337,35 +337,35 @@ const LinksPage = ({ post }) => {
                      </div>
  
                      {/* 右侧内容区域 - 6.5份宽度 */}
-                     <div className='flex-1 relative z-10 p-6 flex flex-col justify-center min-w-0'>
+                     <div className='flex-1 relative z-10 p-4 flex flex-col justify-center min-w-0'>
                        <div className='relative z-10'>
                        {/* 站点名称 */}
-                       <h3 className='text-xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300 line-clamp-1'>
+                       <h3 className='text-lg font-bold text-gray-900 dark:text-white mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300 line-clamp-1'>
                          {link.name}
                        </h3>
                        
                        {/* 描述 */}
-                       <p className='text-gray-600 dark:text-gray-400 text-sm leading-relaxed line-clamp-2 group-hover:text-gray-700 dark:group-hover:text-gray-300 transition-colors duration-300 mb-4'>
+                       <p className='text-gray-600 dark:text-gray-400 text-xs leading-relaxed line-clamp-1 group-hover:text-gray-700 dark:group-hover:text-gray-300 transition-colors duration-300 mb-3'>
                          {link.summary || link.description}
                        </p>
                        
-                       {/* 标签区域 */}
+                       {/* 标签区域 - 单行显示 */}
                        {link.tags && link.tags.length > 0 && (
-                         <div className='flex flex-wrap gap-2'>
-                           {link.tags.slice(0, 4).map((tag, tagIndex) => {
+                         <div className='flex items-center gap-1.5 overflow-hidden'>
+                           {link.tags.slice(0, 6).map((tag, tagIndex) => {
                              const colorClass = getTagColor(tag);
                              return (
                                <span
                                  key={tagIndex}
-                                 className={`px-3 py-1.5 text-xs font-medium rounded-full shadow-sm ${colorClass}`}
+                                 className={`px-2 py-0.5 text-xs font-medium rounded-md shadow-sm flex-shrink-0 ${colorClass}`}
                                >
                                  {tag}
                                </span>
                              );
                            })}
-                           {link.tags.length > 4 && (
-                             <span className='px-3 py-1.5 text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 rounded-full shadow-sm'>
-                               +{link.tags.length - 4}
+                           {link.tags.length > 6 && (
+                             <span className='px-2 py-0.5 text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 rounded-md shadow-sm flex-shrink-0'>
+                               +{link.tags.length - 6}
                              </span>
                            )}
                          </div>
