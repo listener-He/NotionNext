@@ -45,14 +45,21 @@ export async function getStaticProps(req) {
     )
   }
 
-  // 预览文章内容
+  // 预览文章内容 - 性能优化：使用配置化的预览限制
   if (siteConfig('POST_LIST_PREVIEW', false, props?.NOTION_CONFIG)) {
-    for (const i in props.posts) {
+    const { getPreviewConfig } = require('@/lib/performance.config')
+    const previewConfig = getPreviewConfig('index')
+    
+    // 限制预览文章数量，避免首页数据过大
+    const maxPreviewPosts = Math.min(props.posts.length, previewConfig.maxPosts)
+    for (let i = 0; i < maxPreviewPosts; i++) {
       const post = props.posts[i]
       if (post.password && post.password !== '') {
         continue
       }
-      post.blockMap = await getPostBlocks(post.id, 'slug', POST_PREVIEW_LINES)
+      // 使用配置化的预览行数
+      const previewLines = Math.min(POST_PREVIEW_LINES, previewConfig.maxLines)
+      post.blockMap = await getPostBlocks(post.id, 'slug', previewLines)
     }
   }
 

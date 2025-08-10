@@ -26,7 +26,11 @@ export async function getStaticProps({ params: { tag, page }, locale }) {
 
   props.tag = tag
   props.page = page
+  
+  // 性能优化：清理不必要的数据
   delete props.allPages
+  delete props.latestPosts // 标签分页页面通常不需要最新文章数据
+  delete props.allNavPages // 标签分页页面通常不需要导航页面数据
   return {
     props,
     revalidate: process.env.EXPORT

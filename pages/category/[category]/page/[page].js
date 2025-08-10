@@ -31,9 +31,12 @@ export async function getStaticProps({ params: { category, page } }) {
     POSTS_PER_PAGE * page
   )
 
+  // 性能优化：清理不必要的数据
   delete props.allPages
+  delete props.latestPosts // 分类分页页面通常不需要最新文章数据
+  delete props.allNavPages // 分类分页页面通常不需要导航页面数据
+  
   props.page = page
-
   props = { ...props, category, page }
 
   return {
