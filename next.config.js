@@ -193,6 +193,24 @@ const nextConfig = {
                   'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
               }
             ]
+          },
+          {
+            source: '/rss/feed.xml',
+            headers: [
+              { key: 'Content-Type', value: 'application/rss+xml; charset=utf-8' }
+            ]
+          },
+          {
+            source: '/rss/atom.xml',
+            headers: [
+              { key: 'Content-Type', value: 'application/atom+xml; charset=utf-8' }
+            ]
+          },
+          {
+            source: '/rss/feed.json',
+            headers: [
+              { key: 'Content-Type', value: 'application/json; charset=utf-8' }
+            ]
           }
         ]
       },
