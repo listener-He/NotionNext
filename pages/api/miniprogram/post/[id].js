@@ -1,5 +1,7 @@
 import { getGlobalData, getPost } from '@/lib/db/getSiteData'
 import { getPageContentText } from '@/lib/notion/getPageContentText'
+import { getPageContentHtml } from '@/lib/notion/getPageContentHtml'
+import { getPageContentMarkdown } from '@/lib/notion/getPageContentMarkdown'
 import { idToUuid } from 'notion-utils'
 
 /**
@@ -25,7 +27,7 @@ export default async function handler(req, res) {
       })
     }
 
-    // 直接通过ID获取文章内容，避免查询全局数据提升性能
+    // 直接通过id获取文章内容，避免查询全局数据提升性能
     let fullPost = null
     try {
       fullPost = await getPost(id)
@@ -52,12 +54,16 @@ export default async function handler(req, res) {
     }
 
     // 获取文章纯文本内容（用于搜索和摘要）
-    let textContent = ''
+    //let textContent = ''
+    //let htmlContent = ''
+    let markdownContent = ''
     try {
-      textContent = getPageContentText(fullPost, fullPost.blockMap)
+      //textContent = getPageContentText(fullPost, fullPost.blockMap)
+      //htmlContent = getPageContentHtml(fullPost, fullPost.blockMap)
+      markdownContent = getPageContentMarkdown(fullPost, fullPost.blockMap)
     } catch (error) {
-      console.error('获取文章纯文本内容失败:', error)
-      // 静默处理文本内容获取失败
+      console.error('获取文章内容失败:', error)
+      // 静默处理内容获取失败
     }
 
     // 获取相关文章（同分类或同标签）- 需要获取全局数据
@@ -113,8 +119,10 @@ export default async function handler(req, res) {
       pageIcon: '',
       publishDay: fullPost.lastEditedDay,
       // 文章内容相关
-      textContent: textContent, // 完整文本内容
-      wordCount: textContent.length,
+      //textContent: textContent, // 完整文本内容
+      //htmlContent: htmlContent, // HTML格式内容
+      textContent: markdownContent, // Markdown格式内容
+      wordCount: markdownContent.length,
       // 相关文章
       relatedPosts
     }
