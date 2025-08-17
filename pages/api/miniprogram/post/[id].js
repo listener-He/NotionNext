@@ -74,12 +74,9 @@ export default async function handler(req, res) {
     // 获取文章内容（需要先获取blockMap）
     let markdownContent = ''
     try {
-      // 如果没有blockMap，需要通过getPost获取
-      if (!fullPost.blockMap) {
-        const postWithBlocks = await getPost(fullPost.id)
-        if (postWithBlocks && postWithBlocks.blockMap) {
-          fullPost.blockMap = postWithBlocks.blockMap
-        }
+      const postWithBlocks = await getPost(fullPost.id)
+      if (postWithBlocks && postWithBlocks.blockMap) {
+        fullPost.blockMap = postWithBlocks.blockMap
       }
       
       if (fullPost.blockMap) {
