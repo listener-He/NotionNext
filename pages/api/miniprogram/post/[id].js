@@ -27,10 +27,28 @@ export default async function handler(req, res) {
       })
     }
 
-    // 直接通过id获取文章内容，避免查询全局数据提升性能
+    // 获取全局数据以获取完整的文章信息
     let fullPost = null
+    let globalData = null
     try {
-      fullPost = await getPost(id)
+      globalData = await getGlobalData({
+        from: 'miniprogram-post-detail'
+      })
+      
+      if (!globalData || !globalData.allPages) {
+        return res.status(500).json({
+          success: false,
+          error: 'Failed to fetch site data'
+        })
+      }
+      
+      // 从allPages中查找文章（支持通过id或slug查找）
+      fullPost = globalData.allPages.find(post => 
+        post.id === id || 
+        post.slug === id ||
+        post.slug === id.startsWith('article/') ? id : `article/${id}`
+      )
+      
       if (!fullPost) {
         return res.status(404).json({
           success: false,
@@ -45,34 +63,38 @@ export default async function handler(req, res) {
       })
     }
 
-    // 验证文章是否为页面类型（getPost返回的type是'page'）
-    if (fullPost.type !== 'page') {
+    // 验证文章是否为Post类型且已发布
+    if (fullPost.type !== 'Post' || fullPost.status !== 'Published') {
       return res.status(404).json({
         success: false,
         error: 'Post not found'
       })
     }
 
-    // 获取文章纯文本内容（用于搜索和摘要）
-    //let textContent = ''
-    //let htmlContent = ''
+    // 获取文章内容（需要先获取blockMap）
     let markdownContent = ''
     try {
-      //textContent = getPageContentText(fullPost, fullPost.blockMap)
-      //htmlContent = getPageContentHtml(fullPost, fullPost.blockMap)
-      markdownContent = getPageContentMarkdown(fullPost, fullPost.blockMap)
+      // 如果没有blockMap，需要通过getPost获取
+      if (!fullPost.blockMap) {
+        const postWithBlocks = await getPost(fullPost.id)
+        if (postWithBlocks && postWithBlocks.blockMap) {
+          fullPost.blockMap = postWithBlocks.blockMap
+        }
+      }
+      
+      if (fullPost.blockMap) {
+        // textContent = getPageContentText(fullPost, fullPost.blockMap)
+        // htmlContent = getPageContentHtml(fullPost, fullPost.blockMap)
+        markdownContent = getPageContentMarkdown(fullPost, fullPost.blockMap)
+      }
     } catch (error) {
       console.error('获取文章内容失败:', error)
       // 静默处理内容获取失败
     }
 
-    // 获取相关文章（同分类或同标签）- 需要获取全局数据
+    // 获取相关文章（同分类或同标签）- 使用已获取的globalData
     let relatedPosts = []
-    try {
-      const globalData = await getGlobalData({
-        from: 'miniprogram-post-detail-related'
-      })
-      
+    try { 
       if (globalData && globalData.allPages) {
         relatedPosts = globalData.allPages
           .filter(p => 
@@ -81,9 +103,9 @@ export default async function handler(req, res) {
             p.status === 'Published' &&
             (
               p.category === fullPost.category ||
-              (fullPost.tags && p.tagItems && 
-               fullPost.tags.some(tag1 => 
-                 p.tagItems.some(tag2 => tag1 === tag2.name)
+              (fullPost.tagItems && p.tagItems && 
+               fullPost.tagItems.some(tag1 => 
+                 p.tagItems.some(tag2 => tag1.name === tag2.name)
                ))
             )
           )
@@ -92,9 +114,9 @@ export default async function handler(req, res) {
             id: p.id,
             title: p.title,
             summary: p.summary,
-            slug: p.slug,
+            slug: p.slug?.startsWith('article/') ? p.slug.substring(8) : p.slug,
             category: p.category,
-            publishDate: p.publishDate || p.date?.start_date,
+            publishDate: p.publishDate || p.publishDay,
             // 统一使用pageCover字段，内容为缩略图
             pageCover: p.pageCoverThumbnail || p.pageCover
           }))
@@ -108,20 +130,18 @@ export default async function handler(req, res) {
     const postData = {
       id: fullPost.id,
       title: fullPost.title,
-      summary: '', // getPost返回的数据没有summary字段
-      slug: '', // getPost返回的数据没有slug字段
-      category: fullPost.category,
-      tags: fullPost.tags || [],
-      publishDate: fullPost.date?.start_date,
+      summary: fullPost.summary || '',
+      slug: fullPost.slug?.startsWith('article/') ? fullPost.slug.substring(8) : fullPost.slug || '',
+      category: fullPost.category || '',
+      tags: fullPost.tagItems?.map(tag => tag.name) || [],
+      publishDate: fullPost.publishDate || fullPost.publishDay,
       lastEditedDate: fullPost.lastEditedDay,
       // 使用封面图
-      pageCover: fullPost.page_cover,
-      pageIcon: '',
-      publishDay: fullPost.lastEditedDay,
+      pageCover: fullPost.pageCoverThumbnail || fullPost.pageCover || '',
+      pageIcon: fullPost.pageIcon || '',
+      publishDay: fullPost.publishDay,
       // 文章内容相关
-      //textContent: textContent, // 完整文本内容
-      //htmlContent: htmlContent, // HTML格式内容
-      textContent: markdownContent, // Markdown格式内容
+      markdownContent: markdownContent, // Markdown格式内容
       wordCount: markdownContent.length,
       // 相关文章
       relatedPosts
