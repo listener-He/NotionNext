@@ -16,10 +16,10 @@ export default function BeiAnSite() {
       <a href={beianLink} className='mx-1'>
         {beian}
       </a> &nbsp;
-      <img style="width:32px;height:32px;margin-bottom:-8px" src="https://icp.gov.moe//images/ico64.png" alt="萌ICP备案图标"/>
+      <img style={{width: '20px', height: '20px', marginBottom: '-8px'}} src="https://icp.gov.moe//images/ico64.png" alt="萌ICP备案图标"/>
       <a href="https://icp.gov.moe/?keyword=20257012">萌ICP备20257012号</a>
       <br />
-      <img src="https://icp.redcha.cn/static/picture/icplogoi.png" style="height: 20px;" alt="茶ICP备案图标"/>
+      <img src="https://icp.redcha.cn/static/picture/icplogoi.png" style={{width: '20px', height: '20px', marginBottom: '-8px'}} alt="茶ICP备案图标"/>
       <a href="https://icp.redcha.cn/beian/ICP-2025080099.html">茶ICP备2025080099号</a>
     </span>
   )
