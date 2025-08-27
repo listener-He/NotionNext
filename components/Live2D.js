@@ -2,7 +2,6 @@
 import { siteConfig } from '@/lib/config'
 import { useGlobal } from '@/lib/global'
 import { isMobile, loadExternalResource } from '@/lib/utils'
-import { getCurrentThemeMode } from '@/components/DarkModeAutoSwitch'
 import { useEffect, useState, useCallback } from 'react'
 
 /**

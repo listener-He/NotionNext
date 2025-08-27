@@ -8,6 +8,7 @@ import { DynamicLayout } from '@/themes/theme'
 import { generateRedirectJson } from '@/lib/redirect'
 import { checkDataFromAlgolia } from '@/lib/plugins/algolia'
 import { getISRConfig, shouldSkipISR } from '@/lib/isr-config'
+import { getPreviewConfig } from '@/lib/performance.config'
 
 /**
  * 首页布局
@@ -48,7 +49,6 @@ export async function getStaticProps(req) {
 
   // 预览文章内容 - 性能优化：使用配置化的预览限制
   if (siteConfig('POST_LIST_PREVIEW', false, props?.NOTION_CONFIG)) {
-    const { getPreviewConfig } = require('@/lib/performance.config')
     const previewConfig = getPreviewConfig('index')
     
     // 限制预览文章数量，避免首页数据过大

@@ -2,6 +2,7 @@ import BLOG from '@/blog.config'
 import { siteConfig } from '@/lib/config'
 import { getGlobalData, getPostBlocks } from '@/lib/db/getSiteData'
 import { DynamicLayout } from '@/themes/theme'
+import { getPreviewConfig } from '@/lib/performance.config'
 
 /**
  * 文章列表分页
@@ -51,7 +52,6 @@ export async function getStaticProps({ params: { page }, locale }) {
 
   // 处理预览 - 性能优化：使用配置化的预览限制
   if (siteConfig('POST_LIST_PREVIEW', false, props?.NOTION_CONFIG)) {
-    const { getPreviewConfig } = require('@/lib/performance.config')
     const previewConfig = getPreviewConfig('page')
     
     // 限制预览内容的加载数量，避免数据过大
