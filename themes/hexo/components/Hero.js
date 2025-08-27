@@ -15,8 +15,9 @@ let wrapperTop = 0
  */
 const Hero = props => {
   const [typed, changeType] = useState()
+  const [enhancedStarryDestroy, setEnhancedStarryDestroy] = useState(null)
   const { siteInfo } = props
-  const { locale } = useGlobal()
+  const { locale, isDarkMode } = useGlobal()
   const scrollToWrapper = () => {
     window.scrollTo({ top: wrapperTop, behavior: 'smooth' })
   }
@@ -42,11 +43,34 @@ const Hero = props => {
       })
     }
 
+    // 加载原有的星空背景
+    if (isDarkMode && typeof window !== 'undefined') {
+      loadExternalResource('/js/starrySky.js', 'js').then(() => {
+        if (window.renderStarrySky) {
+          window.renderStarrySky()
+        }
+      })
+    }
+
+    // 加载增强版星空背景
+    if (isDarkMode && typeof window !== 'undefined' && !enhancedStarryDestroy) {
+      loadExternalResource('/js/enhancedStarrySky.js', 'js').then(() => {
+        if (window.createEnhancedStarrySky) {
+          const destroyFn = window.createEnhancedStarrySky()
+          setEnhancedStarryDestroy(() => destroyFn)
+        }
+      })
+    }
+
     window.addEventListener('resize', updateHeaderHeight)
     return () => {
       window.removeEventListener('resize', updateHeaderHeight)
+      // 组件卸载时清理增强版星空背景
+      if (enhancedStarryDestroy) {
+        enhancedStarryDestroy()
+      }
     }
-  })
+  }, [typed, enhancedStarryDestroy])
 
   function updateHeaderHeight() {
     requestAnimationFrame(() => {
