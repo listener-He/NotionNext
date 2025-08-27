@@ -10,7 +10,7 @@ import { useEffect, useState, useCallback } from 'react'
  * @returns
  */
 export default function Live2D() {
-  const { theme, switchTheme } = useGlobal()
+  const { theme, switchTheme, isDarkMode } = useGlobal()
   const [currentModel, setCurrentModel] = useState('')
   const showPet = JSON.parse(siteConfig('WIDGET_PET'))
   const petLink = siteConfig('WIDGET_PET_LINK')
@@ -20,16 +20,15 @@ export default function Live2D() {
 
   // 获取当前应使用的模型链接
   const getCurrentModelLink = useCallback(() => {
-    const currentTheme = getCurrentThemeMode()
-    
-    if (currentTheme === 'dark' && petLinkNight) {
+    // 直接使用isDarkMode状态而不是getCurrentThemeMode函数
+    if (isDarkMode && petLinkNight) {
       return petLinkNight
-    } else if (currentTheme === 'light' && petLinkDuring) {
+    } else if (!isDarkMode && petLinkDuring) {
       return petLinkDuring
     }
     
     return petLink
-  }, [petLink, petLinkDuring, petLinkNight])
+  }, [petLink, petLinkDuring, petLinkNight, isDarkMode])
 
   // 加载Live2D模型
   const loadLive2D = useCallback((modelUrl) => {
@@ -42,12 +41,13 @@ export default function Live2D() {
   useEffect(() => {
     const newModelLink = getCurrentModelLink()
     if (newModelLink !== currentModel) {
+      console.log(`Live2D: Switching model to ${isDarkMode ? 'night' : 'day'} mode`, newModelLink)
       setCurrentModel(newModelLink)
       if (newModelLink) {
         loadLive2D(newModelLink)
       }
     }
-  }, [theme, getCurrentModelLink, currentModel, loadLive2D])
+  }, [isDarkMode, getCurrentModelLink, currentModel, loadLive2D])
 
   useEffect(() => {
     if (showPet && !isMobile()) {

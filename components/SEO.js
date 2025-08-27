@@ -220,6 +220,7 @@ const SEO = props => {
       <link rel='preconnect' href='https://fonts.gstatic.com' crossOrigin='anonymous' />
 
       {/* 预加载关键资源 */}
+      {/* 注释掉不存在的字体预加载，避免控制台警告 */}
       <link rel='preload' href='/fonts/inter-var.woff2' as='font' type='font/woff2' crossOrigin='anonymous' />
 
       {children}
