@@ -7,7 +7,6 @@ import { generateSitemapXml } from '@/lib/sitemap.xml'
 import { DynamicLayout } from '@/themes/theme'
 import { generateRedirectJson } from '@/lib/redirect'
 import { checkDataFromAlgolia } from '@/lib/plugins/algolia'
-import { getISRConfig, shouldSkipISR } from '@/lib/isr-config'
 import { getPreviewConfig } from '@/lib/performance.config'
 
 /**
@@ -83,9 +82,13 @@ export async function getStaticProps(req) {
 
   return {
     props,
-    revalidate: shouldSkipISR(req)
-      ? false
-      : getISRConfig('index', { postsCount: props.posts?.length }, props.NOTION_CONFIG)
+    revalidate: process.env.EXPORT
+      ? undefined
+      : siteConfig(
+        'NEXT_REVALIDATE_SECOND',
+        BLOG.NEXT_REVALIDATE_SECOND,
+        props.NOTION_CONFIG
+      )
   }
 }
 
