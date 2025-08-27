@@ -3,6 +3,7 @@ import { siteConfig } from '@/lib/config'
 import { getGlobalData, getPost } from '@/lib/db/getSiteData'
 import { checkSlugHasOneSlash, processPostData } from '@/lib/utils/post'
 import { idToUuid } from 'notion-utils'
+import { getISRConfig, shouldSkipISR } from '@/lib/isr-config'
 import Slug from '..'
 
 /**
@@ -84,13 +85,13 @@ export async function getStaticProps({ params: { prefix, slug }, locale }) {
   }
   return {
     props,
-    revalidate: process.env.EXPORT
-      ? undefined
-      : siteConfig(
-          'NEXT_REVALIDATE_SECOND',
-          BLOG.NEXT_REVALIDATE_SECOND,
-          props.NOTION_CONFIG
-        )
+    revalidate: shouldSkipISR({ params: { prefix, slug }, locale })
+      ? false
+      : getISRConfig('post', {
+          publishDate: props.post?.publishDate,
+          category: props.post?.category,
+          tags: props.post?.tags
+        }, props.NOTION_CONFIG)
   }
 }
 

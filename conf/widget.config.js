@@ -19,6 +19,10 @@ module.exports = {
   WIDGET_PET_LINK:
     process.env.NEXT_PUBLIC_WIDGET_PET_LINK ||
     'https://cdn.jsdelivr.net/npm/live2d-widget-model-wanko@1.0.5/assets/wanko.model.json', // 挂件模型地址 @see https://github.com/xiazeyu/live2d-widget-models
+  WIDGET_PET_LINK_DURING:
+    process.env.NEXT_PUBLIC_WIDGET_PET_LINK_DURING || '', // 白天使用的模型，如果未配置则使用 WIDGET_PET_LINK
+  WIDGET_PET_LINK_NIGHT:
+    process.env.NEXT_PUBLIC_WIDGET_PET_LINK_NIGHT || '', // 夜间模式使用的模型，如果未配置则使用 WIDGET_PET_LINK
   WIDGET_PET_SWITCH_THEME:
     process.env.NEXT_PUBLIC_WIDGET_PET_SWITCH_THEME || true, // 点击宠物挂件切换博客主题
 

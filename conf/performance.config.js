@@ -13,6 +13,12 @@ module.exports = {
   ENABLE_CODE_SPLITTING: process.env.NEXT_PUBLIC_ENABLE_CODE_SPLITTING || true,
   CHUNK_SIZE_LIMIT: process.env.NEXT_PUBLIC_CHUNK_SIZE_LIMIT || 244000, // 244KB
   
+  // 资源优化配置
+  OPTIMIZE_BUNDLE_SIZE: process.env.NEXT_PUBLIC_OPTIMIZE_BUNDLE_SIZE || true,
+  TREE_SHAKING: process.env.NEXT_PUBLIC_TREE_SHAKING || true,
+  MINIFY_CSS: process.env.NEXT_PUBLIC_MINIFY_CSS || true,
+  MINIFY_JS: process.env.NEXT_PUBLIC_MINIFY_JS || true,
+  
   // 缓存配置
   BROWSER_CACHE_TTL: process.env.NEXT_PUBLIC_BROWSER_CACHE_TTL || 86400, // 24小时
   CDN_CACHE_TTL: process.env.NEXT_PUBLIC_CDN_CACHE_TTL || 604800, // 7天
@@ -43,5 +49,42 @@ module.exports = {
     LCP: 2500, // Largest Contentful Paint (ms)
     FID: 100,  // First Input Delay (ms)
     CLS: 0.1   // Cumulative Layout Shift
+  },
+  
+  // 内存优化
+  MEMORY_OPTIMIZATION: {
+    ENABLE_GARBAGE_COLLECTION: process.env.NEXT_PUBLIC_ENABLE_GC || true,
+    MAX_MEMORY_USAGE: process.env.NEXT_PUBLIC_MAX_MEMORY || '512MB',
+    CLEANUP_INTERVAL: process.env.NEXT_PUBLIC_CLEANUP_INTERVAL || 300000 // 5分钟
+  },
+  
+  // 网络优化
+  NETWORK_OPTIMIZATION: {
+    ENABLE_HTTP2_PUSH: process.env.NEXT_PUBLIC_HTTP2_PUSH || true,
+    CONNECTION_TIMEOUT: process.env.NEXT_PUBLIC_CONNECTION_TIMEOUT || 10000,
+    REQUEST_TIMEOUT: process.env.NEXT_PUBLIC_REQUEST_TIMEOUT || 30000
+  },
+  
+  // 预览优化配置
+  getPreviewConfig: (pageType) => {
+    const configs = {
+      index: {
+        maxPosts: 10,
+        maxLines: 8
+      },
+      category: {
+        maxPosts: 8,
+        maxLines: 6
+      },
+      tag: {
+        maxPosts: 8,
+        maxLines: 6
+      },
+      archive: {
+        maxPosts: 20,
+        maxLines: 4
+      }
+    }
+    return configs[pageType] || { maxPosts: 5, maxLines: 5 }
   }
 }

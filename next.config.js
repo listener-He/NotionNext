@@ -95,9 +95,20 @@ const nextConfig = {
   compress: true,
   poweredByHeader: false,
   generateEtags: true,
+  
+  // HTTP缓存优化
+  onDemandEntries: {
+    maxInactiveAge: 60 * 1000, // 1分钟
+    pagesBufferLength: 5,
+  },
 
   // 构建优化
   swcMinify: true,
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production' ? {
+      exclude: ['error', 'warn']
+    } : false,
+  },
   modularizeImports: {
     '@heroicons/react/24/outline': {
       transform: '@heroicons/react/24/outline/{{member}}'
@@ -342,7 +353,22 @@ const nextConfig = {
   experimental: {
     scrollRestoration: true,
     // 性能优化实验性功能
-    optimizePackageImports: ['@heroicons/react', 'lodash']
+    optimizePackageImports: ['@heroicons/react', 'lodash'],
+    // 启用Turbo模式（如果可用）
+    turbo: {
+      rules: {
+        '*.svg': {
+          loaders: ['@svgr/webpack'],
+          as: '*.js',
+        },
+      },
+    },
+    // 启用并发功能
+    serverComponentsExternalPackages: ['notion-utils'],
+    // 优化字体加载
+    fontLoaders: [
+      { loader: '@next/font/google', options: { subsets: ['latin'] } },
+    ]
   },
   exportPathMap: function (
     defaultPathMap,
