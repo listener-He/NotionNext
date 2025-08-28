@@ -22,12 +22,12 @@ export const BeiAnGongAn = props => {
       <a href={href} target='_blank' rel='noopener noreferrer' className='ml-1'>
         {BEI_AN_GONGAN}
       </a> &nbsp;
-      <LazyImage src='https://blog-file.hehouhui.cn/20250724094940374.png' width={15} height={15} alt='萌ICP备20257012号'/>
-      <a href="https://icp.gov.moe/?keyword=20257012" target="_blank">萌ICP备20257012号</a>
-      &nbsp;
-      <LazyImage src="https://icp.redcha.cn/static/picture/icplogoi.png" width={20} height={20} alt="茶ICP备案图标"/>
-      <a href="https://icp.redcha.cn/beian/ICP-2025080099.html">茶ICP备2025080099号</a>
-       &nbsp;
+      {/*<LazyImage src='https://blog-file.hehouhui.cn/20250724094940374.png' width={15} height={15} alt='萌20257012号'/>*/}
+      {/*<a href="https://icp.gov.moe/?keyword=20257012" target="_blank">萌20257012号</a>*/}
+      {/*&nbsp;*/}
+      {/*<LazyImage src="https://icp.redcha.cn/static/picture/icplogoi.png" width={20} height={20} alt="茶图标"/>*/}
+      {/*<a href="https://icp.redcha.cn/beian/ICP-2025080099.html">茶2025080099号</a>*/}
+      {/* &nbsp;*/}
       <a href="https://bloginc.cn/18872.html">
         <div style={{
           display: 'inline-flex',
