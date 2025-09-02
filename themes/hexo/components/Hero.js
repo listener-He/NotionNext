@@ -19,14 +19,23 @@ const Hero = props => {
   const { siteInfo } = props
   const { locale, isDarkMode } = useGlobal()
   const scrollToWrapper = () => {
-    window.scrollTo({ top: wrapperTop, behavior: 'smooth' })
+    if (typeof window !== 'undefined') {
+      window.scrollTo({ top: wrapperTop, behavior: 'smooth' })
+    }
+    // window.scrollTo({ top: wrapperTop, behavior: 'smooth' })
   }
 
   const GREETING_WORDS = siteConfig('GREETING_WORDS').split(',')
+  // 添加状态来检测是否在客户端
+  const [isClient, setIsClient] = useState(false)
+
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
   useEffect(() => {
     updateHeaderHeight()
 
-    if (!typed && window && document.getElementById('typed')) {
+    if (!typed && window && window !== 'undefined' && document.getElementById('typed')) {
       loadExternalResource('/js/typed.min.js', 'js').then(() => {
         if (window.Typed) {
           changeType(
@@ -61,22 +70,72 @@ const Hero = props => {
         }
       })
     }
-
-    window.addEventListener('resize', updateHeaderHeight)
+    if (typeof window !== 'undefined') {
+      window.addEventListener('resize', updateHeaderHeight)
+    }
+    // window.addEventListener('resize', updateHeaderHeight)
     return () => {
-      window.removeEventListener('resize', updateHeaderHeight)
+      // window.removeEventListener('resize', updateHeaderHeight)
+      // // 组件卸载时清理增强版星空背景
+      // if (enhancedStarryDestroy) {
+      //   enhancedStarryDestroy()
+      // }
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('resize', updateHeaderHeight)
+      }
       // 组件卸载时清理增强版星空背景
-      if (enhancedStarryDestroy) {
+      if (enhancedStarryDestroy && typeof window !== 'undefined') {
         enhancedStarryDestroy()
       }
     }
   }, [typed, enhancedStarryDestroy])
 
   function updateHeaderHeight() {
-    requestAnimationFrame(() => {
-      const wrapperElement = document.getElementById('wrapper')
-      wrapperTop = wrapperElement?.offsetTop
-    })
+    // requestAnimationFrame(() => {
+    //   const wrapperElement = document.getElementById('wrapper')
+    //   wrapperTop = wrapperElement?.offsetTop
+    // })
+    if (typeof window !== 'undefined' && typeof requestAnimationFrame !== 'undefined') {
+      requestAnimationFrame(() => {
+        const wrapperElement = document.getElementById('wrapper')
+        wrapperTop = wrapperElement?.offsetTop
+      })
+    }
+  }
+
+// 只在客户端渲染时才显示需要浏览器API的元素
+  if (!isClient) {
+    return (
+      <header
+        id='header'
+        style={{ zIndex: -1 }}
+        className='w-full h-screen relative bg-black'>
+        <div className='text-white absolute bottom-0 flex flex-col h-full items-center justify-center w-full '>
+          {/* 站点标题 */}
+          <div className='font-black text-4xl md:text-5xl shadow-text'>
+            {siteInfo?.title || siteConfig('TITLE')}
+          </div>
+          {/* 站点欢迎语 */}
+          <div className='mt-2 h-12 items-center text-center font-medium shadow-text text-lg'>
+            <span id='typed' />
+          </div>
+
+          {/* 首页导航大按钮 */}
+          {siteConfig('HEXO_HOME_NAV_BUTTONS', null, CONFIG) && (
+            <NavButtonGroup {...props} />
+          )}
+        </div>
+
+        {siteInfo?.pageCover && (
+          <LazyImage
+            id='header-cover'
+            alt={siteInfo?.title}
+            src={siteInfo?.pageCover}
+            className={`header-cover w-full h-screen object-cover object-center ${siteConfig('HEXO_HOME_NAV_BACKGROUND_IMG_FIXED', null, CONFIG) ? 'fixed' : ''}`}
+          />
+        )}
+      </header>
+    )
   }
 
   return (

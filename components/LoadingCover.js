@@ -22,9 +22,21 @@ export default function LoadingCover() {
     setOnLoading(false) // 强行关闭 LoadingCover
   }
 
-  if (typeof window === 'undefined') {
+  // 使用useEffect设置一个状态来检测是否在客户端
+  const [isClient, setIsClient] = useState(false)
+
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
+
+  // 只在客户端渲染时才显示组件
+  if (!isClient) {
     return null // 避免在服务端渲染时渲染出这个组件
   }
+
+  // if (typeof window === 'undefined') {
+  //   return null // 避免在服务端渲染时渲染出这个组件
+  // }
 
   return isVisible ? (
     <div
