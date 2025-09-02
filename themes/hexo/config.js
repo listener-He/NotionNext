@@ -14,6 +14,9 @@ const CONFIG = {
   // 是否显示开始阅读按钮
   HEXO_SHOW_START_READING: true,
 
+  // 夜间模式下首页背景是否只占据半屏，使下方内容能在首屏可见
+  HEXO_HOME_BANNER_HALF_SCREEN_DARK_MODE: true,
+
   // 菜单配置
   HEXO_MENU_INDEX: true, // 显示首页
   HEXO_MENU_CATEGORY: true, // 显示分类

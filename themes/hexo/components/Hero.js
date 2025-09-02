@@ -22,7 +22,6 @@ const Hero = props => {
     if (typeof window !== 'undefined') {
       window.scrollTo({ top: wrapperTop, behavior: 'smooth' })
     }
-    // window.scrollTo({ top: wrapperTop, behavior: 'smooth' })
   }
 
   const GREETING_WORDS = siteConfig('GREETING_WORDS').split(',')
@@ -73,13 +72,8 @@ const Hero = props => {
     if (typeof window !== 'undefined') {
       window.addEventListener('resize', updateHeaderHeight)
     }
-    // window.addEventListener('resize', updateHeaderHeight)
+
     return () => {
-      // window.removeEventListener('resize', updateHeaderHeight)
-      // // 组件卸载时清理增强版星空背景
-      // if (enhancedStarryDestroy) {
-      //   enhancedStarryDestroy()
-      // }
       if (typeof window !== 'undefined') {
         window.removeEventListener('resize', updateHeaderHeight)
       }
@@ -91,10 +85,6 @@ const Hero = props => {
   }, [typed, enhancedStarryDestroy])
 
   function updateHeaderHeight() {
-    // requestAnimationFrame(() => {
-    //   const wrapperElement = document.getElementById('wrapper')
-    //   wrapperTop = wrapperElement?.offsetTop
-    // })
     if (typeof window !== 'undefined' && typeof requestAnimationFrame !== 'undefined') {
       requestAnimationFrame(() => {
         const wrapperElement = document.getElementById('wrapper')
@@ -103,13 +93,18 @@ const Hero = props => {
     }
   }
 
+  // 检查是否启用夜间模式下半屏效果
+  const isHalfScreenDarkMode = siteConfig('HEXO_HOME_BANNER_HALF_SCREEN_DARK_MODE', false, CONFIG) && isDarkMode
+  const headerHeight = isHalfScreenDarkMode ? 'h-1/2' : 'h-screen'
+  const headerClass = `w-full ${headerHeight} relative bg-black`
+
 // 只在客户端渲染时才显示需要浏览器API的元素
   if (!isClient) {
     return (
       <header
         id='header'
         style={{ zIndex: -1 }}
-        className='w-full h-screen relative bg-black'>
+        className={headerClass}>
         <div className='text-white absolute bottom-0 flex flex-col h-full items-center justify-center w-full '>
           {/* 站点标题 */}
           <div className='font-black text-4xl md:text-5xl shadow-text'>
@@ -131,7 +126,7 @@ const Hero = props => {
             id='header-cover'
             alt={siteInfo?.title}
             src={siteInfo?.pageCover}
-            className={`header-cover w-full h-screen object-cover object-center ${siteConfig('HEXO_HOME_NAV_BACKGROUND_IMG_FIXED', null, CONFIG) ? 'fixed' : ''}`}
+            className={`header-cover w-full ${headerHeight} object-cover object-center ${siteConfig('HEXO_HOME_NAV_BACKGROUND_IMG_FIXED', null, CONFIG) ? 'fixed' : ''}`}
           />
         )}
       </header>
@@ -142,7 +137,7 @@ const Hero = props => {
     <header
       id='header'
       style={{ zIndex: -1 }}
-      className='w-full h-screen relative bg-black'>
+      className={headerClass}>
       <div className='text-white absolute bottom-0 flex flex-col h-full items-center justify-center w-full '>
         {/* 站点标题 */}
         <div className='font-black text-4xl md:text-5xl shadow-text'>
@@ -174,7 +169,7 @@ const Hero = props => {
         id='header-cover'
         alt={siteInfo?.title}
         src={siteInfo?.pageCover}
-        className={`header-cover w-full h-screen object-cover object-center ${siteConfig('HEXO_HOME_NAV_BACKGROUND_IMG_FIXED', null, CONFIG) ? 'fixed' : ''}`}
+        className={`header-cover w-full  ${headerHeight} object-cover object-center ${siteConfig('HEXO_HOME_NAV_BACKGROUND_IMG_FIXED', null, CONFIG) ? 'fixed' : ''}`}
       />
     </header>
   )
