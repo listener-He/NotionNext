@@ -1,12 +1,19 @@
+
 import { useEffect } from 'react'
 import { loadExternalResource } from '@/lib/utils'
+import {getDevicePerformance} from '@/components/PerformanceDetector'
 
 const StarrySky = () => {
+  const { isLowEndDevice} = getDevicePerformance();
+
   useEffect(() => {
-    loadExternalResource('/js/starrySky.js', 'js').then(url => {
-      window.renderStarrySky && window.renderStarrySky()
-    })
-  }, [])
+    if (!isLowEndDevice) {
+      loadExternalResource('/js/starrySky.js', 'js').then(url => {
+        window.renderStarrySky && window.renderStarrySky()
+      })
+    }
+  }, [isLowEndDevice])
+
   return (
     <></>
   )
