@@ -3,6 +3,7 @@ import throttle from 'lodash.throttle'
 import { uuidToId } from 'notion-utils'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import Progress from './Progress'
+import { getDevicePerformance } from '@/components/PerformanceDetector'
 
 /**
  * 目录导航组件
@@ -12,6 +13,8 @@ import Progress from './Progress'
  */
 const Catalog = ({ toc }) => {
   const { locale } = useGlobal()
+  // 获取设备性能信息
+  const { isLowEndDevice } = getDevicePerformance()
   // 监听滚动事件
   useEffect(() => {
     window.addEventListener('scroll', actionSectionScrollSpy)
@@ -28,7 +31,7 @@ const Catalog = ({ toc }) => {
   // 同步选中目录事件
   const [activeSection, setActiveSection] = useState(null)
 
-  const throttleMs = 200
+  const throttleMs = isLowEndDevice ? 500 : 200
   const actionSectionScrollSpy = useCallback(
     throttle(() => {
       const sections = document.getElementsByClassName('notion-h')

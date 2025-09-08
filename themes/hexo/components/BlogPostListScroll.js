@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from 'react'
 import CONFIG from '../config'
 import BlogPostCard from './BlogPostCard'
 import BlogPostListEmpty from './BlogPostListEmpty'
+import { getDevicePerformance } from '@/components/PerformanceDetector'
 
 /**
  * 博客列表滚动分页
@@ -23,6 +24,9 @@ const BlogPostListScroll = ({
   const [page, updatePage] = useState(1)
   const POSTS_PER_PAGE = siteConfig('POSTS_PER_PAGE', null, NOTION_CONFIG)
   const postsToShow = getListByPage(posts, page, POSTS_PER_PAGE)
+
+  // 获取设备性能信息
+  const { isLowEndDevice } = getDevicePerformance()
 
   let hasMore = false
   if (posts) {
@@ -50,11 +54,31 @@ const BlogPostListScroll = ({
     })
   }
 
+  // 在低端设备上减少滚动事件监听频率
+  const throttleScroll = (() => {
+    let lastTime = 0
+    return function () {
+      const now = Date.now()
+      // 低端设备上降低滚动事件触发频率
+      if (isLowEndDevice) {
+        if (now - lastTime >= 300) {
+          lastTime = now
+          scrollTrigger()
+        }
+      } else {
+        if (now - lastTime >= 100) {
+          lastTime = now
+          scrollTrigger()
+        }
+      }
+    }
+  })()
+
   // 监听滚动
   useEffect(() => {
-    window.addEventListener('scroll', scrollTrigger)
+    window.addEventListener('scroll', throttleScroll)
     return () => {
-      window.removeEventListener('scroll', scrollTrigger)
+      window.removeEventListener('scroll', throttleScroll)
     }
   })
 

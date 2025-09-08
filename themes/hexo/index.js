@@ -34,6 +34,7 @@ import TocDrawerButton from './components/TocDrawerButton'
 import CONFIG from './config'
 import { Style } from './style'
 import LinksPage from './components/LinksPage'
+import PerformanceDetector from '@/components/PerformanceDetector'
 
 const AlgoliaSearchModal = dynamic(
   () => import('@/components/AlgoliaSearchModal'),

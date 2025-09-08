@@ -6,6 +6,7 @@ import { loadExternalResource } from '@/lib/utils'
 import { useEffect, useState } from 'react'
 import CONFIG from '../config'
 import NavButtonGroup from './NavButtonGroup'
+import PerformanceDetector from '@/components/PerformanceDetector'
 
 let wrapperTop = 0
 
@@ -51,23 +52,29 @@ const Hero = props => {
       })
     }
 
-    // 加载原有的星空背景
-    if (isDarkMode && typeof window !== 'undefined') {
-      loadExternalResource('/js/starrySky.js', 'js').then(() => {
-        if (window.renderStarrySky) {
-          window.renderStarrySky()
-        }
-      })
-    }
 
-    // 加载增强版星空背景
-    if (isDarkMode && typeof window !== 'undefined' && !enhancedStarryDestroy) {
-      loadExternalResource('/js/enhancedStarrySky.js', 'js').then(() => {
-        if (window.createEnhancedStarrySky) {
-          const destroyFn = window.createEnhancedStarrySky()
-          setEnhancedStarryDestroy(() => destroyFn)
-        }
-      })
+    // 优化：仅在高性能设备上加载星空背景
+    const { isLowEndDevice } = getDevicePerformance()
+
+    if (!isLowEndDevice) {
+      // 加载原有的星空背景
+      if (isDarkMode && typeof window !== 'undefined') {
+        loadExternalResource('/js/starrySky.js', 'js').then(() => {
+          if (window.renderStarrySky) {
+            window.renderStarrySky()
+          }
+        })
+      }
+
+      // 加载增强版星空背景
+      if (isDarkMode && typeof window !== 'undefined' && !enhancedStarryDestroy) {
+        loadExternalResource('/js/enhancedStarrySky.js', 'js').then(() => {
+          if (window.createEnhancedStarrySky) {
+            const destroyFn = window.createEnhancedStarrySky()
+            setEnhancedStarryDestroy(() => destroyFn)
+          }
+        })
+      }
     }
     if (typeof window !== 'undefined') {
       window.addEventListener('resize', updateHeaderHeight)
@@ -94,18 +101,20 @@ const Hero = props => {
   }
 
   // 检查是否启用夜间模式下半屏效果
-  const isHalfScreenDarkMode = siteConfig('HEXO_HOME_BANNER_HALF_SCREEN_DARK_MODE', false, CONFIG) && isDarkMode
-  const headerHeight = isHalfScreenDarkMode ? 'h-1/2' : 'h-screen'
+  const isHalfScreenDarkMode = siteConfig('HEXO_HOME_BANNER_HALF_SCREEN_DARK_MODE', true, CONFIG) && isDarkMode
+  // 修复：始终使用全屏高度，但在夜间模式下半屏时调整内容位置
+  const headerHeight = 'h-screen'
+  const contentPosition = isHalfScreenDarkMode ? 'bottom-1/2' : 'bottom-0'
   const headerClass = `w-full ${headerHeight} relative bg-black`
 
-// 只在客户端渲染时才显示需要浏览器API的元素
+  // 只在客户端渲染时才显示需要浏览器API的元素
   if (!isClient) {
     return (
       <header
         id='header'
         style={{ zIndex: -1 }}
         className={headerClass}>
-        <div className='text-white absolute bottom-0 flex flex-col h-full items-center justify-center w-full '>
+        <div className={`text-white absolute bottom-0 flex flex-col h-full items-center justify-center w-full ${contentPosition}`}>
           {/* 站点标题 */}
           <div className='font-black text-4xl md:text-5xl shadow-text'>
             {siteInfo?.title || siteConfig('TITLE')}
@@ -138,7 +147,7 @@ const Hero = props => {
       id='header'
       style={{ zIndex: -1 }}
       className={headerClass}>
-      <div className='text-white absolute bottom-0 flex flex-col h-full items-center justify-center w-full '>
+      <div className={`text-white absolute bottom-0 flex flex-col h-full items-center justify-center w-full ${contentPosition}`}>
         {/* 站点标题 */}
         <div className='font-black text-4xl md:text-5xl shadow-text'>
           {siteInfo?.title || siteConfig('TITLE')}
@@ -154,15 +163,17 @@ const Hero = props => {
         )}
 
         {/* 滚动按钮 */}
-        <div
-          onClick={scrollToWrapper}
-          className='z-10 cursor-pointer w-full text-center py-4 text-3xl absolute bottom-10 text-white'>
-          <div className='opacity-70 animate-bounce text-xs'>
-            {siteConfig('HEXO_SHOW_START_READING', null, CONFIG) &&
-              locale.COMMON.START_READING}
+        {!isHalfScreenDarkMode && (
+          <div
+            onClick={scrollToWrapper}
+            className='z-10 cursor-pointer w-full text-center py-4 text-3xl absolute bottom-10 text-white'>
+            <div className='opacity-70 animate-bounce text-xs'>
+              {siteConfig('HEXO_SHOW_START_READING', null, CONFIG) &&
+                locale.COMMON.START_READING}
+            </div>
+            <i className='opacity-70 animate-bounce fas fa-angle-down' />
           </div>
-          <i className='opacity-70 animate-bounce fas fa-angle-down' />
-        </div>
+        )}
       </div>
 
       <LazyImage

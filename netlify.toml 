@@ -1,6 +1,6 @@
 [build]
-  command = "npm run export"
-  publish = "out"
+  command = "yarn run build"
+  publish = ".next"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
@@ -9,7 +9,6 @@
   included_files = ["lang/*", "themes/**/*", "components/**/*", "lib/**/*", "conf/*"]
 
 [build.environment]
-  EXPORT = "true"
   NODE_VERSION = "20"
 
 [[headers]]
