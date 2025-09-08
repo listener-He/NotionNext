@@ -6,7 +6,7 @@ import { loadExternalResource } from '@/lib/utils'
 import { useEffect, useState } from 'react'
 import CONFIG from '../config'
 import NavButtonGroup from './NavButtonGroup'
-import PerformanceDetector from '@/components/PerformanceDetector'
+import {getDevicePerformance} from '@/components/PerformanceDetector'
 
 let wrapperTop = 0
 
@@ -56,26 +56,15 @@ const Hero = props => {
     // 优化：仅在高性能设备上加载星空背景
     const { isLowEndDevice } = getDevicePerformance()
 
-    if (!isLowEndDevice) {
-      // 加载原有的星空背景
-      if (isDarkMode && typeof window !== 'undefined') {
-        loadExternalResource('/js/starrySky.js', 'js').then(() => {
-          if (window.renderStarrySky) {
-            window.renderStarrySky()
-          }
-        })
-      }
-
-      // 加载增强版星空背景
-      if (isDarkMode && typeof window !== 'undefined' && !enhancedStarryDestroy) {
-        loadExternalResource('/js/enhancedStarrySky.js', 'js').then(() => {
-          if (window.createEnhancedStarrySky) {
-            const destroyFn = window.createEnhancedStarrySky()
-            setEnhancedStarryDestroy(() => destroyFn)
-          }
-        })
-      }
+    // 加载原有的星空背景
+    if (!isLowEndDevice && isDarkMode && typeof window !== 'undefined') {
+      loadExternalResource('/js/starrySky.js', 'js').then(() => {
+        if (window.renderStarrySky) {
+          window.renderStarrySky()
+        }
+      })
     }
+
     if (typeof window !== 'undefined') {
       window.addEventListener('resize', updateHeaderHeight)
     }
