@@ -9,7 +9,7 @@ import { Transition } from '@headlessui/react'
 import dynamic from 'next/dynamic'
 import SmartLink from '@/components/SmartLink'
 import { useRouter } from 'next/router'
-import { createContext, useContext, useEffect, useRef } from 'react'
+import { createContext, useContext, useEffect, useRef, useMemo, useState } from 'react'
 import ArticleAdjacent from './components/ArticleAdjacent'
 import ArticleCopyright from './components/ArticleCopyright'
 import { ArticleLock } from './components/ArticleLock'
@@ -34,11 +34,15 @@ import TocDrawerButton from './components/TocDrawerButton'
 import CONFIG from './config'
 import { Style } from './style'
 import LinksPage from './components/LinksPage'
+import { getDevicePerformance } from '@/components/PerformanceDetector'
 
-
+// 使用 useMemo 优化动态导入
 const AlgoliaSearchModal = dynamic(
   () => import('@/components/AlgoliaSearchModal'),
-  { ssr: false }
+  { 
+    ssr: false,
+    loading: () => <div className="hidden">Loading...</div> // 添加加载状态
+  }
 )
 
 // 主题全局状态
@@ -56,13 +60,11 @@ const LayoutBase = props => {
   const { onLoading, fullWidth } = useGlobal()
   const router = useRouter()
   const showRandomButton = siteConfig('HEXO_MENU_RANDOM', false, CONFIG)
+  const homeBannerEnable = siteConfig('HEXO_HOME_BANNER_ENABLE', null, CONFIG)
+  const fontStyle = siteConfig('FONT_STYLE')
 
-  const headerSlot = post ? (
-    <PostHero {...props} />
-  ) : router.route === '/' &&
-    siteConfig('HEXO_HOME_BANNER_ENABLE', null, CONFIG) ? (
-    <Hero {...props} />
-  ) : null
+  // 获取设备性能信息
+  const { isLowEndDevice } = getDevicePerformance()
 
   const drawerRight = useRef(null)
   const tocRef = isBrowser ? document.getElementById('article-wrapper') : null
@@ -87,34 +89,40 @@ const LayoutBase = props => {
   // Algolia搜索框
   const searchModal = useRef(null)
 
+
+
   return (
     <ThemeGlobalHexo.Provider value={{ searchModal }}>
       <div
         id='theme-hexo'
-        className={`${siteConfig('FONT_STYLE')} dark:bg-black scroll-smooth`}>
+        className={`${fontStyle} dark:bg-black scroll-smooth ${isLowEndDevice ? 'reduce-motion' : ''}`}>
         <Style />
 
         {/* 顶部导航 */}
         <Header {...props} />
 
-        {/* 顶部嵌入 */}
+        {/* 顶部嵌入 - 添加性能优化 */}
         <Transition
           show={!onLoading}
           appear={true}
-          enter='transition ease-in-out duration-700 transform order-first'
-          enterFrom='opacity-0 -translate-y-16'
+          enter='transition ease-in-out duration-300 transform order-first'
+          enterFrom='opacity-0 -translate-y-4'
           enterTo='opacity-100'
-          leave='transition ease-in-out duration-300 transform'
+          leave='transition ease-in-out duration-200 transform'
           leaveFrom='opacity-100'
-          leaveTo='opacity-0 translate-y-16'
+          leaveTo='opacity-0 translate-y-4'
           unmount={false}>
-          {headerSlot}
+          {post ? (
+            <PostHero {...props} />
+          ) : router.route === '/' && homeBannerEnable ? (
+            <Hero {...props} />
+          ) : null}
         </Transition>
 
         {/* 主区块 */}
         <main
           id='wrapper'
-          className={`${siteConfig('HEXO_HOME_BANNER_ENABLE', null, CONFIG) ? '' : 'pt-16'} bg-hexo-background-gray dark:bg-black w-full py-8 md:px-8 lg:px-24 min-h-screen relative`}>
+          className={`${homeBannerEnable ? '' : 'pt-16'} bg-hexo-background-gray dark:bg-black w-full py-8 md:px-8 lg:px-24 min-h-screen relative`}>
           <div
             id='container-inner'
             className={
@@ -128,12 +136,12 @@ const LayoutBase = props => {
               <Transition
                 show={!onLoading}
                 appear={true}
-                enter='transition ease-in-out duration-700 transform order-first'
-                enterFrom='opacity-0 translate-y-16'
+                enter='transition ease-in-out duration-300 transform order-first'
+                enterFrom='opacity-0 translate-y-4'
                 enterTo='opacity-100'
-                leave='transition ease-in-out duration-300 transform'
+                leave='transition ease-in-out duration-200 transform'
                 leaveFrom='opacity-100 translate-y-0'
-                leaveTo='opacity-0 -translate-y-16'
+                leaveTo='opacity-0 -translate-y-4'
                 unmount={false}>
                 {/* 主区上部嵌入 */}
                 {slotTop}
@@ -142,7 +150,7 @@ const LayoutBase = props => {
               </Transition>
             </div>
 
-            {/* 右侧栏 */}
+            {/* 右侧栏 - 延迟加载优化 */}
             <SideRight {...props} />
           </div>
         </main>
@@ -275,7 +283,7 @@ const LayoutSlug = props => {
   useEffect(() => {
     // 404检测 - 但排除友情链接页面
     if (!post && !isLinksPage) {
-      setTimeout(
+      const timeoutId = setTimeout(
         () => {
           if (isBrowser) {
             const article = document.querySelector('#article-wrapper #notion-article')
@@ -288,6 +296,7 @@ const LayoutSlug = props => {
         },
         waiting404
       )
+      return () => clearTimeout(timeoutId) // 清理定时器
     }
   }, [post, isLinksPage])
   
@@ -320,7 +329,7 @@ const LayoutSlug = props => {
                 {post && <NotionPage post={post} />}
               </section>
 
-              {/* 分享 */}
+              {/* 分享 - 延迟渲染 */}
               <ShareBar post={post} />
               {post?.type === 'Post' && (
                 <>

@@ -78,7 +78,7 @@ const Hero = props => {
         enhancedStarryDestroy()
       }
     }
-  }, [typed, enhancedStarryDestroy])
+  }, [typed, enhancedStarryDestroy, GREETING_WORDS, isDarkMode])
 
   function updateHeaderHeight() {
     if (typeof window !== 'undefined' && typeof requestAnimationFrame !== 'undefined') {
@@ -95,6 +95,12 @@ const Hero = props => {
   const headerHeight = 'h-screen'
   const contentPosition = isHalfScreenDarkMode ? 'bottom-1/2' : 'bottom-0'
   const headerClass = `w-full ${headerHeight} relative bg-black`
+  
+  // 预先获取所有需要的配置值，确保Hooks调用顺序一致
+  const showNavButtons = siteConfig('HEXO_HOME_NAV_BUTTONS', null, CONFIG)
+  const showStartReading = siteConfig('HEXO_SHOW_START_READING', null, CONFIG)
+  const backgroundFixed = siteConfig('HEXO_HOME_NAV_BACKGROUND_IMG_FIXED', null, CONFIG)
+  const siteTitle = siteConfig('TITLE')
 
   // 只在客户端渲染时才显示需要浏览器API的元素
   if (!isClient) {
@@ -106,7 +112,7 @@ const Hero = props => {
         <div className={`text-white absolute bottom-0 flex flex-col h-full items-center justify-center w-full ${contentPosition}`}>
           {/* 站点标题 */}
           <div className='font-black text-4xl md:text-5xl shadow-text'>
-            {siteInfo?.title || siteConfig('TITLE')}
+            {siteInfo?.title || siteTitle}
           </div>
           {/* 站点欢迎语 */}
           <div className='mt-2 h-12 items-center text-center font-medium shadow-text text-lg'>
@@ -114,7 +120,7 @@ const Hero = props => {
           </div>
 
           {/* 首页导航大按钮 */}
-          {siteConfig('HEXO_HOME_NAV_BUTTONS', null, CONFIG) && (
+          {showNavButtons && (
             <NavButtonGroup {...props} />
           )}
         </div>
@@ -124,7 +130,7 @@ const Hero = props => {
             id='header-cover'
             alt={siteInfo?.title}
             src={siteInfo?.pageCover}
-            className={`header-cover w-full ${headerHeight} object-cover object-center ${siteConfig('HEXO_HOME_NAV_BACKGROUND_IMG_FIXED', null, CONFIG) ? 'fixed' : ''}`}
+            className={`header-cover w-full ${headerHeight} object-cover object-center ${backgroundFixed ? 'fixed' : ''}`}
           />
         )}
       </header>
@@ -139,7 +145,7 @@ const Hero = props => {
       <div className={`text-white absolute bottom-0 flex flex-col h-full items-center justify-center w-full ${contentPosition}`}>
         {/* 站点标题 */}
         <div className='font-black text-4xl md:text-5xl shadow-text'>
-          {siteInfo?.title || siteConfig('TITLE')}
+          {siteInfo?.title || siteTitle}
         </div>
         {/* 站点欢迎语 */}
         <div className='mt-2 h-12 items-center text-center font-medium shadow-text text-lg'>
@@ -147,7 +153,7 @@ const Hero = props => {
         </div>
 
         {/* 首页导航大按钮 */}
-        {siteConfig('HEXO_HOME_NAV_BUTTONS', null, CONFIG) && (
+        {showNavButtons && (
           <NavButtonGroup {...props} />
         )}
 
@@ -157,8 +163,7 @@ const Hero = props => {
             onClick={scrollToWrapper}
             className='z-10 cursor-pointer w-full text-center py-4 text-3xl absolute bottom-10 text-white'>
             <div className='opacity-70 animate-bounce text-xs'>
-              {siteConfig('HEXO_SHOW_START_READING', null, CONFIG) &&
-                locale.COMMON.START_READING}
+              {showStartReading && locale.COMMON.START_READING}
             </div>
             <i className='opacity-70 animate-bounce fas fa-angle-down' />
           </div>
@@ -169,7 +174,7 @@ const Hero = props => {
         id='header-cover'
         alt={siteInfo?.title}
         src={siteInfo?.pageCover}
-        className={`header-cover w-full  ${headerHeight} object-cover object-center ${siteConfig('HEXO_HOME_NAV_BACKGROUND_IMG_FIXED', null, CONFIG) ? 'fixed' : ''}`}
+        className={`header-cover w-full  ${headerHeight} object-cover object-center ${backgroundFixed ? 'fixed' : ''}`}
       />
     </header>
   )

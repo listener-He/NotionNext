@@ -1,8 +1,8 @@
 import  { createRef, useEffect } from 'react'
 import { init } from '@waline/client'
 import { useRouter } from 'next/router'
-import '@waline/client/style'
 import { siteConfig } from '@/lib/config'
+import '@waline/client/dist/waline.css'
 
 const path = ''
 let waline = null

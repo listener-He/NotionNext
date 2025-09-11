@@ -96,7 +96,11 @@ export default function AlgoliaSearchModal({ cRef }) {
     'enter',
     e => {
       if (isInputFocused && searchResults.length > 0) {
-        onJumpSearchResult(index)
+        if (index) {
+          onJumpSearchResult(index)
+        } else {
+          onJumpSearchResult() 
+        }
       }
     },
     { enableOnFormTags: true }

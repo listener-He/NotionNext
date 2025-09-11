@@ -136,6 +136,10 @@ async function calculateDevicePerformance() {
   if (totalScore >= 80) performanceLevel = 'high'
   else if (totalScore >= 50) performanceLevel = 'normal'
   else performanceLevel = 'low'
+  // 检查是否用户偏好减少动画
+  if (performanceLevel !== 'low' && typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    performanceLevel = 'low'
+  }
 
   return {
     performanceLevel,

@@ -20,9 +20,10 @@ const Style = () => {
       // 底色
       #theme-hexo body {
         background-color: #f5f5f5;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
       }
       .dark #theme-hexo body {
-        background-color: black;
+        background-color: #121212;
       }
 
       /*  菜单下划线动画 */
@@ -35,7 +36,7 @@ const Style = () => {
         background-repeat: no-repeat;
         background-position: bottom center;
         background-size: 0 2px;
-        transition: background-size 100ms ease-in-out;
+        transition: background-size 150ms ease-in-out;
       }
 
       #theme-hexo .menu-link:hover {
@@ -69,7 +70,7 @@ const Style = () => {
         color: var(--theme-color) !important;
       }
 
-      /* MenuGroup 悬浮颜色 */
+      /* MenuGroup 悬悬颜色 */
       #theme-hexo #nav div[class*='hover:text-indigo-600']:hover {
         color: var(--theme-color) !important;
       }
@@ -195,12 +196,13 @@ const Style = () => {
         height: 100%;
         background: linear-gradient(
           to bottom,
-          rgba(0, 0, 0, 0.5) 0%,
-          rgba(0, 0, 0, 0.2) 10%,
-          rgba(0, 0, 0, 0) 25%,
-          rgba(0, 0, 0, 0.2) 75%,
-          rgba(0, 0, 0, 0.5) 100%
+          rgba(0, 0, 0, 0.4) 0%,
+          rgba(0, 0, 0, 0.1) 15%,
+          rgba(0, 0, 0, 0) 35%,
+          rgba(0, 0, 0, 0.1) 75%,
+          rgba(0, 0, 0, 0.4) 100%
         );
+        will-change: transform;
       }
 
       /* Custem */
@@ -210,13 +212,13 @@ const Style = () => {
 
       // 选中字体颜色
       ::selection {
-        background: color-mix(in srgb, var(--theme-color) 30%, transparent);
+        background: color-mix(in srgb, var(--theme-color) 25%, transparent);
       }
 
-      // 自定义滚动条
+      // 自定义滚动条 - 更细更高效
       ::-webkit-scrollbar {
-        width: 5px;
-        height: 5px;
+        width: 4px;
+        height: 4px;
       }
 
       ::-webkit-scrollbar-track {
@@ -225,6 +227,7 @@ const Style = () => {
 
       ::-webkit-scrollbar-thumb {
         background-color: var(--theme-color);
+        border-radius: 2px;
       }
 
       * {
@@ -232,7 +235,7 @@ const Style = () => {
         scrollbar-color: var(--theme-color) transparent;
       }
       
-      // 把宠物永久浮动在屏幕右下角
+      // 把宠物永久浮动在屏幕右下角 - 添加性能优化属性
       #live2d {
           will-change: transform, opacity;
           position: fixed;
@@ -241,6 +244,7 @@ const Style = () => {
           width: 300px;
           height: 250px;
           z-index: 9999 !important;
+          transform: translateZ(0); /* 启用硬件加速 */
       }
 
       // 导航栏 右侧 
@@ -249,7 +253,6 @@ const Style = () => {
           color: black;
       }
       
-
       /* 推荐文章卡片间距 */
       #theme-hexo .grid-cols-2.md\\:grid-cols-3.gap-4 {
           gap: 1rem !important;
@@ -301,6 +304,33 @@ const Style = () => {
       #theme-hexo .links-page-description {
         font-size: 0.875rem;
         color: var(--text-secondary-color);
+      }
+      
+      // 针对低性能设备的优化
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+        }
+        
+        #live2d {
+          display: none !important;
+        }
+      }
+      
+      // 针对高分辨率屏幕优化渐变
+      @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+        #theme-hexo .header-cover::before {
+          background: linear-gradient(
+            to bottom,
+            rgba(0, 0, 0, 0.3) 0%,
+            rgba(0, 0, 0, 0.075) 15%,
+            rgba(0, 0, 0, 0) 35%,
+            rgba(0, 0, 0, 0.075) 75%,
+            rgba(0, 0, 0, 0.3) 100%
+          );
+        }
       }
     `}</style>
   )
