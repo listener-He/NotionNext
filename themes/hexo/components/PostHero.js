@@ -55,7 +55,7 @@ export default function PostHero({ post, siteInfo }) {
             {siteConfig('POST_TITLE_ICON') && (
               <NotionIcon icon={post.pageIcon} className='text-4xl mx-1' />
             )}
-            {post.title}
+            <h1>{post.title}</h1>
           </div>
 
           <section className='flex-wrap shadow-text-md flex text-sm justify-center mt-4 text-white dark:text-gray-400 font-light leading-8'>
