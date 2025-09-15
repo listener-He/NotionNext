@@ -4,6 +4,7 @@ import { CACHE_KEY_PAGE_BLOCK } from '@/lib/cache/cache_keys'
 import { siteConfig } from '@/lib/config'
 import { getGlobalData } from '@/lib/db/getSiteData'
 import { DynamicLayout } from '@/themes/theme'
+import { getPageContentText } from '@/lib/notion/getPageContentText'
 
 const Index = props => {
   const theme = siteConfig('THEME', BLOG.THEME, props.NOTION_CONFIG)
