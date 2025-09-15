@@ -4,6 +4,7 @@ import { getGlobalData, getPost } from '@/lib/db/getSiteData'
 import { checkSlugHasMorThanTwoSlash, processPostData } from '@/lib/utils/post'
 import { idToUuid } from 'notion-utils'
 import Slug from '..'
+import { calculatePostCacheTime } from '@/lib/cache/cache_coefficient'
 
 /**
  * 根据notion的slug访问页面
@@ -92,15 +93,25 @@ export async function getStaticProps({
     }
     await processPostData(props, from)
   }
+  
+  // 计算文章缓存时间
+  let revalidate = process.env.EXPORT
+    ? undefined
+    : siteConfig(
+        'NEXT_REVALIDATE_SECOND',
+        BLOG.NEXT_REVALIDATE_SECOND,
+        props.NOTION_CONFIG
+      )
+  
+  // 如果是文章页面，根据最后更新时间计算缓存时间
+  if (props?.post?.lastEditedDate) {
+    const lastEditedTimestamp = new Date(props.post.lastEditedDate).getTime()
+    revalidate = calculatePostCacheTime(BLOG.NEXT_REVALIDATE_SECOND, lastEditedTimestamp)
+  }
+  
   return {
     props,
-    revalidate: process.env.EXPORT
-      ? undefined
-      : siteConfig(
-          'NEXT_REVALIDATE_SECOND',
-          BLOG.NEXT_REVALIDATE_SECOND,
-          props.NOTION_CONFIG
-        )
+    revalidate
   }
 }
 
