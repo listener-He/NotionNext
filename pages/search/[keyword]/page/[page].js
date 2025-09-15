@@ -1,5 +1,6 @@
 import BLOG from '@/blog.config'
 import { getDataFromCache } from '@/lib/cache/cache_manager'
+import { CACHE_KEY_PAGE_BLOCK } from '@/lib/cache/cache_keys'
 import { siteConfig } from '@/lib/config'
 import { getGlobalData } from '@/lib/db/getSiteData'
 import { DynamicLayout } from '@/themes/theme'
@@ -62,50 +63,6 @@ export function getStaticPaths() {
 }
 
 /**
- * 将对象的指定字段拼接到字符串
- * @param sourceTextArray
- * @param targetObj
- * @param key
- * @returns {*}
- */
-function appendText(sourceTextArray, targetObj, key) {
-  if (!targetObj) {
-    return sourceTextArray
-  }
-  const textArray = targetObj[key]
-  const text = textArray ? getTextContent(textArray) : ''
-  if (text && text !== 'Untitled') {
-    return sourceTextArray.concat(text)
-  }
-  return sourceTextArray
-}
-
-/**
- * 递归获取层层嵌套的数组
- * @param {*} textArray
- * @returns
- */
-function getTextContent(textArray) {
-  if (typeof textArray === 'object' && isIterable(textArray)) {
-    let result = ''
-    for (const textObj of textArray) {
-      result = result + getTextContent(textObj)
-    }
-    return result
-  } else if (typeof textArray === 'string') {
-    return textArray
-  }
-}
-
-/**
- * 对象是否可以遍历
- * @param {*} obj
- * @returns
- */
-const isIterable = obj =>
-  obj != null && typeof obj[Symbol.iterator] === 'function'
-
-/**
  * 在内存缓存中进行全文索引
  * @param {*} allPosts
  * @param keyword 关键词
@@ -117,7 +74,7 @@ async function filterByMemCache(allPosts, keyword) {
     keyword = keyword.trim()
   }
   for (const post of allPosts) {
-    const cacheKey = 'page_block_' + post.id
+    const cacheKey = CACHE_KEY_PAGE_BLOCK(post.id)
     const page = await getDataFromCache(cacheKey, true)
     const tagContent =
       post?.tags && Array.isArray(post?.tags) ? post?.tags.join(' ') : ''
@@ -161,5 +118,49 @@ async function filterByMemCache(allPosts, keyword) {
   }
   return filterPosts
 }
+
+/**
+ * 将对象的指定字段拼接到字符串
+ * @param sourceTextArray
+ * @param targetObj
+ * @param key
+ * @returns {*}
+ */
+function appendText(sourceTextArray, targetObj, key) {
+  if (!targetObj) {
+    return sourceTextArray
+  }
+  const textArray = targetObj[key]
+  const text = textArray ? getTextContent(textArray) : ''
+  if (text && text !== 'Untitled') {
+    return sourceTextArray.concat(text)
+  }
+  return sourceTextArray
+}
+
+/**
+ * 递归获取层层嵌套的数组
+ * @param {*} textArray
+ * @returns
+ */
+function getTextContent(textArray) {
+  if (typeof textArray === 'object' && isIterable(textArray)) {
+    let result = ''
+    for (const textObj of textArray) {
+      result = result + getTextContent(textObj)
+    }
+    return result
+  } else if (typeof textArray === 'string') {
+    return textArray
+  }
+}
+
+/**
+ * 对象是否可以遍历
+ * @param {*} obj
+ * @returns
+ */
+const isIterable = obj =>
+  obj != null && typeof obj[Symbol.iterator] === 'function'
 
 export default Index

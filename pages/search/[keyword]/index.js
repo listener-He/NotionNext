@@ -1,9 +1,9 @@
 import BLOG from '@/blog.config'
 import { getDataFromCache } from '@/lib/cache/cache_manager'
+import { CACHE_KEY_PAGE_BLOCK } from '@/lib/cache/cache_keys'
 import { siteConfig } from '@/lib/config'
 import { getGlobalData } from '@/lib/db/getSiteData'
 import { DynamicLayout } from '@/themes/theme'
-import { getPageContentText } from '@/lib/notion/getPageContentText'
 
 const Index = props => {
   const theme = siteConfig('THEME', BLOG.THEME, props.NOTION_CONFIG)
@@ -71,7 +71,7 @@ async function filterByMemCache(allPosts, keyword) {
     keyword = keyword.trim().toLowerCase()
   }
   for (const post of allPosts) {
-    const cacheKey = 'page_block_' + post.id
+    const cacheKey = CACHE_KEY_PAGE_BLOCK(post.id)
     const page = await getDataFromCache(cacheKey, true)
     const tagContent =
       post?.tags && Array.isArray(post?.tags) ? post?.tags.join(' ') : ''

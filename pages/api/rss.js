@@ -1,6 +1,7 @@
 import { getGlobalData } from '@/lib/db/getSiteData'
 import { generateRssFeed } from '@/lib/rss'
 import { getOrSetDataWithCustomCache } from '@/lib/cache/cache_manager'
+import { CACHE_KEY_RSS } from '@/lib/cache/cache_keys'
 import { gzip } from 'zlib'
 import { promisify } from 'util'
 
@@ -32,7 +33,7 @@ export default async function handler(req, res) {
   try {
     // 根据请求的格式确定缓存键和内容类型
     const { format } = req.query
-    const cacheKey = `rss_feed_${format || 'rss2'}`
+    const cacheKey = CACHE_KEY_RSS(format || 'rss2');
     let contentType
     
     switch (format) {
