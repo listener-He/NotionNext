@@ -11,56 +11,58 @@ const PerformanceMonitor = () => {
       return
     }
 
-    // 监控Core Web Vitals
-    const reportWebVitals = (metric) => {
-      const { name, value, id } = metric
-      
-      // 检查是否超出性能预算
-      const budget = BLOG.PERFORMANCE_BUDGET
-      let isOverBudget = false
-      
-      switch (name) {
-        case 'FCP':
-          isOverBudget = value > budget.FCP
-          break
-        case 'LCP':
-          isOverBudget = value > budget.LCP
-          break
-        case 'FID':
-          isOverBudget = value > budget.FID
-          break
-        case 'CLS':
-          isOverBudget = value > budget.CLS
-          break
-      }
+    // 动态导入web-vitals库以避免编译错误
+    import('web-vitals')
+      .then(({ getCLS, getFID, getFCP, getLCP, getTTFB }) => {
+        // 监控Core Web Vitals
+        const reportWebVitals = (metric) => {
+          const { name, value, id } = metric
+          
+          // 检查是否超出性能预算
+          const budget = BLOG.PERFORMANCE_BUDGET
+          let isOverBudget = false
+          
+          switch (name) {
+            case 'FCP':
+              isOverBudget = value > budget.FCP
+              break
+            case 'LCP':
+              isOverBudget = value > budget.LCP
+              break
+            case 'FID':
+              isOverBudget = value > budget.FID
+              break
+            case 'CLS':
+              isOverBudget = value > budget.CLS
+              break
+          }
 
-      // 控制台输出性能指标
-      if (process.env.NODE_ENV === 'development') {
-        console.log(`[Performance] ${name}: ${value}${isOverBudget ? ' ⚠️ Over Budget' : ' ✅'}`)
-      }
+          // 控制台输出性能指标
+          if (process.env.NODE_ENV === 'development') {
+            console.log(`[Performance] ${name}: ${value}${isOverBudget ? ' ⚠️ Over Budget' : ' ✅'}`)
+          }
 
-      // 可以在这里添加性能数据上报逻辑
-      // 例如发送到Google Analytics、Vercel Analytics等
-      if (window.gtag) {
-        window.gtag('event', name, {
-          event_category: 'Web Vitals',
-          event_label: id,
-          value: Math.round(name === 'CLS' ? value * 1000 : value),
-          non_interaction: true
-        })
-      }
-    }
+          // 可以在这里添加性能数据上报逻辑
+          // 例如发送到Google Analytics、Vercel Analytics等
+          if (window.gtag) {
+            window.gtag('event', name, {
+              event_category: 'Web Vitals',
+              event_label: id,
+              value: Math.round(name === 'CLS' ? value * 1000 : value),
+              non_interaction: true
+            })
+          }
+        }
 
-    // 动态导入web-vitals库
-    import('web-vitals').then(({ getCLS, getFID, getFCP, getLCP, getTTFB }) => {
-      getCLS(reportWebVitals)
-      getFID(reportWebVitals)
-      getFCP(reportWebVitals)
-      getLCP(reportWebVitals)
-      getTTFB(reportWebVitals)
-    }).catch(err => {
-      console.warn('Failed to load web-vitals:', err)
-    })
+        getCLS(reportWebVitals)
+        getFID(reportWebVitals)
+        getFCP(reportWebVitals)
+        getLCP(reportWebVitals)
+        getTTFB(reportWebVitals)
+      })
+      .catch(err => {
+        console.warn('Failed to load web-vitals:', err)
+      })
 
     // 监控资源加载性能
     const monitorResourceTiming = () => {
