@@ -26,7 +26,7 @@ const BLOG = {
   ENABLE_RSS: process.env.NEXT_PUBLIC_ENABLE_RSS || true, // 是否开启RSS订阅功能
 
   // Redis缓存优化
-  ENABLE_REDIS_COMPRESSION: process.env.ENABLE_REDIS_COMPRESSION || false, // 是否启用Redis智能压缩缓存，可显著减少存储空间占用
+  ENABLE_REDIS_COMPRESSION: process.env.ENABLE_REDIS_COMPRESSION || true, // 是否启用Redis智能压缩缓存，可显著减少存储空间占用
 
   // 其它复杂配置
   // 原配置文件过长，且并非所有人都会用到，故此将配置拆分到/conf/目录下, 按需找到对应文件并修改即可
