@@ -151,7 +151,7 @@ export default function LazyImage({
     ...(siteConfig('WEBP_SUPPORT') && { 'data-webp': true }),
     ...(siteConfig('AVIF_SUPPORT') && { 'data-avif': true }),
     // 添加图片优化属性
-    fetchPriority: priority ? 'high' : 'low',
+    fetchpriority: priority ? 'high' : 'low',
     // 为图片添加适当的尺寸属性，帮助浏览器提前计算布局
     ...(width && height && {
       'data-width': width,
