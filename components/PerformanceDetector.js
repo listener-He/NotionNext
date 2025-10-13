@@ -45,10 +45,12 @@ function getStoredPerformance() {
     // 检查数据是否过期（1天有效期）
     if (now - data.timestamp > 24 * 60 * 60 * 1000) {
       localStorage.removeItem('device_performance')
-      return null
+    } else {
+      return data;
     }
-
-    return data
+    const performanceInfo = calculateDevicePerformance()
+    storePerformance(performanceInfo)
+    return performanceInfo
   } catch (e) {
     console.warn('Failed to parse stored performance data:', e)
     return null

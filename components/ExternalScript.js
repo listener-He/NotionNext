@@ -18,7 +18,14 @@ const ExternalScript = props => {
     return null
   }
   const script = document.createElement('script')
-  Object.entries(props).forEach(([key, value]) => {
+  // 为第三方脚本添加性能优化属性
+  const performanceProps = {
+    async: true,
+    defer: true,
+    ...props
+  }
+  
+  Object.entries(performanceProps).forEach(([key, value]) => {
     script.setAttribute(key, value)
   })
   document.head.appendChild(script)

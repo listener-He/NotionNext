@@ -24,6 +24,7 @@ const Utterances = ({ issueTerm, layout }) => {
     script.setAttribute('src', 'https://utteranc.es/client.js');
     script.setAttribute('crossorigin', 'anonymous');
     script.setAttribute('async', true);
+    script.setAttribute('defer', true);
     script.setAttribute('repo', siteConfig('COMMENT_UTTERRANCES_REPO'));
     script.setAttribute('issue-term', 'title');
     // 初始主题

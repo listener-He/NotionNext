@@ -3,6 +3,7 @@ import { siteConfig } from '@/lib/config'
 import { useGlobal } from '@/lib/global'
 import { isMobile, loadExternalResource } from '@/lib/utils'
 import { useEffect, useState, useCallback } from 'react'
+import { getDevicePerformance } from '@/components/PerformanceDetector'
 
 /**
  * 网页动画
@@ -16,6 +17,9 @@ export default function Live2D() {
   const petLinkDuring = siteConfig('WIDGET_PET_LINK_DURING')
   const petLinkNight = siteConfig('WIDGET_PET_LINK_NIGHT')
   const petSwitchTheme = siteConfig('WIDGET_PET_SWITCH_THEME')
+
+  // 获取设备性能信息
+  const { isLowEndDevice } = getDevicePerformance()
 
   // 获取当前应使用的模型链接
   const getCurrentModelLink = useCallback(() => {
@@ -49,26 +53,38 @@ export default function Live2D() {
   }, [isDarkMode, getCurrentModelLink, currentModel, loadLive2D])
 
   useEffect(() => {
-    if (showPet && !isMobile()) {
-      Promise.all([
-        loadExternalResource(
-          'https://cdn.jsdmirror.com/gh/stevenjoezhang/live2d-widget@latest/live2d.min.js',
-          'js'
-        )
-      ]).then(e => {
-        if (typeof window?.loadlive2d !== 'undefined') {
-          // https://github.com/xiazeyu/live2d-widget-models
-          try {
-            const initialModel = getCurrentModelLink()
-            setCurrentModel(initialModel)
-            loadlive2d('live2d', initialModel)
-          } catch (error) {
-            console.error('读取PET模型', error)
-          }
-        }
-      })
+    // 在低端设备上不加载Live2D组件
+    if (isLowEndDevice) {
+      console.log('Live2D: Skipping load on low-end device')
+      return
     }
-  }, [])
+
+    if (showPet && !isMobile()) {
+      // 延迟加载Live2D资源，避免阻塞主进程
+      const loadTimer = setTimeout(() => {
+        Promise.all([
+          loadExternalResource(
+            'https://cdn.jsdmirror.com/gh/stevenjoezhang/live2d-widget@latest/live2d.min.js',
+            'js'
+          )
+        ]).then(e => {
+          if (typeof window?.loadlive2d !== 'undefined') {
+            // https://github.com/xiazeyu/live2d-widget-models
+            try {
+              const initialModel = getCurrentModelLink()
+              setCurrentModel(initialModel)
+              loadlive2d('live2d', initialModel)
+            } catch (error) {
+              console.error('读取PET模型', error)
+            }
+          }
+        })
+      }, 3000) // 延迟3秒加载
+
+      // 清理函数
+      return () => clearTimeout(loadTimer)
+    }
+  }, [showPet, isLowEndDevice])
 
   function handleClick() {
     if (petSwitchTheme) {
@@ -76,7 +92,8 @@ export default function Live2D() {
     }
   }
 
-  if (!showPet) {
+  // 在低端设备上不渲染Live2D组件
+  if (!showPet || isLowEndDevice) {
     return <></>
   }
 

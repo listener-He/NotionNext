@@ -360,6 +360,7 @@ const ExternalPlugin = props => {
           />
           <script
             async
+            defer
             dangerouslySetInnerHTML={{
               __html: `
             ((window.gitter = {}).chat = {}).options = {
@@ -375,6 +376,7 @@ const ExternalPlugin = props => {
       {ANALYTICS_BAIDU_ID && (
         <script
           async
+          defer
           dangerouslySetInnerHTML={{
             __html: `
           var _hmt = _hmt || [];
@@ -393,6 +395,7 @@ const ExternalPlugin = props => {
       {ANALYTICS_CNZZ_ID && (
         <script
           async
+          defer
           dangerouslySetInnerHTML={{
             __html: `
           document.write(unescape("%3Cspan style='display:none' id='cnzz_stat_icon_${ANALYTICS_CNZZ_ID}'%3E%3C/span%3E%3Cscript src='https://s9.cnzz.com/z_stat.php%3Fid%3D${ANALYTICS_CNZZ_ID}' type='text/javascript'%3E%3C/script%3E"));
@@ -411,10 +414,12 @@ const ExternalPlugin = props => {
         <>
           <script
             async
+            defer
             src={`https://www.googletagmanager.com/gtag/js?id=${ANALYTICS_GOOGLE_ID}`}
           />
           <script
             async
+            defer
             dangerouslySetInnerHTML={{
               __html: `
                 window.dataLayer = window.dataLayer || [];
@@ -433,6 +438,7 @@ const ExternalPlugin = props => {
       {MATOMO_HOST_URL && MATOMO_SITE_ID && (
         <script
           async
+          defer
           dangerouslySetInnerHTML={{
             __html: `
               var _paq = window._paq = window._paq || [];

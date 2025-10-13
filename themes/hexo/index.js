@@ -35,6 +35,7 @@ import CONFIG from './config'
 import { Style } from './style'
 import LinksPage from './components/LinksPage'
 import { getDevicePerformance } from '@/components/PerformanceDetector'
+import PerformanceDetector from '@/components/PerformanceDetector'
 
 // 使用 useMemo 优化动态导入
 const AlgoliaSearchModal = dynamic(
@@ -89,14 +90,15 @@ const LayoutBase = props => {
   // Algolia搜索框
   const searchModal = useRef(null)
 
-
-
   return (
     <ThemeGlobalHexo.Provider value={{ searchModal }}>
       <div
         id='theme-hexo'
         className={`${fontStyle} dark:bg-black scroll-smooth ${isLowEndDevice ? 'reduce-motion' : ''}`}>
         <Style />
+        
+        {/* 性能检测组件 */}
+        <PerformanceDetector />
 
         {/* 顶部导航 */}
         <Header {...props} />
