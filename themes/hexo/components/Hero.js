@@ -107,7 +107,7 @@ const Hero = props => {
     return (
       <header
         id='header'
-        style={{ zIndex: -1 }}
+        style={{ zIndex: -1 , height: isHalfScreenDarkMode ? '35vh' : '100vh'}}
         className={headerClass}>
         <div className={`text-white absolute bottom-0 flex flex-col h-full items-center justify-center w-full ${contentPosition}`}>
           {/* 站点标题 */}
@@ -140,7 +140,7 @@ const Hero = props => {
   return (
     <header
       id='header'
-      style={{ zIndex: -1 }}
+      style={{ zIndex: -1, height: isHalfScreenDarkMode ? '35vh' : '100vh'}}
       className={headerClass}>
       <div className={`text-white absolute bottom-0 flex flex-col h-full items-center justify-center w-full ${contentPosition}`}>
         {/* 站点标题 */}
