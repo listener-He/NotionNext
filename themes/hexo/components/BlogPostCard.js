@@ -1,64 +1,70 @@
-import BLOG from '@/blog.config'
-import Link from 'next/link'
-import React from 'react'
-import CONFIG_HEXO from '../config_hexo'
+import LazyImage from '@/components/LazyImage'
+import { siteConfig } from '@/lib/config'
+import SmartLink from '@/components/SmartLink'
+import CONFIG from '../config'
 import { BlogPostCardInfo } from './BlogPostCardInfo'
-// import Image from 'next/image'
+import { getDevicePerformance } from '@/components/PerformanceDetector'
 
 const BlogPostCard = ({ index, post, showSummary, siteInfo }) => {
-  const showPreview = CONFIG_HEXO.POST_LIST_PREVIEW && post.blockMap
-  if (post && !post.page_cover && CONFIG_HEXO.POST_LIST_COVER_DEFAULT) {
-    post.page_cover = siteInfo?.pageCover
+  const showPreview =
+    siteConfig('HEXO_POST_LIST_PREVIEW', null, CONFIG) && post.blockMap
+  if (
+    post &&
+    !post.pageCoverThumbnail &&
+    siteConfig('HEXO_POST_LIST_COVER_DEFAULT', null, CONFIG)
+  ) {
+    post.pageCoverThumbnail = siteInfo?.pageCover
   }
-  const showPageCover = CONFIG_HEXO.POST_LIST_COVER && post?.page_cover
-  const delay = (index % 2) * 200
+  const showPageCover =
+    siteConfig('HEXO_POST_LIST_COVER', null, CONFIG) &&
+    post?.pageCoverThumbnail &&
+    !showPreview
+  //   const delay = (index % 2) * 200
+  // 获取设备性能信息
+  const { isLowEndDevice } = getDevicePerformance()
 
+  // 在低端设备上禁用AOS动画
+  const enableAOS = !isLowEndDevice
   return (
     <div
+      className={`${siteConfig('HEXO_POST_LIST_COVER_HOVER_ENLARGE', null, CONFIG) ? ' hover:scale-110 transition-all duration-150' : ''}`}>
+      <div
         key={post.id}
-        className={`flex md:flex-row flex-col-reverse ${CONFIG_HEXO.POST_LIST_IMG_CROSSOVER ? 'even:md:flex-row-reverse' : ''}
-        w-full md:h-52 justify-between overflow-hidden
-        border dark:border-black rounded-xl bg-white dark:bg-hexo-black-gray`}>
-
+        {...(enableAOS && {
+          'data-aos': 'fade-up',
+          'data-aos-easing': 'ease-in-out',
+          'data-aos-duration': '500',
+          'data-aos-once': 'false',
+          'data-aos-anchor-placement': 'top-bottom'
+        })}
+        id='blog-post-card'
+        className={`group md:h-56 w-full flex justify-between md:flex-row flex-col-reverse ${siteConfig('HEXO_POST_LIST_IMG_CROSSOVER', null, CONFIG) && index % 2 === 1 ? 'md:flex-row-reverse' : ''}
+                    overflow-hidden border dark:border-black rounded-xl bg-white dark:bg-hexo-black-gray`}>
         {/* 文字内容 */}
-        <div
-            data-aos="fade-up"
-            data-aos-duration="200"
-            data-aos-delay={delay}
-            data-aos-once="true"
-            data-aos-anchor-placement="top-bottom"
-            className={`flex flex-col lg:p-6 p-4  ${showPageCover ? 'md:w-7/12 w-full ' : 'w-full'}`}>
+        <BlogPostCardInfo
+          index={index}
+          post={post}
+          showPageCover={showPageCover}
+          showPreview={showPreview}
+          showSummary={showSummary}
+        />
 
-            <BlogPostCardInfo post={post} showPreview={showPreview} showSummary={showSummary}/>
-
-        </div>
-
-         {/* 图片封面 */}
-        {showPageCover && !showPreview && post?.page_cover && (
-           <div className="flex overflow-hidden md:w-5/12 h-full">
-                <Link href={`${BLOG.SUB_PATH}/${post.slug}`} passHref legacyBehavior>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                        src={post?.page_cover}
-                        alt={post.title}
-                        loading='lazy'
-                        className="w-full cursor-pointer object-cover duration-200 hover:scale-125 "
-                    />
-                    {/* <div className='relative w-full h-full'>
-                    <Image
-                     className='hover:scale-125 transition cursor-pointer duration-500'
-                     src={post?.page_cover}
-                     alt={post.title}
-                     quality={30}
-                     placeholder='blur'
-                     blurDataURL='/bg_image.jpg'
-                     style={{ objectFit: 'cover' }}
-                     fill/>
-                    </div> */}
-                </Link>
-            </div>
+        {/* 图片封面 */}
+        {showPageCover && (
+          <div className='md:w-5/12 overflow-hidden'>
+            <SmartLink href={post?.href}>
+              <>
+                <LazyImage
+                  priority={index === 1}
+                  alt={post?.title}
+                  src={post?.pageCoverThumbnail}
+                  className='h-56 w-full object-cover object-center group-hover:scale-110 duration-500'
+                />
+              </>
+            </SmartLink>
+          </div>
         )}
-
+      </div>
     </div>
   )
 }

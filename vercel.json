@@ -1,5 +1,46 @@
 {
   "cleanUrls": true,
   "trailingSlash": false,
-  "headers": []
+  "rewrites": [
+    {
+      "source": "/rss/feed.xml",
+      "destination": "/api/rss"
+    },
+    {
+      "source": "/rss/atom.xml",
+      "destination": "/api/rss?format=atom"
+    },
+    {
+      "source": "/rss/feed.json",
+      "destination": "/api/rss?format=json"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Strict-Transport-Security",
+          "value": "max-age=31536000; includeSubDomains; preload"
+        }
+      ]
+    },
+    {
+      "source": "/api/rss",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "s-maxage=3600, stale-while-revalidate"
+        },
+        {
+          "key": "Content-Encoding",
+          "value": "gzip"
+        },
+        {
+          "key": "Vary",
+          "value": "Accept-Encoding"
+        }
+      ]
+    }
+  ]
 }

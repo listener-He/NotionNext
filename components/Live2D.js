@@ -1,49 +1,111 @@
 /* eslint-disable no-undef */
-import BLOG from '@/blog.config'
+import { siteConfig } from '@/lib/config'
 import { useGlobal } from '@/lib/global'
-import { loadExternalResource } from '@/lib/utils'
-import React from 'react'
+import { isMobile, loadExternalResource } from '@/lib/utils'
+import { useEffect, useState, useCallback } from 'react'
+import { getDevicePerformance } from '@/components/PerformanceDetector'
 
+/**
+ * 网页动画
+ * @returns
+ */
 export default function Live2D() {
-  const { switchTheme } = useGlobal()
+  const { theme, switchTheme, isDarkMode } = useGlobal()
+  const [currentModel, setCurrentModel] = useState('')
+  const showPet = JSON.parse(siteConfig('WIDGET_PET'))
+  const petLink = siteConfig('WIDGET_PET_LINK')
+  const petLinkDuring = siteConfig('WIDGET_PET_LINK_DURING')
+  const petLinkNight = siteConfig('WIDGET_PET_LINK_NIGHT')
+  const petSwitchTheme = siteConfig('WIDGET_PET_SWITCH_THEME')
 
-  React.useEffect(() => {
-    if (BLOG.WIDGET_PET) {
-      window.addEventListener('scroll', initLive2D)
-      return () => {
-        window.removeEventListener('scroll', initLive2D)
-      }
+  // 获取设备性能信息
+  const { isLowEndDevice } = getDevicePerformance()
+
+  // 获取当前应使用的模型链接
+  const getCurrentModelLink = useCallback(() => {
+    // 直接使用isDarkMode状态而不是getCurrentThemeMode函数
+    if (isDarkMode && petLinkNight) {
+      return petLinkNight
+    } else if (!isDarkMode && petLinkDuring) {
+      return petLinkDuring
+    }
+    
+    return petLink
+  }, [petLink, petLinkDuring, petLinkNight, isDarkMode])
+
+  // 加载Live2D模型
+  const loadLive2D = useCallback((modelUrl) => {
+    if (typeof window !== 'undefined' && window.loadlive2d) {
+      window.loadlive2d('live2d', modelUrl)
     }
   }, [])
 
+  // 监听主题变化并切换模型
+  useEffect(() => {
+    const newModelLink = getCurrentModelLink()
+    if (newModelLink !== currentModel) {
+      console.log(`Live2D: Switching model to ${isDarkMode ? 'night' : 'day'} mode`, newModelLink)
+      setCurrentModel(newModelLink)
+      if (newModelLink) {
+        loadLive2D(newModelLink)
+      }
+    }
+  }, [isDarkMode, getCurrentModelLink, currentModel, loadLive2D])
+
+  useEffect(() => {
+    // 在低端设备上不加载Live2D组件
+    if (isLowEndDevice) {
+      console.log('Live2D: Skipping load on low-end device')
+      return
+    }
+
+    if (showPet && !isMobile()) {
+      // 延迟加载Live2D资源，避免阻塞主进程
+      const loadTimer = setTimeout(() => {
+        Promise.all([
+          loadExternalResource(
+            'https://cdn.jsdmirror.com/gh/stevenjoezhang/live2d-widget@latest/live2d.min.js',
+            'js'
+          )
+        ]).then(e => {
+          if (typeof window?.loadlive2d !== 'undefined') {
+            // https://github.com/xiazeyu/live2d-widget-models
+            try {
+              const initialModel = getCurrentModelLink()
+              setCurrentModel(initialModel)
+              loadlive2d('live2d', initialModel)
+            } catch (error) {
+              console.error('读取PET模型', error)
+            }
+          }
+        })
+      }, 3000) // 延迟3秒加载
+
+      // 清理函数
+      return () => clearTimeout(loadTimer)
+    }
+  }, [showPet, isLowEndDevice])
+
   function handleClick() {
-    if (BLOG.WIDGET_PET_SWITCH_THEME) {
+    if (petSwitchTheme) {
       switchTheme()
     }
   }
 
-  if (!BLOG.WIDGET_PET || !JSON.parse(BLOG.WIDGET_PET)) {
+  // 在低端设备上不渲染Live2D组件
+  if (!showPet || isLowEndDevice) {
     return <></>
   }
 
-  return <canvas id="live2d" className='cursor-pointer' width="280" height="250" onClick={handleClick} alt='切换主题' title='切换主题' />
-}
-
-/**
- * 加载宠物
- */
-function initLive2D() {
-  window.removeEventListener('scroll', initLive2D)
-  setTimeout(() => {
-    // 加载 waifu.css live2d.min.js waifu-tips.js
-    // if (screen.width >= 768) {
-    Promise.all([
-      // loadExternalResource('https://cdn.zhangxinxu.com/sp/demo/live2d/live2d/js/live2d.js', 'js')
-      loadExternalResource('https://cdn.jsdelivr.net/gh/stevenjoezhang/live2d-widget@latest/live2d.min.js', 'js')
-    ]).then((e) => {
-      // https://github.com/xiazeyu/live2d-widget-models
-      loadlive2d('live2d', BLOG.WIDGET_PET_LINK)
-    })
-    // }
-  }, 300)
+  return (
+    <canvas
+      id='live2d'
+      width='280'
+      height='250'
+      onClick={handleClick}
+      className='cursor-grab'
+      onMouseDown={e => e.target.classList.add('cursor-grabbing')}
+      onMouseUp={e => e.target.classList.remove('cursor-grabbing')}
+    />
+  )
 }

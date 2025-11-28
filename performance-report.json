@@ -1,0 +1,53 @@
+{
+  "timestamp": "2025-08-10T18:40:49.529Z",
+  "baseUrl": "http://localhost:3000",
+  "results": [
+    {
+      "url": "/",
+      "uncompressedSize": 196806,
+      "compressedSize": 52440,
+      "compressionRatio": "73.35%",
+      "timestamp": "2025-08-10T18:40:22.360Z"
+    },
+    {
+      "url": "/page/2",
+      "uncompressedSize": 92908,
+      "compressedSize": 22439,
+      "compressionRatio": "75.85%",
+      "timestamp": "2025-08-10T18:40:33.533Z"
+    },
+    {
+      "url": "/page/3",
+      "uncompressedSize": 92958,
+      "compressedSize": 21656,
+      "compressionRatio": "76.70%",
+      "timestamp": "2025-08-10T18:40:38.134Z"
+    },
+    {
+      "url": "/category/技术/page/1",
+      "uncompressedSize": 20362,
+      "compressedSize": 4966,
+      "compressionRatio": "75.61%",
+      "timestamp": "2025-08-10T18:40:42.060Z"
+    },
+    {
+      "url": "/tag/JavaScript/page/1",
+      "uncompressedSize": 20337,
+      "compressedSize": 4966,
+      "compressionRatio": "75.58%",
+      "timestamp": "2025-08-10T18:40:45.098Z"
+    },
+    {
+      "url": "/search/test/page/1",
+      "uncompressedSize": 21364,
+      "compressedSize": 5011,
+      "compressionRatio": "76.54%",
+      "timestamp": "2025-08-10T18:40:48.979Z"
+    }
+  ],
+  "summary": {
+    "totalPages": 6,
+    "successfulTests": 6,
+    "failedTests": 0
+  }
+}
