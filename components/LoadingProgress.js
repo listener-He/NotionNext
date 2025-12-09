@@ -11,18 +11,21 @@ export default function LoadingProgress() {
   const [NProgress, setNProgress] = useState(null)
   // 加载进度条
   useEffect(() => {
-    loadExternalResource(
-      'https://cdnjs.snrat.com/ajax/libs/nprogress/0.2.0/nprogress.min.js',
-      'js'
-    ).then(() => {
+    // 根据是否启用中国大陆优化选择不同的 CDN
+    const nprogressJsUrl = siteConfig('CHINA_OPTIMIZATION_ENABLED') 
+      ? siteConfig('NPROGRESS_JS_MIRROR') || 'https://cdn.bootcdn.net/ajax/libs/nprogress/0.2.0/nprogress.min.js'
+      : 'https://cdnjs.snrat.com/ajax/libs/nprogress/0.2.0/nprogress.min.js'
+      
+    const nprogressCssUrl = siteConfig('CHINA_OPTIMIZATION_ENABLED')
+      ? siteConfig('NPROGRESS_CSS_MIRROR') || 'https://cdn.bootcdn.net/ajax/libs/nprogress/0.2.0/nprogress.min.css'
+      : 'https://cdnjs.snrat.com/ajax/libs/nprogress/0.2.0/nprogress.min.css'
+
+    loadExternalResource(nprogressJsUrl, 'js').then(() => {
       if (window.NProgress) {
         setNProgress(window.NProgress)
         // 调速
         window.NProgress.settings.minimun = 0.1
-        loadExternalResource(
-          'https://cdnjs.snrat.com/ajax/libs/nprogress/0.2.0/nprogress.min.css',
-          'css'
-        )
+        loadExternalResource(nprogressCssUrl, 'css')
       }
     })
 

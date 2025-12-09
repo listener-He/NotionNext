@@ -24,9 +24,18 @@ export default function AOSAnimation() {
       return
     }
 
+    // 根据是否启用中国大陆优化选择不同的资源地址
+    const aosJsUrl = process.env.NEXT_PUBLIC_CHINA_OPTIMIZATION_ENABLED === 'true'
+      ? (process.env.NEXT_PUBLIC_AOS_JS_MIRROR || '/js/aos.js')
+      : '/js/aos.js'
+      
+    const aosCssUrl = process.env.NEXT_PUBLIC_CHINA_OPTIMIZATION_ENABLED === 'true'
+      ? (process.env.NEXT_PUBLIC_AOS_CSS_MIRROR || '/css/aos.css')
+      : '/css/aos.css'
+
     Promise.all([
-      loadExternalResource('/js/aos.js', 'js'),
-      loadExternalResource('/css/aos.css', 'css')
+      loadExternalResource(aosJsUrl, 'js'),
+      loadExternalResource(aosCssUrl, 'css')
     ]).then(() => {
       if (window.AOS) {
         // 进一步优化AOS配置以提升性能

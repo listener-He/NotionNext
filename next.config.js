@@ -359,11 +359,7 @@ const nextConfig = {
       },
     },
     // 启用并发功能
-    serverComponentsExternalPackages: ['notion-utils'],
-    // 优化字体加载
-    fontLoaders: [
-      { loader: '@next/font/google', options: { subsets: ['latin'] } },
-    ]
+    serverComponentsExternalPackages: ['notion-utils']
   },
   exportPathMap: function (
     defaultPathMap,
