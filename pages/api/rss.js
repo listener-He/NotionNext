@@ -7,8 +7,8 @@ import { promisify } from 'util'
 
 const gzipAsync = promisify(gzip)
 
-// RSS缓存时间（秒）- 30分钟
-const RSS_CACHE_TIME = 30 * 60
+// RSS缓存时间（秒）- 1小时
+const RSS_CACHE_TIME = 60 * 60
 
 /**
  * RSS API 路由
@@ -17,7 +17,7 @@ const RSS_CACHE_TIME = 30 * 60
  * 
  * 功能特性：
  * - 支持多种格式：RSS2.0 (默认)、Atom、JSON Feed
- * - 集成缓存管理器，30分钟缓存时间
+ * - 集成缓存管理器，1小时缓存时间
  * - 支持 gzip 压缩，优化传输性能
  * - 独立缓存不同格式的RSS内容
  * 
@@ -94,6 +94,8 @@ export default async function handler(req, res) {
     const shouldCompress = acceptEncoding.includes('gzip') && content.length > 1024
 
     res.setHeader('Content-Type', contentType)
+    // 设置更长的缓存时间
+    res.setHeader('Cache-Control', 'public, max-age=3600, stale-while-revalidate=59')
     
     if (shouldCompress) {
       try {

@@ -52,7 +52,7 @@ function checkFileSystemSupport() {
   return fileSystemSupported
 }
 
-export async function getServerSideProps({ params, req }) {
+export async function getServerSideProps({ params, req, res }) {
   const slug = params.slug.join('/')
   
   // 检测文件系统支持
@@ -89,6 +89,8 @@ export async function getServerSideProps({ params, req }) {
   } catch (error) {
     // 文件不存在，重定向到 API
     console.log(`[RSS] 静态文件 ${slug} 不存在，重定向到 API: ${destination}`)
+    // 设置缓存头以优化性能
+    res.setHeader('Cache-Control', 'public, max-age=3600, stale-while-revalidate=59')
     return {
       redirect: {
         destination,
