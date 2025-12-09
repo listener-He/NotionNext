@@ -77,9 +77,16 @@ export default async function handler(req, res) {
       const postWithBlocks = await getPost(fullPost.id)
       if (postWithBlocks && postWithBlocks.blockMap) {
         fullPost.blockMap = postWithBlocks.blockMap
+        // 确保 fullPost 包含 content 属性
+        if (!fullPost.content && postWithBlocks.blockMap.block) {
+          const pageBlock = postWithBlocks.blockMap.block[fullPost.id]?.value
+          if (pageBlock && pageBlock.content) {
+            fullPost.content = pageBlock.content
+          }
+        }
       }
       
-      if (fullPost.blockMap) {
+      if (fullPost.blockMap && fullPost.content) {
         // textContent = getPageContentText(fullPost, fullPost.blockMap)
         // htmlContent = getPageContentHtml(fullPost, fullPost.blockMap)
         markdownContent = getPageContentMarkdown(fullPost, fullPost.blockMap)
