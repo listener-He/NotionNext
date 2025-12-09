@@ -8,7 +8,7 @@ import { idToUuid } from 'notion-utils'
  * 微信小程序 - 获取文章详情API
  * 根据slug获取文章详细内容
  * 复用现有的数据获取和缓存逻辑
- * 
+ *
  * 路径参数：
  * - slug: 文章slug
  */
@@ -34,21 +34,21 @@ export default async function handler(req, res) {
       globalData = await getGlobalData({
         from: 'miniprogram-post-detail'
       })
-      
+
       if (!globalData || !globalData.allPages) {
         return res.status(500).json({
           success: false,
           error: 'Failed to fetch site data'
         })
       }
-      
+
       // 从allPages中查找文章（支持通过id或slug查找）
-      fullPost = globalData.allPages.find(post => 
-        post.id === id || 
+      fullPost = globalData.allPages.find(post =>
+        post.id === id ||
         post.slug === id ||
         post.slug === id.startsWith('article/') ? id : `article/${id}`
       )
-      
+
       if (!fullPost) {
         return res.status(404).json({
           success: false,
@@ -85,7 +85,7 @@ export default async function handler(req, res) {
           }
         }
       }
-      
+
       if (fullPost.blockMap && fullPost.content) {
         // textContent = getPageContentText(fullPost, fullPost.blockMap)
         // htmlContent = getPageContentHtml(fullPost, fullPost.blockMap)
@@ -98,17 +98,17 @@ export default async function handler(req, res) {
 
     // 获取相关文章（同分类或同标签）- 使用已获取的globalData
     let relatedPosts = []
-    try { 
+    try {
       if (globalData && globalData.allPages) {
         relatedPosts = globalData.allPages
-          .filter(p => 
-            p.id !== fullPost.id && 
-            p.type === 'Post' && 
+          .filter(p =>
+            p.id !== fullPost.id &&
+            p.type === 'Post' &&
             p.status === 'Published' &&
             (
               p.category === fullPost.category ||
-              (fullPost.tagItems && p.tagItems && 
-               fullPost.tagItems.some(tag1 => 
+              (fullPost.tagItems && p.tagItems &&
+               fullPost.tagItems.some(tag1 =>
                  p.tagItems.some(tag2 => tag1.name === tag2.name)
                ))
             )
@@ -156,6 +156,8 @@ export default async function handler(req, res) {
       data: postData
     }
 
+    // 设置缓存控制头，优化小程序请求性能
+    res.setHeader('Cache-Control', 's-maxage=1800, stale-while-revalidate=300')
     res.status(200).json(result)
   } catch (error) {
     if (error.message === 'Post not found') {

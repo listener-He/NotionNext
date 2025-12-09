@@ -4,7 +4,7 @@ import { getGlobalData } from '@/lib/db/getSiteData'
  * 微信小程序 - 获取文章列表API
  * 支持分页、分类筛选、标签筛选、搜索
  * 复用现有的数据获取和缓存逻辑
- * 
+ *
  * 查询参数：
  * - page: 页码（从1开始，默认1）
  * - pageSize: 每页数量（默认10，最大50）
@@ -124,6 +124,8 @@ export default async function handler(req, res) {
       }
     }
 
+    // 设置缓存控制头，优化小程序请求性能
+    res.setHeader('Cache-Control', 's-maxage=7200, stale-while-revalidate=600')
     res.status(200).json(result)
   } catch (error) {
     res.status(500).json({

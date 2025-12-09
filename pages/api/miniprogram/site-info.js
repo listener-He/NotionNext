@@ -26,11 +26,11 @@ export default async function handler(req, res) {
     }
 
         // 统计数据
-    const publishedPosts = globalData.allPages?.filter(post => 
+    const publishedPosts = globalData.allPages?.filter(post =>
       post.type === 'Post' && post.status === 'Published'
     ) || []
-    
-    const publishedPages = globalData.allPages?.filter(post => 
+
+    const publishedPages = globalData.allPages?.filter(post =>
       post.type === 'Page' && post.status === 'Published'
     ) || []
 
@@ -54,7 +54,7 @@ export default async function handler(req, res) {
     const latestPostDate = sortedPosts[sortedPosts.length - 1]?.publishDate || sortedPosts[sortedPosts.length - 1]?.date?.start_date
 
     // 计算建站天数
-    const siteDays = firstPostDate 
+    const siteDays = firstPostDate
       ? Math.floor((new Date() - new Date(firstPostDate)) / (1000 * 60 * 60 * 24))
       : 0
 
@@ -107,6 +107,8 @@ export default async function handler(req, res) {
       data: siteData
     }
 
+    // 设置缓存控制头，优化小程序请求性能
+    res.setHeader('Cache-Control', 's-maxage=7200, stale-while-revalidate=600')
     res.status(200).json(result)
   } catch (error) {
     res.status(500).json({
