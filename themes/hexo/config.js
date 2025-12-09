@@ -45,6 +45,6 @@ const CONFIG = {
   HEXO_WIDGET_DARK_MODE: true, // 夜间模式
   HEXO_WIDGET_TOC: true, // 移动端悬浮目录
 
-  HEXO_THEME_COLOR: '#928CEE' // 主题色配置（默认为 #928CEE）
+  HEXO_THEME_COLOR: '#6366f1' // 主题色配置（默认为 #928CEE，修改为更现代的靛蓝色）
 }
 export default CONFIG

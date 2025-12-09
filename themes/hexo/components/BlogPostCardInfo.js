@@ -19,7 +19,7 @@ export const BlogPostCardInfo = ({
 }) => {
   return (
     <article
-      className={`flex flex-col justify-between lg:p-6 p-4  ${showPageCover && !showPreview ? 'md:w-7/12 w-full md:max-h-60' : 'w-full'}`}>
+      className={`flex flex-col justify-between lg:p-6 p-4 ${showPageCover && !showPreview ? 'md:w-7/12 w-full md:max-h-60' : 'w-full'}`}>
       <div>
         <header>
           <h2>
@@ -61,7 +61,7 @@ export const BlogPostCardInfo = ({
 
         {/* 摘要 */}
         {(!showPreview || showSummary) && !post.results && (
-          <main className='line-clamp-2 replace my-3 text-gray-700  dark:text-gray-300 text-sm font-light leading-7'>
+          <main className='line-clamp-2 replace my-3 text-gray-700 dark:text-gray-300 text-sm font-light leading-7'>
             {post.summary}
           </main>
         )}
@@ -85,7 +85,7 @@ export const BlogPostCardInfo = ({
 
       <div>
         {/* 日期标签 */}
-        <div className='text-gray-400 justify-between flex'>
+        <div className='text-gray-400 justify-between flex flex-wrap gap-2'>
           {/* 日期 */}
           <SmartLink
             href={`/archive#${formatDateFmt(post?.publishDate, 'yyyy-MM')}`}
@@ -95,8 +95,8 @@ export const BlogPostCardInfo = ({
             {post?.publishDay || post.lastEditedDay}
           </SmartLink>
 
-          <div className='md:flex-nowrap flex-wrap md:justify-start inline-block'>
-            <div>
+          <div className='md:flex-nowrap flex-wrap md:justify-start inline-flex'>
+            <div className='flex flex-wrap gap-2'>
               {' '}
               {post.tagItems?.map(tag => (
                 <TagItemMini key={tag.name} tag={tag} />

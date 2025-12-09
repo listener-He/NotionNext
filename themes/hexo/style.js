@@ -36,7 +36,7 @@ const Style = () => {
         background-repeat: no-repeat;
         background-position: bottom center;
         background-size: 0 2px;
-        transition: background-size 150ms ease-in-out;
+        transition: background-size 100ms ease-in-out;
       }
 
       #theme-hexo .menu-link:hover {
@@ -280,6 +280,7 @@ const Style = () => {
         border-radius: 0.5rem;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         transition: all 0.3s ease;
+        will-change: transform;
       }
 
       #theme-hexo .links-page-card:hover {
@@ -319,6 +320,23 @@ const Style = () => {
         }
       }
       
+      // 为动画元素启用硬件加速
+      [data-aos] {
+        will-change: transform, opacity;
+        transform: translateZ(0);
+      }
+      
+      // 减少动画持续时间以提高响应速度
+      #theme-hexo .menu-link {
+        transition: background-size 100ms ease-in-out;
+      }
+      
+      // 优化文章卡片悬停效果
+      #theme-hexo #blog-post-card {
+        will-change: transform;
+        transform: translateZ(0);
+      }
+      
       // 针对高分辨率屏幕优化渐变
       @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
         #theme-hexo .header-cover::before {
@@ -331,6 +349,16 @@ const Style = () => {
             rgba(0, 0, 0, 0.3) 100%
           );
         }
+      }
+      
+      // 提升视觉层次感的阴影效果
+      #theme-hexo .card-shadow {
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+        transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+      }
+      
+      #theme-hexo .card-shadow:hover {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.18), 0 6px 12px rgba(0, 0, 0, 0.22);
       }
     `}</style>
   )
