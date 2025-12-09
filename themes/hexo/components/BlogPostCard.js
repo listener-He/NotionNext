@@ -58,6 +58,7 @@ const BlogPostCard = ({ index, post, showSummary, siteInfo }) => {
                   alt={post?.title}
                   src={post?.pageCoverThumbnail}
                   className='h-56 w-full object-cover object-center group-hover:scale-110 duration-500'
+                  title={post?.title} // 为图片添加title属性以提高SEO
                 />
               </>
             </SmartLink>

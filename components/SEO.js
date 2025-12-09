@@ -143,7 +143,8 @@ const SEO = props => {
 
       {/* 基础SEO元数据 */}
       <meta name='keywords' content={keywords} />
-      <meta name='description' content={description} />
+      {/* 提高描述的吸引力和相关性 */}
+      <meta name='description' content={description?.substring(0, 160)} />
       <meta name='author' content={AUTHOR} />
       <meta name='generator' content='NotionNext' />
 
@@ -154,7 +155,7 @@ const SEO = props => {
       {/* Open Graph 元数据 */}
       <meta property='og:locale' content={lang} />
       <meta property='og:title' content={title} />
-      <meta property='og:description' content={description} />
+      <meta property='og:description' content={description?.substring(0, 200)} />
       <meta property='og:url' content={url} />
       <meta property='og:image' content={image} />
       <meta property='og:image:width' content='1200' />
@@ -168,9 +169,14 @@ const SEO = props => {
       <meta name='twitter:site' content={siteConfig('TWITTER_SITE', '@NotionNext')} />
       <meta name='twitter:creator' content={siteConfig('TWITTER_CREATOR', '@NotionNext')} />
       <meta name='twitter:title' content={title} />
-      <meta name='twitter:description' content={description} />
+      <meta name='twitter:description' content={description?.substring(0, 200)} />
       <meta name='twitter:image' content={image} />
       <meta name='twitter:image:alt' content={title} />
+
+      {/* 微信分享优化 */}
+      <meta property='weixin:title' content={title} />
+      <meta property='weixin:description' content={description?.substring(0, 160)} />
+      <meta property='weixin:image' content={image} />
 
       <link rel='icon' href={BLOG_FAVICON} />
 
@@ -242,7 +248,7 @@ const generateStructuredData = (meta, siteInfo, url, image, author) => {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
     name: siteInfo?.title,
-    description: siteInfo?.description,
+    description: siteInfo?.description?.substring(0, 160),
     url: siteConfig('LINK'),
     author: {
       '@type': 'Person',
@@ -264,7 +270,7 @@ const generateStructuredData = (meta, siteInfo, url, image, author) => {
       '@context': 'https://schema.org',
       '@type': 'BlogPosting',
       headline: meta.title,
-      description: meta.description,
+      description: meta.description?.substring(0, 160),
       image: image,
       url: url,
       datePublished: meta.publishDay,
@@ -286,7 +292,8 @@ const generateStructuredData = (meta, siteInfo, url, image, author) => {
         '@id': url
       },
       keywords: meta.tags?.join(', '),
-      articleSection: meta.category
+      articleSection: meta.category,
+      wordCount: meta.wordCount
     }
   }
 
@@ -401,7 +408,10 @@ const getSEOMeta = (props, router, locale) => {
         slug: post?.slug,
         image: post?.pageCoverThumbnail || `${siteInfo?.pageCover}`,
         category: post?.category?.[0],
-        tags: post?.tags
+        tags: post?.tags,
+        wordCount: post?.wordCount,
+        publishDay: post?.publishDay,
+        lastEditedDay: post?.lastEditedDay
       }
   }
 }
