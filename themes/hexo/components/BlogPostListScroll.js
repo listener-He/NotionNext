@@ -80,7 +80,7 @@ const BlogPostListScroll = ({
     return () => {
       window.removeEventListener('scroll', throttleScroll)
     }
-  })
+  }, []) // 添加空依赖数组以避免重复绑定
 
   const targetRef = useRef(null)
   const { locale } = useGlobal()
@@ -104,9 +104,7 @@ const BlogPostListScroll = ({
 
         <div>
           <div
-            onClick={() => {
-              handleGetMore()
-            }}
+            onClick={handleGetMore}
             className='w-full my-4 py-4 text-center cursor-pointer rounded-xl dark:text-gray-200'>
             {' '}
             {hasMore ? locale.COMMON.MORE : `${locale.COMMON.NO_MORE}`}{' '}

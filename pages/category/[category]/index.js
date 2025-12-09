@@ -21,9 +21,9 @@ export async function getStaticProps({ params: { category }, locale }) {
   props.posts = props.allPages?.filter(
     page => page.type === 'Post' && page.status === 'Published'
   )
-  // 处理过滤
+  // 处理过滤 - 精确匹配分类名称
   props.posts = props.posts.filter(
-    post => post && post.category && post.category.includes(category)
+    post => post && post.category && post.category === category
   )
   // 处理文章页数
   props.postCount = props.posts.length

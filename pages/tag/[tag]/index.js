@@ -20,7 +20,8 @@ export async function getStaticProps({ params: { tag }, locale }) {
   // 过滤状态
   props.posts = props.allPages
     ?.filter(page => page.type === 'Post' && page.status === 'Published')
-    .filter(post => post && post?.tags && post?.tags.includes(tag))
+    // 修复标签筛选逻辑，检查tagItems数组中是否存在匹配的标签名称
+    .filter(post => post && post?.tagItems && post?.tagItems.some(t => t.name === tag))
 
   // 处理文章页数
   props.postCount = props.posts.length

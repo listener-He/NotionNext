@@ -21,7 +21,8 @@ export async function getStaticProps({ params: { category, page } }) {
   // 过滤状态类型
   props.posts = props.allPages
     ?.filter(page => page.type === 'Post' && page.status === 'Published')
-    .filter(post => post && post.category && post.category.includes(category))
+    // 精确匹配分类名称
+    .filter(post => post && post.category && post.category === category)
   // 处理文章页数
   props.postCount = props.posts.length
   const POSTS_PER_PAGE = siteConfig('POSTS_PER_PAGE', 12, props?.NOTION_CONFIG)
@@ -52,27 +53,33 @@ export async function getStaticProps({ params: { category, page } }) {
 }
 
 export async function getStaticPaths() {
-  const from = 'category-paths'
-  const { categoryOptions, allPages, NOTION_CONFIG } = await getGlobalData({
-    from
-  })
+  const from = 'category-page-paths'
+  const { categoryOptions, allPages } = await getGlobalData({ from })
+  
   const paths = []
-
+  
+  // 为每个分类生成分页路径
   categoryOptions?.forEach(category => {
-    // 过滤状态类型
+    // 过滤该分类下的文章
     const categoryPosts = allPages
       ?.filter(page => page.type === 'Post' && page.status === 'Published')
-      .filter(
-        post => post && post.category && post.category.includes(category.name)
-      )
-    // 处理文章页数
-    const postCount = categoryPosts.length
+      .filter(post => post && post.category && post.category === category.name)
+    
+    // 计算该分类的文章数量
+    const postCount = categoryPosts?.length || 0
     const totalPages = Math.ceil(
-      postCount / siteConfig('POSTS_PER_PAGE', null, NOTION_CONFIG)
+      postCount / siteConfig('POSTS_PER_PAGE', 12)
     )
+    
+    // 为每一页生成路径
     if (totalPages > 1) {
-      for (let i = 1; i <= totalPages; i++) {
-        paths.push({ params: { category: category.name, page: '' + i } })
+      for (let i = 2; i <= totalPages; i++) {
+        paths.push({ 
+          params: { 
+            category: category.name, 
+            page: '' + i 
+          } 
+        })
       }
     }
   })
