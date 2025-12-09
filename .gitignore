@@ -6,7 +6,11 @@
 .pnp.js
 .idea
 .next
-
+.yarn
+/.yarn.lock
+/.next/cache
+.yarn/**
+.yarnrc.yml
 # testing
 /coverage
 
