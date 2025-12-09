@@ -25,7 +25,7 @@ const PaginationNumber = ({ page, totalPage }) => {
       <SmartLink
         href={{
           pathname:
-            pageInt === 2
+            currentPage === 2
               ? `${pagePrefix}/`
               : `${pagePrefix}/page/${currentPage - 1}`,
           query: router.query.s ? { s: router.query.s } : {}
