@@ -17,23 +17,16 @@ const BlogPostListPage = ({ page = 1, posts = [], postCount, siteInfo }) => {
   const POSTS_PER_PAGE = siteConfig('POSTS_PER_PAGE', null, NOTION_CONFIG)
   const totalPage = Math.ceil(postCount / POSTS_PER_PAGE)
   const showPagination = postCount >= POSTS_PER_PAGE
-  
-  // 计算当前页的文章
-  const currentPagePosts = posts.slice(
-    POSTS_PER_PAGE * (page - 1),
-    POSTS_PER_PAGE * page
-  )
-  
-  if (!currentPagePosts || currentPagePosts.length === 0 || page > totalPage) {
+  if (!posts || posts.length === 0 || page > totalPage) {
     return <BlogPostListEmpty />
   } else {
     return (
       <div id='container' className='w-full'>
         {/* 文章列表 */}
         <div className='space-y-6 px-2'>
-          {currentPagePosts?.map(post => (
+          {posts?.map(post => (
             <BlogPostCard
-              index={currentPagePosts.indexOf(post)}
+              index={posts.indexOf(post)}
               key={post.id}
               post={post}
               siteInfo={siteInfo}

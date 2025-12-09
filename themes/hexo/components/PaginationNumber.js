@@ -25,7 +25,7 @@ const PaginationNumber = ({ page, totalPage }) => {
       <SmartLink
         href={{
           pathname:
-            currentPage === 2
+            pageInt === 2
               ? `${pagePrefix}/`
               : `${pagePrefix}/page/${currentPage - 1}`,
           query: router.query.s ? { s: router.query.s } : {}
@@ -44,7 +44,7 @@ const PaginationNumber = ({ page, totalPage }) => {
           query: router.query.s ? { s: router.query.s } : {}
         }}
         rel='next'
-        className={`${+showNext ? 'block' : 'invisible'} pb-0.5 hover:bg-indigo-400 hover:text-white w-6 text-center cursor-pointer duration-200 hover:font-bold`}>
+        className={`${showNext ? 'block' : 'invisible'} pb-0.5 hover:bg-indigo-400 hover:text-white w-6 text-center cursor-pointer duration-200 hover:font-bold`}>
         <i className='fas fa-angle-right' />
       </SmartLink>
     </div>

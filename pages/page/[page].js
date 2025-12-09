@@ -48,7 +48,7 @@ export async function getStaticProps({ params: { page }, locale }) {
     POSTS_PER_PAGE * (page - 1),
     POSTS_PER_PAGE * page
   )
-  props.page = page
+  props.page = parseInt(page)
 
   // 处理预览 - 性能优化：使用配置化的预览限制
   if (siteConfig('POST_LIST_PREVIEW', false, props?.NOTION_CONFIG)) {
