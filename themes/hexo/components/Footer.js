@@ -48,10 +48,13 @@ const Footer = ({ title }) => {
           <LazyImage src="https://www.blogsclub.org/badge/blog.hehouhui.cn"
                      height={60} />
         </a>
-        <a href="https://www.travellings.cn/go.html" target="_blank" rel="noopener" title="开往-友链接力">
+        <a href="https://blogs.quest" target="_blank" title="空间穿梭-随机访问BlogsClub成员博客">
+          <LazyImage src="https://www.blogsclub.org/images/shuttle_1.png" width={40} height={16}/>
+        </a>
+        <a href="https://www.travellings.cn/go.html" target="_blank" title="开往-友链接力">
           <LazyImage src="https://www.travellings.cn/assets/logo.gif" alt="开往-友链接力" width={120} height={16} />
         </a>
-        <a href="https://www.foreverblog.cn/go.html" target="_blank" rel="noopener">
+        <a href="https://www.foreverblog.cn/go.html" target="_blank">
           <LazyImage src="https://foreverblog.cn/assets/logo/logo_en_default.png" alt="十年之约·虫洞" height={16}
                      width={100} />
         </a>
