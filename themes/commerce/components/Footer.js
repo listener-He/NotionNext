@@ -14,11 +14,6 @@ import CanvasEmail from '@/components/CanvasEmail'
  * @returns
  */
 const Footer = props => {
-  const d = new Date()
-  const currentYear = d.getFullYear()
-  const since = siteConfig('SINCE')
-  const copyrightDate =
-    parseInt(since) < currentYear ? since + '-' + currentYear : currentYear
   const { categoryOptions, customMenu } = props
 
   const CONTACT_EMAIL = siteConfig('CONTACT_EMAIL')
