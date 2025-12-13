@@ -11,7 +11,7 @@
 /.yarn.lock
 /.next/cache
 .yarn/**
-.yarnrc.yml
+
 # testing
 /coverage
 
