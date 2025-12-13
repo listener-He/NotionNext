@@ -7,23 +7,23 @@ import { promisify } from 'util'
 
 const gzipAsync = promisify(gzip)
 
-// RSS缓存时间（秒）- 1小时
-const RSS_CACHE_TIME = 60 * 60
+// RSS缓存时间（秒）- 2小时
+const RSS_CACHE_TIME = 60 * 120
 
 /**
  * RSS API 路由
  * 在 Vercel 等无服务器环境中动态生成 RSS 内容
  * 复用原有的 RSS 生成逻辑
- * 
+ *
  * 功能特性：
  * - 支持多种格式：RSS2.0 (默认)、Atom、JSON Feed
  * - 集成缓存管理器，1小时缓存时间
  * - 支持 gzip 压缩，优化传输性能
  * - 独立缓存不同格式的RSS内容
- * 
+ *
  * 查询参数：
  * - format: 'rss2' | 'atom' | 'json' (可选，默认为 rss2)
- * 
+ *
  * 示例：
  * - GET /api/rss - 返回 RSS2.0 格式
  * - GET /api/rss?format=atom - 返回 Atom 格式
@@ -35,7 +35,7 @@ export default async function handler(req, res) {
     const { format } = req.query
     const cacheKey = CACHE_KEY_RSS(format || 'rss2');
     let contentType
-    
+
     switch (format) {
       case 'atom':
         contentType = 'application/atom+xml; charset=utf-8'
@@ -55,17 +55,17 @@ export default async function handler(req, res) {
       RSS_CACHE_TIME,
       async () => {
         console.log(`[RSS API] 🔄 生成新的RSS内容: ${format || 'rss2'}`)
-        
+
         // 获取站点数据
         const props = await getGlobalData({ from: 'rss-api' })
-        
+
         if (!props || !props.latestPosts) {
           throw new Error('Failed to fetch site data')
         }
 
         // 使用原有的 RSS 生成逻辑
         const feed = await generateRssFeed(props)
-        
+
         if (!feed) {
           throw new Error('Failed to generate RSS feed')
         }
@@ -81,10 +81,10 @@ export default async function handler(req, res) {
         }
       }
     )
-    
+
     const duration = Date.now() - startTime
     console.log(`[RSS API] ⚡ RSS响应完成: ${format || 'rss2'}, 耗时: ${duration}ms`)
-    
+
     if (!content) {
       return res.status(500).json({ error: 'Failed to generate RSS feed' })
     }
@@ -96,7 +96,7 @@ export default async function handler(req, res) {
     res.setHeader('Content-Type', contentType)
     // 设置更长的缓存时间
     res.setHeader('Cache-Control', 'public, max-age=3600, stale-while-revalidate=59')
-    
+
     if (shouldCompress) {
       try {
         const compressed = await gzipAsync(Buffer.from(content, 'utf8'))
