@@ -84,6 +84,14 @@ export async function getStaticProps({ params: { prefix, slug }, locale }) {
     await processPostData(props, from)
   }
   
+  // 确保 prev 和 next 不是 undefined，防止序列化错误
+  if (!props.prev) {
+    props.prev = null
+  }
+  if (!props.next) {
+    props.next = null
+  }
+  
   // 计算文章缓存时间
   let revalidate = process.env.EXPORT
     ? undefined
