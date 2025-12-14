@@ -4,6 +4,7 @@ import { siteConfig } from '@/lib/config'
 import { getGlobalData } from '@/lib/db/getSiteData'
 import { extractLangId, extractLangPrefix } from '@/lib/utils/pageId'
 import { getServerSideSitemap } from 'next-sitemap'
+import { generateSiteAllUrl } from '@/lib/sitemap'
 
 export const getServerSideProps = async ctx => {
   let fields = []
@@ -12,7 +13,7 @@ export const getServerSideProps = async ctx => {
   for (let index = 0; index < siteIds.length; index++) {
     const siteId = siteIds[index]
     const id = extractLangId(siteId)
-    const locale = extractLangPrefix(siteId)
+    //const locale = extractLangPrefix(siteId)
     // 第一个id站点默认语言
     const siteData = await getGlobalData({
       pageId: id,
@@ -23,7 +24,7 @@ export const getServerSideProps = async ctx => {
       siteData?.siteInfo?.link,
       siteData.NOTION_CONFIG
     )
-    const localeFields = generateLocalesSitemap(link, siteData.allPages, locale)
+    const localeFields = generateSiteAllUrl(link, new Date(), siteData.allPages)
     fields = fields.concat(localeFields)
   }
 
@@ -32,7 +33,7 @@ export const getServerSideProps = async ctx => {
   // 缓存
   ctx.res.setHeader(
     'Cache-Control',
-    'public, max-age=3600, stale-while-revalidate=59'
+    'public, max-age=7200, stale-while-revalidate=59'
   )
   return getServerSideSitemap(ctx, fields)
 }
