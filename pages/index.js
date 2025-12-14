@@ -8,6 +8,7 @@ import { DynamicLayout } from '@/themes/theme'
 import { generateRedirectJson } from '@/lib/redirect'
 import { checkDataFromAlgolia } from '@/lib/plugins/algolia'
 import { getPreviewConfig } from '@/lib/performance.config'
+import { generateSitemap } from '@/lib/sitemap'
 
 /**
  * 首页布局
@@ -49,7 +50,7 @@ export async function getStaticProps(req) {
   // 预览文章内容 - 性能优化：使用配置化的预览限制
   if (siteConfig('POST_LIST_PREVIEW', false, props?.NOTION_CONFIG)) {
     const previewConfig = getPreviewConfig('index')
-    
+
     // 限制预览文章数量，避免首页数据过大
     const maxPreviewPosts = Math.min(props.posts.length, previewConfig.maxPosts)
     for (let i = 0; i < maxPreviewPosts; i++) {
@@ -68,7 +69,7 @@ export async function getStaticProps(req) {
   // 生成Feed订阅
   generateRss(props)
   // 生成
-  generateSitemapXml(props)
+  generateSitemap(props)
   // 检查数据是否需要从algolia删除
   checkDataFromAlgolia(props)
   if (siteConfig('UUID_REDIRECT', false, props?.NOTION_CONFIG)) {
