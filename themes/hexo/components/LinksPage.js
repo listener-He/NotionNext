@@ -443,7 +443,7 @@ const LinksPage = ({ post }) => {
                 </li>
                 <li className='flex items-start'>
                   <span className='text-blue-500 mr-2 mt-1'>•</span>
-                  <div>
+                  <div className='break-all'>
                     <span className='text-gray-700 dark:text-gray-300 text-base'>头像地址：</span>
                     <span className='text-gray-900 dark:text-white text-base font-medium'>https://www.hehouhui.cn/images/avatar.jpeg</span>
                   </div>
@@ -451,7 +451,7 @@ const LinksPage = ({ post }) => {
               </ul>
             </div>
           </div>
-
+          
           <div className='mt-8 pt-6 border-t border-gray-200 dark:border-gray-700 text-center'>
             <p className='text-gray-600 dark:text-gray-400 text-base'>
               如果您满足这些条件，并愿意与本站建立友链，请在评论区留下贵站信息。我期待与您建立友好的互联网连接！如果暂时不符合条件，我会通过邮件或留言通知您，并期待未来有机会交朋友！
