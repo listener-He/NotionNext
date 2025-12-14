@@ -1,5 +1,3 @@
-import { siteConfig } from '@/lib/config'
-import { useGlobal } from '@/lib/global'
 import Link from 'next/link'
 import LazyImage from '@/components/LazyImage'
 import Comment from '@/components/Comment'
@@ -14,7 +12,7 @@ const CACHE_DURATION = 3 * 60 * 60 * 1000 // 3小时
 const tagColorMap = new Map()
 const tagColors = [
   'bg-gradient-to-r from-blue-500 to-blue-600 text-white',
-  'bg-gradient-to-r from-purple-500 to-purple-600 text-white', 
+  'bg-gradient-to-r from-purple-500 to-purple-600 text-white',
   'bg-gradient-to-r from-pink-500 to-pink-600 text-white',
   'bg-gradient-to-r from-green-500 to-green-600 text-white',
   'bg-gradient-to-r from-yellow-500 to-yellow-600 text-white',
@@ -36,12 +34,12 @@ const getTagColor = (tagName) => {
   if (tagColorMap.has(tagName)) {
     return tagColorMap.get(tagName)
   }
-  
+
   const hash = tagName.split('').reduce((a, b) => {
     a = ((a << 5) - a) + b.charCodeAt(0)
     return a & a
   }, 0)
-  
+
   const colorClass = tagColors[Math.abs(hash) % tagColors.length]
   tagColorMap.set(tagName, colorClass)
   return colorClass
@@ -78,28 +76,28 @@ const extractLinksFromNotionPage = (post) => {
     if (block.type === 'collection_view' || block.type === 'collection_view_page') {
       const collectionId = block.collection_id
       const collectionData = collection?.[collectionId]?.value
-      
+
       if (collectionData && collectionData.schema) {
         const schema = collectionData.schema
-        
+
         // 查找collection中的所有记录
         Object.values(blocks).forEach(recordWrapper => {
           const record = recordWrapper?.value
           if (!record) return
-          
+
           // 检查是否是collection的子项
           if (record.parent_id === collectionId && record.type === 'page') {
             const properties = record.properties || {}
             const link = {
               id: record.id
             }
-            
+
             // 从属性中解析字段
             Object.entries(schema).forEach(([schemaKey, schemaValue]) => {
               const fieldName = schemaValue.name?.toLowerCase() || ''
               const fieldType = schemaValue.type
               const propertyValue = properties[schemaKey]
-              
+
               if (propertyValue) {
                 try {
                   switch (fieldType) {
@@ -114,7 +112,7 @@ const extractLinksFromNotionPage = (post) => {
                         }
                       }
                       break
-                      
+
                     case 'select':
                       if (fieldName.includes('tag') || fieldName.includes('标签') || fieldName.includes('分类')) {
                         if (propertyValue[0]) {
@@ -122,7 +120,7 @@ const extractLinksFromNotionPage = (post) => {
                         }
                       }
                       break
-                      
+
                     case 'rich_text':
                     case 'text':
                       const textContent = getTextContent(propertyValue)
@@ -152,13 +150,13 @@ const extractLinksFromNotionPage = (post) => {
                 }
               }
             })
-            
+
             // 头像降级逻辑：优先使用avatar属性，否则使用内容图片
             if (!link.avatar) {
-              const pageBlocks = Object.values(blocks).filter(b => 
+              const pageBlocks = Object.values(blocks).filter(b =>
                 b?.value?.parent_id === record.id && b?.value?.type === 'image'
               )
-              
+
               if (pageBlocks.length > 0) {
                 const imageBlock = pageBlocks[0].value
                 if (imageBlock.properties?.source) {
@@ -166,19 +164,19 @@ const extractLinksFromNotionPage = (post) => {
                 }
               }
             }
-            
+
             // 从页面封面中提取背景图
             if (record.format?.page_cover) {
               link.cover = record.format.page_cover
             }
-            
+
             // 确保必要字段存在
             if (link.name && link.url) {
               // 设置默认头像
               if (!link.avatar) {
                 link.avatar = '/avatar.png'
               }
-              
+
               // 校验头像URL格式
               if (link.avatar && !link.avatar.startsWith('http')) {
                 if (link.avatar.startsWith('/')) {
@@ -187,27 +185,27 @@ const extractLinksFromNotionPage = (post) => {
                   link.avatar = 'https://' + link.avatar
                 }
               }
-              
+
               // 设置描述优先级
               link.description = link.summary || link.description || '暂无介绍'
-              
+
               // 确保tags数组存在
               if (!link.tags) {
                 link.tags = []
               }
-              
+
               // 设置背景图优先级
               if (link.cover && !link.cover.includes('notion-static.com/page-cover')) {
                 link.backgroundImage = link.cover
               } else if (link.avatar) {
                 link.backgroundImage = link.avatar
               }
-              
+
               // 校验URL格式
               if (!link.url.startsWith('http')) {
                 link.url = 'https://' + link.url
               }
-              
+
               // 兜底处理：额外检查所有标签是否包含分隔符，如果有则重新分割
               if (link.tags && link.tags.length > 0) {
                 const processedTags = []
@@ -222,7 +220,7 @@ const extractLinksFromNotionPage = (post) => {
                 })
                 link.tags = [...new Set(processedTags)] // 去重
               }
-              
+
               links.push(link)
             }
           }
@@ -234,7 +232,7 @@ const extractLinksFromNotionPage = (post) => {
   // 更新缓存
   linksCache = links
   cacheTimestamp = Date.now()
-  
+
   return links
 }
 
@@ -257,7 +255,7 @@ const LinksPage = ({ post }) => {
             <div className='absolute inset-0 flex items-center justify-center'>
               <div className='w-32 h-32 bg-gradient-to-r from-blue-400/20 to-purple-400/20 rounded-full blur-3xl'></div>
             </div>
-            
+
             <h1 className='relative text-3xl sm:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 dark:from-white dark:to-gray-200 bg-clip-text text-transparent mb-3 sm:mb-4'>
               友情链接
             </h1>
@@ -266,7 +264,7 @@ const LinksPage = ({ post }) => {
             </p>
           </div>
         </div>
-        
+
         {links.length === 0 ? (
           <div className='text-center py-20'>
             <div className='text-gray-500 dark:text-gray-400 text-xl mb-4'>
@@ -290,14 +288,14 @@ const LinksPage = ({ post }) => {
                  >
                    {/* 背景装饰层 */}
                    <div className='absolute inset-0 bg-gradient-to-br from-blue-50/50 via-purple-50/30 to-pink-50/50 dark:from-blue-900/20 dark:via-purple-900/10 dark:to-pink-900/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500' />
-                   
+
                    {/* 卡片内容 - 左右布局 */}
                    <div className='relative flex items-stretch min-h-[96px]'>
                      {/* 右侧内容区域背景层 - 完整覆盖 */}
                      <div className='absolute inset-0 rounded-2xl overflow-hidden'
                           style={{
-                            background: link.backgroundImage ? `url(${link.backgroundImage})` : 
-                                       link.avatar ? `url(${link.avatar})` : 
+                            background: link.backgroundImage ? `url(${link.backgroundImage})` :
+                                       link.avatar ? `url(${link.avatar})` :
                                        'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                             backgroundSize: 'cover',
                             backgroundPosition: 'center',
@@ -335,7 +333,7 @@ const LinksPage = ({ post }) => {
                          <div className='absolute inset-0 bg-gradient-to-br from-blue-400 via-purple-500 to-pink-500' />
                        )}
                      </div>
- 
+
                      {/* 右侧内容区域 - 6.5份宽度 */}
                      <div className='flex-1 relative z-10 p-4 flex flex-col justify-center min-w-0'>
                        <div className='relative z-10'>
@@ -343,12 +341,12 @@ const LinksPage = ({ post }) => {
                        <h3 className='text-lg font-bold text-gray-900 dark:text-white mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300 line-clamp-1'>
                          {link.name}
                        </h3>
-                       
+
                        {/* 描述 */}
                        <p className='text-gray-600 dark:text-gray-400 text-xs leading-relaxed line-clamp-1 group-hover:text-gray-700 dark:group-hover:text-gray-300 transition-colors duration-300 mb-3'>
                          {link.summary || link.description}
                        </p>
-                       
+
                        {/* 标签区域 - 单行显示 */}
                        {link.tags && link.tags.length > 0 && (
                          <div className='flex items-center gap-1.5 overflow-hidden'>
@@ -378,13 +376,13 @@ const LinksPage = ({ post }) => {
             ))}
           </div>
         )}
-        
+
         {/* 评论区域 */}
         <div className='mt-12 sm:mt-16 lg:mt-20 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-lg p-4 sm:p-6 lg:p-8'>
           <Comment frontMatter={post} />
         </div>
       </div>
-      
+
       {/* CSS动画定义 */}
       <style jsx>{`
         @keyframes fadeInUp {

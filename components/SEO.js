@@ -146,7 +146,7 @@ const SEO = props => {
       {/* 提高描述的吸引力和相关性 */}
       <meta name='description' content={description?.substring(0, 160)} />
       <meta name='author' content={AUTHOR} />
-      <meta name='generator' content='NotionNext' />
+      <meta name='generator' content='HeHui,HehouHui' />
 
       {/* 语言和地区 */}
       <meta httpEquiv='content-language' content={siteConfig('LANG')} />
@@ -166,8 +166,8 @@ const SEO = props => {
 
       {/* Twitter Card 元数据 */}
       <meta name='twitter:card' content='summary_large_image' />
-      <meta name='twitter:site' content={siteConfig('TWITTER_SITE', '@NotionNext')} />
-      <meta name='twitter:creator' content={siteConfig('TWITTER_CREATOR', '@NotionNext')} />
+      <meta name='twitter:site' content={url} />
+      <meta name='twitter:creator' content={AUTHOR} />
       <meta name='twitter:title' content={title} />
       <meta name='twitter:description' content={description?.substring(0, 200)} />
       <meta name='twitter:image' content={image} />
@@ -206,8 +206,8 @@ const SEO = props => {
           <meta property='article:modified_time' content={meta.lastEditedDay} />
           <meta property='article:author' content={AUTHOR} />
           <meta property='article:section' content={category} />
-          <meta property='article:tag' content={keywords} />
-          <meta property='article:publisher' content={FACEBOOK_PAGE} />
+          <meta property='article:tag' content={meta.tags ? keywords + "," + meta.tags.join(',') : keywords} />
+          <meta property='article:publisher' content={FACEBOOK_PAGE ? FACEBOOK_PAGE : url} />
         </>
       )}
 
