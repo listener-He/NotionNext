@@ -66,6 +66,10 @@ const Footer = ({ title }) => {
           <LazyImage src="https://www.boyouquan.com/assets/images/sites/logo/planet-shuttle-dark.svg" alt="博友圈" height={20}
                      width={100} />
         </a>
+        <a href="https://boke.lu" target="_blank">
+          <LazyImage src="https://boke.lu/logo/横板新图标透明背景.png" alt="博客录" height={16}
+                     width={100} />
+        </a>
       </div>
     </footer>
   )
