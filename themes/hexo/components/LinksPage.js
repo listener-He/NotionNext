@@ -266,69 +266,6 @@ const LinksPage = ({ post }) => {
           </div>
         </div>
 
-        {/* 申请条件和规范说明 */}
-        <div className='bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 mb-8 border border-gray-150 dark:border-gray-700'>
-          <h2 className='text-2xl font-bold text-gray-800 dark:text-white mb-4'>申请友链</h2>
-
-          <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
-            {/* 申请条件 */}
-            <div>
-              <h3 className='text-lg font-semibold text-gray-700 dark:text-gray-300 mb-3 flex items-center'>
-                <svg className='w-5 h-5 mr-2' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
-                  <path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z'></path>
-                </svg>
-                申请条件
-              </h3>
-              <ul className='space-y-2 text-gray-600 dark:text-gray-400'>
-                <li className='flex items-start'>
-                  <span className='text-blue-500 mr-2'>•</span>
-                  <span>网站内容符合中国大陆法律法规</span>
-                </li>
-                <li className='flex items-start'>
-                  <span className='text-blue-500 mr-2'>•</span>
-                  <span>原创内容占比较高，有自己的独特见解</span>
-                </li>
-                <li className='flex items-start'>
-                  <span className='text-blue-500 mr-2'>•</span>
-                  <span>网站稳定运行，有一定的更新频率</span>
-                </li>
-                <li className='flex items-start'>
-                  <span className='text-blue-500 mr-2'>•</span>
-                  <span>网站设计美观，内容质量较高</span>
-                </li>
-              </ul>
-            </div>
-
-            {/* 申请规范 */}
-            <div>
-              <h3 className='text-lg font-semibold text-gray-700 dark:text-gray-300 mb-3 flex items-center'>
-                <svg className='w-5 h-5 mr-2' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
-                  <path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z'></path>
-                </svg>
-                申请规范
-              </h3>
-              <ul className='space-y-2 text-gray-600 dark:text-gray-400'>
-                <li className='flex items-start'>
-                  <span className='text-blue-500 mr-2'>•</span>
-                  <span>网站名称：{siteConfig('TITLE') || siteConfig('AUTHOR') || 'Honesty'}</span>
-                </li>
-                <li className='flex items-start'>
-                  <span className='text-blue-500 mr-2'>•</span>
-                  <span>网站链接：{siteConfig('LINK') || 'https://www.hehouhui.cn'}</span>
-                </li>
-                <li className='flex items-start'>
-                  <span className='text-blue-500 mr-2'>•</span>
-                  <span>网站描述：{siteConfig('BIO') || '请提供一句简洁的介绍'}</span>
-                </li>
-                <li className='flex items-start'>
-                  <span className='text-blue-500 mr-2'>•</span>
-                  <span>头像地址：https://www.hehouhui.cn/images/avatar.jpeg </span>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
         {links.length === 0 ? (
           <div className='text-center py-20'>
             <div className='text-gray-500 dark:text-gray-400 text-xl mb-4'>
@@ -358,7 +295,7 @@ const LinksPage = ({ post }) => {
                      {/* 右侧内容区域背景层 - 完整覆盖 */}
                      <div className='absolute inset-0 rounded-2xl overflow-hidden'
                           style={{
-                            background: link.backgroundImage ? `url(${link.backgroundImage})` :
+                            background: link.cover ? `url(${link.cover})` :
                                        link.avatar ? `url(${link.avatar})` :
                                        'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                             backgroundSize: 'cover',
@@ -440,6 +377,91 @@ const LinksPage = ({ post }) => {
             ))}
           </div>
         )}
+
+        {/* 申请条件和规范说明 */}
+        <div className='bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 mt-12 mb-8 border border-gray-150 dark:border-gray-700'>
+          <h2 className='text-2xl font-bold text-gray-800 dark:text-white mb-6 pb-2 border-b border-gray-200 dark:border-gray-700'>申请友链</h2>
+
+          <div className='grid grid-cols-1 md:grid-cols-2 gap-8'>
+            {/* 申请条件 */}
+            <div>
+              <h3 className='text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4 flex items-center'>
+                <svg className='w-6 h-6 mr-2 text-blue-500' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                  <path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z'></path>
+                </svg>
+                申请条件
+              </h3>
+              <ul className='space-y-3'>
+                <li className='flex items-start'>
+                  <span className='text-blue-500 mr-2 mt-1'>•</span>
+                  <span className='text-gray-700 dark:text-gray-300 text-base leading-relaxed'>网站内容符合中国大陆法律法规</span>
+                </li>
+                <li className='flex items-start'>
+                  <span className='text-blue-500 mr-2 mt-1'>•</span>
+                  <span className='text-gray-700 dark:text-gray-300 text-base leading-relaxed'>原创内容占比较高，有自己的独特见解</span>
+                </li>
+                <li className='flex items-start'>
+                  <span className='text-blue-500 mr-2 mt-1'>•</span>
+                  <span className='text-gray-700 dark:text-gray-300 text-base leading-relaxed'>网站稳定运行，有一定的更新频率</span>
+                </li>
+                <li className='flex items-start'>
+                  <span className='text-blue-500 mr-2 mt-1'>•</span>
+                  <span className='text-gray-700 dark:text-gray-300 text-base leading-relaxed'>网站设计美观，内容质量较高</span>
+                </li>
+                <li className='flex items-start'>
+                  <span className='text-blue-500 mr-2 mt-1'>•</span>
+                  <span className='text-gray-700 dark:text-gray-300 text-base leading-relaxed'>如果您满足这些条件，并愿意与本站建立友链，请在评论区留下贵站信息。我期待与您建立友好的互联网连接！如果暂时不符合条件，我会通过邮件或留言通知您，并期待未来有机会交朋友！</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* 申请规范 */}
+            <div>
+              <h3 className='text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4 flex items-center'>
+                <svg className='w-6 h-6 mr-2 text-blue-500' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                  <path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z'></path>
+                </svg>
+                申请规范
+              </h3>
+              <ul className='space-y-3'>
+                <li className='flex items-start'>
+                  <span className='text-blue-500 mr-2 mt-1'>•</span>
+                  <div>
+                    <span className='text-gray-700 dark:text-gray-300 text-base'>网站名称：</span>
+                    <span className='text-gray-900 dark:text-white text-base font-medium'>{siteConfig('TITLE') || siteConfig('AUTHOR') || 'Honesty'}</span>
+                  </div>
+                </li>
+                <li className='flex items-start'>
+                  <span className='text-blue-500 mr-2 mt-1'>•</span>
+                  <div>
+                    <span className='text-gray-700 dark:text-gray-300 text-base'>网站链接：</span>
+                    <span className='text-gray-900 dark:text-white text-base font-medium'>{siteConfig('LINK') || 'https://www.hehouhui.cn'}</span>
+                  </div>
+                </li>
+                <li className='flex items-start'>
+                  <span className='text-blue-500 mr-2 mt-1'>•</span>
+                  <div>
+                    <span className='text-gray-700 dark:text-gray-300 text-base'>网站描述：</span>
+                    <span className='text-gray-900 dark:text-white text-base font-medium'>{siteConfig('BIO') || '请提供一句简洁的介绍'}</span>
+                  </div>
+                </li>
+                <li className='flex items-start'>
+                  <span className='text-blue-500 mr-2 mt-1'>•</span>
+                  <div>
+                    <span className='text-gray-700 dark:text-gray-300 text-base'>头像地址：</span>
+                    <span className='text-gray-900 dark:text-white text-base font-medium'>https://www.hehouhui.cn/images/avatar.jpeg</span>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div className='mt-8 pt-6 border-t border-gray-200 dark:border-gray-700 text-center'>
+            <p className='text-gray-600 dark:text-gray-400 text-base'>
+              请在下方评论区按照上述规范提交友链申请，我会尽快审核并与您互换链接。
+            </p>
+          </div>
+        </div>
 
         {/* 评论区域 */}
         <div className='mt-12 sm:mt-16 lg:mt-20 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-lg p-4 sm:p-6 lg:p-8'>
