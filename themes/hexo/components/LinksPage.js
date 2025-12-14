@@ -408,10 +408,6 @@ const LinksPage = ({ post }) => {
                   <span className='text-blue-500 mr-2 mt-1'>•</span>
                   <span className='text-gray-700 dark:text-gray-300 text-base leading-relaxed'>网站设计美观，内容质量较高</span>
                 </li>
-                <li className='flex items-start'>
-                  <span className='text-blue-500 mr-2 mt-1'>•</span>
-                  <span className='text-gray-700 dark:text-gray-300 text-base leading-relaxed'>如果您满足这些条件，并愿意与本站建立友链，请在评论区留下贵站信息。我期待与您建立友好的互联网连接！如果暂时不符合条件，我会通过邮件或留言通知您，并期待未来有机会交朋友！</span>
-                </li>
               </ul>
             </div>
 
@@ -458,6 +454,7 @@ const LinksPage = ({ post }) => {
 
           <div className='mt-8 pt-6 border-t border-gray-200 dark:border-gray-700 text-center'>
             <p className='text-gray-600 dark:text-gray-400 text-base'>
+              如果您满足这些条件，并愿意与本站建立友链，请在评论区留下贵站信息。我期待与您建立友好的互联网连接！如果暂时不符合条件，我会通过邮件或留言通知您，并期待未来有机会交朋友！
               请在下方评论区按照上述规范提交友链申请，我会尽快审核并与您互换链接。
             </p>
           </div>
