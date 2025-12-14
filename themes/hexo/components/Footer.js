@@ -40,13 +40,13 @@ const Footer = ({ title }) => {
       </span>
       <br />
       <div className='flex justify-center items-center gap-4 flex-wrap'>
-        <a href="https://blogscn.fun/" title="BLOGS·CN" target="_blank">
+        <a href="https://blogscn.fun/random.html" title="BLOGS·CN" target="_blank">
           <LazyImage src="https://photo.xiangming.site/img/blogscn.png" alt="本站已加入BLOGS·CN"
                      width={60} height={16} />
         </a>
         <a href="https://www.blogsclub.org/blog/523.html" target="_blank">
           <LazyImage src="https://www.blogsclub.org/badge/blog.hehouhui.cn"
-                     height={60} />
+                     height={60} width={130}/>
         </a>
         <a href="https://blogs.quest" target="_blank" title="空间穿梭-随机访问BlogsClub成员博客">
           <LazyImage src="https://www.blogsclub.org/images/shuttle_1.png" width={40} height={16}/>
@@ -57,6 +57,10 @@ const Footer = ({ title }) => {
         <a href="https://www.foreverblog.cn/go.html" target="_blank">
           <LazyImage src="https://foreverblog.cn/assets/logo/logo_en_default.png" alt="十年之约·虫洞" height={16}
                      width={100} />
+        </a>
+        <a href="https://storeweb.cn/member/o/2336" target="_blank">
+          <LazyImage src="https://upload.storeweb.cn/image/logo.png" alt="个站商店" height={16}
+                     width={16} />
         </a>
       </div>
     </footer>
