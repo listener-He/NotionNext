@@ -2,6 +2,7 @@ import Link from 'next/link'
 import LazyImage from '@/components/LazyImage'
 import Comment from '@/components/Comment'
 import { getTextContent } from 'notion-utils'
+import { siteConfig } from '@/lib/config'
 
 // 友情链接缓存
 let linksCache = null
@@ -262,6 +263,69 @@ const LinksPage = ({ post }) => {
             <p className='relative text-gray-600 dark:text-gray-300 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed px-4'>
               发现更多优秀的博客和网站，一起分享知识与创意。
             </p>
+          </div>
+        </div>
+
+        {/* 申请条件和规范说明 */}
+        <div className='bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 mb-8 border border-gray-150 dark:border-gray-700'>
+          <h2 className='text-2xl font-bold text-gray-800 dark:text-white mb-4'>申请友链</h2>
+
+          <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+            {/* 申请条件 */}
+            <div>
+              <h3 className='text-lg font-semibold text-gray-700 dark:text-gray-300 mb-3 flex items-center'>
+                <svg className='w-5 h-5 mr-2' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                  <path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z'></path>
+                </svg>
+                申请条件
+              </h3>
+              <ul className='space-y-2 text-gray-600 dark:text-gray-400'>
+                <li className='flex items-start'>
+                  <span className='text-blue-500 mr-2'>•</span>
+                  <span>网站内容符合中国大陆法律法规</span>
+                </li>
+                <li className='flex items-start'>
+                  <span className='text-blue-500 mr-2'>•</span>
+                  <span>原创内容占比较高，有自己的独特见解</span>
+                </li>
+                <li className='flex items-start'>
+                  <span className='text-blue-500 mr-2'>•</span>
+                  <span>网站稳定运行，有一定的更新频率</span>
+                </li>
+                <li className='flex items-start'>
+                  <span className='text-blue-500 mr-2'>•</span>
+                  <span>网站设计美观，内容质量较高</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* 申请规范 */}
+            <div>
+              <h3 className='text-lg font-semibold text-gray-700 dark:text-gray-300 mb-3 flex items-center'>
+                <svg className='w-5 h-5 mr-2' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                  <path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z'></path>
+                </svg>
+                申请规范
+              </h3>
+              <ul className='space-y-2 text-gray-600 dark:text-gray-400'>
+                <li className='flex items-start'>
+                  <span className='text-blue-500 mr-2'>•</span>
+                  <span>网站名称：{siteConfig('TITLE') || siteConfig('AUTHOR') || 'Honesty'}</span>
+                </li>
+                <li className='flex items-start'>
+                  <span className='text-blue-500 mr-2'>•</span>
+                  <span>网站链接：{siteConfig('LINK') || 'https://www.hehouhui.cn'}</span>
+                </li>
+                <li className='flex items-start'>
+                  <span className='text-blue-500 mr-2'>•</span>
+                  <span>网站描述：{siteConfig('BIO') || '请提供一句简洁的介绍'}</span>
+                </li>
+                <li className='flex items-start'>
+                  <span className='text-blue-500 mr-2'>•</span>
+                  <span>头像地址：https://www.hehouhui.cn/images/avatar.jpeg </span>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
 
