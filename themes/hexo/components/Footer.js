@@ -62,6 +62,10 @@ const Footer = ({ title }) => {
           <LazyImage src="https://upload.storeweb.cn/image/logo.png" alt="个站商店" height={16}
                      width={16} />
         </a>
+        <a href="https://www.boyouquan.com/planet-shuttle" target="_blank">
+          <LazyImage src="https://www.boyouquan.com/assets/images/sites/logo/planet-shuttle-dark.svg" alt="博友圈" height={20}
+                     width={100} />
+        </a>
       </div>
     </footer>
   )
