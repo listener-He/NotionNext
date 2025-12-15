@@ -103,7 +103,7 @@ const nextConfig = {
   },
 
   // 构建优化
-  swcMinify: true,
+  // Next.js 15 默认开启 SWC 优化，无需显式配置
   modularizeImports: {
     '@heroicons/react/24/outline': {
       transform: '@heroicons/react/24/outline/{{member}}'
@@ -325,8 +325,13 @@ const nextConfig = {
     if (!dev && !isServer) {
       config.optimization = {
         ...config.optimization,
+        usedExports: true,
+        runtimeChunk: 'single',
         splitChunks: {
           chunks: 'all',
+          minSize: 20000,
+          maxInitialRequests: 25,
+          automaticNameDelimiter: '-',
           cacheGroups: {
             vendor: {
               test: /[\\/]node_modules[\\/]/,
@@ -345,10 +350,7 @@ const nextConfig = {
       }
     }
 
-    // Enable source maps in development mode
-    if (dev || process.env.NODE_ENV_API === 'development') {
-      config.devtool = 'eval-source-map'
-    }
+    // 保持默认 devtool，避免开发模式性能退化
 
     // 优化模块解析
     config.resolve.modules = [
@@ -362,18 +364,10 @@ const nextConfig = {
     scrollRestoration: true,
     // 性能优化实验性功能
     optimizePackageImports: ['@heroicons/react', 'lodash'],
-    // 启用Turbo模式（如果可用）
-    turbo: {
-      rules: {
-        '*.svg': {
-          loaders: ['@svgr/webpack'],
-          as: '*.js',
-        },
-      },
-    },
     // 启用并发功能
-    serverComponentsExternalPackages: ['notion-utils']
   },
+  // Next.js 15: serverComponentsExternalPackages 移至顶层配置
+  serverExternalPackages: ['notion-utils'],
   exportPathMap: function (
     defaultPathMap,
     { dev, dir, outDir, distDir, buildId }
