@@ -360,3 +360,34 @@ img {
 .text-secondary {
   color: var(--text-secondary);
 }
+
+.glass-nav {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  background-color: color-mix(in oklab, var(--surface) 85%, transparent);
+  border: 1px solid color-mix(in oklab, var(--surface-border) 85%, transparent);
+}
+.dark .glass-nav {
+  background-color: color-mix(in oklab, var(--surface) 80%, transparent);
+  border: 1px solid color-mix(in oklab, var(--surface-border) 80%, transparent);
+}
+.glass-sidebar {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  background-color: color-mix(in oklab, var(--surface) 70%, transparent);
+  border: 1px solid color-mix(in oklab, var(--surface-border) 70%, transparent);
+}
+.dark .glass-sidebar {
+  background-color: color-mix(in oklab, var(--surface) 65%, transparent);
+  border: 1px solid color-mix(in oklab, var(--surface-border) 65%, transparent);
+}
+.glass-container {
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  background-color: color-mix(in oklab, var(--surface) 55%, transparent);
+  border: 1px solid color-mix(in oklab, var(--surface-border) 55%, transparent);
+}
+.dark .glass-container {
+  background-color: color-mix(in oklab, var(--surface) 50%, transparent);
+  border: 1px solid color-mix(in oklab, var(--surface-border) 50%, transparent);
+}

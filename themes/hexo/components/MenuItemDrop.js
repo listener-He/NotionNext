@@ -21,7 +21,7 @@ export const MenuItemDrop = ({ link }) => {
         <SmartLink
           href={link?.href}
           target={link?.target}
-          className=' menu-link pl-2 pr-4 no-underline tracking-widest pb-1'>
+          className=' menu-link pl-2 pr-4 no-underline tracking-widest pb-1 text-secondary hover:text-black dark:hover:text-white'>
           {link?.icon && <i className={link?.icon} />} {link?.name}
           {hasSubMenu && <i className='px-2 fa fa-angle-down'></i>}
         </SmartLink>
@@ -29,7 +29,7 @@ export const MenuItemDrop = ({ link }) => {
 
       {hasSubMenu && (
         <>
-          <div className='cursor-pointer menu-link pl-2 pr-4 no-underline tracking-widest pb-1 relative'>
+          <div className='cursor-pointer menu-link pl-2 pr-4 no-underline tracking-widest pb-1 relative text-secondary hover:text-black dark:hover:text-white'>
             {link?.icon && <i className={link?.icon} />} {link?.name}
             <i
               className={`px-2 fa fa-angle-down duration-300  ${show ? 'rotate-180' : 'rotate-0'}`}></i>
@@ -44,13 +44,12 @@ export const MenuItemDrop = ({ link }) => {
       {/* 子菜单 */}
       {hasSubMenu && (
         <ul
-          style={{ backdropFilter: 'blur(3px)' }}
-          className={`${show ? 'visible opacity-100 top-12 pointer-events-auto' : 'invisible opacity-0 top-20 pointer-events-none'} drop-shadow-md overflow-hidden rounded-md text-black dark:text-white bg-white dark:bg-black transition-all duration-300 z-20 absolute block  `}>
+          className={`${show ? 'visible opacity-100 top-12 pointer-events-auto' : 'invisible opacity-0 top-20 pointer-events-none'} overflow-hidden rounded-md transition-all duration-300 z-20 absolute block glass-layer-strong text-primary dark:text-gray-200`}>
           {link.subMenus.map((sLink, index) => {
             return (
               <li
                 key={index}
-                className='cursor-pointer hover:bg-indigo-500 hover:text-white tracking-widest transition-all duration-200 dark:border-gray-800  py-1 pr-6 pl-3'>
+                className='cursor-pointer tracking-widest transition-all duration-200 py-1 pr-6 pl-3 hover:bg-black/80 hover:text-white dark:hover:bg-white/10'>
                 <SmartLink href={sLink.href} target={link?.target}>
                   <span className='text-sm text-nowrap font-extralight'>
                     {link?.icon && <i className={sLink?.icon}> &nbsp; </i>}

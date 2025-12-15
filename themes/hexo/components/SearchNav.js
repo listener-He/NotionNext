@@ -31,20 +31,13 @@ export default function SearchNav(props) {
             <div id="category-list" className="duration-200 flex flex-wrap mx-8">
                 {categoryOptions?.map(category => {
                   return (
-                      <SmartLink
+                    <SmartLink
                           key={category.name}
                           href={`/category/${category.name}`}
-                          passHref
-                          legacyBehavior>
-                          <div
-                              className={
-                                  ' duration-300 dark:hover:text-white rounded-lg px-5 cursor-pointer py-2 hover:bg-indigo-400 hover:text-white'
-                              }
-                          >
-                              <i className="mr-4 fas fa-folder" />
-                              {category.name}({category.count})
-                          </div>
-                      </SmartLink>
+                          className='duration-300 rounded-lg px-5 cursor-pointer py-2 hover:bg-black/80 hover:text-white text-secondary dark:text-gray-300'>
+                          <i className="mr-4 fas fa-folder" />
+                          {category.name}({category.count})
+                    </SmartLink>
                   )
                 })}
             </div>
