@@ -68,8 +68,9 @@ const SearchInput = props => {
       <input
         ref={searchInputRef}
         type="text"
+        aria-label={locale.SEARCH.ARTICLES}
         className={
-          'outline-none w-full text-sm pl-5 rounded-lg transition focus:shadow-lg dark:text-gray-300 font-light leading-10 text-black bg-gray-100 dark:bg-gray-500'
+          'outline-none w-full text-sm pl-5 rounded-lg transition focus:shadow-lg focus:ring-2 focus:ring-indigo-500 dark:text-gray-300 font-light leading-10 text-black bg-gray-100 dark:bg-gray-500'
         }
         onKeyUp={handleKeyUp}
         onCompositionStart={lockSearchInput}

@@ -41,7 +41,7 @@ const Header = props => {
 
   // 监听滚动
   useEffect(() => {
-    window.addEventListener('scroll', topNavStyleHandler)
+    window.addEventListener('scroll', topNavStyleHandler, { passive: true })
     router.events.on('routeChangeComplete', topNavStyleHandler)
     topNavStyleHandler()
     return () => {
@@ -58,35 +58,40 @@ const Header = props => {
       const nav = document.querySelector('#sticky-nav')
       // 首页和文章页会有头图
       const header = document.querySelector('#header')
+      const navHeight = nav?.clientHeight || 0
+      const headerHeight = header?.clientHeight || 0
       // 导航栏和头图是否重叠
       const scrollInHeader =
-        header && (scrollS < 10 || scrollS < header?.clientHeight - 50) // 透明导航条的条件
+        header &&
+        (scrollS < 10 || scrollS < headerHeight - navHeight - 50) // 透明导航条的条件
 
       // const textWhite = header && scrollInHeader
 
       if (scrollInHeader) {
-        nav && nav.classList.replace('bg-white', 'bg-none')
+        nav && nav.classList.replace('bg-white', 'bg-transparent')
         nav && nav.classList.replace('border', 'border-transparent')
         nav && nav.classList.replace('drop-shadow-md', 'shadow-none')
-        nav && nav.classList.replace('dark:bg-hexo-black-gray', 'transparent')
+        nav && nav.classList.replace('dark:bg-hexo-black-gray', 'dark:bg-transparent')
       } else {
-        nav && nav.classList.replace('bg-none', 'bg-white')
+        nav && nav.classList.replace('bg-transparent', 'bg-white')
         nav && nav.classList.replace('border-transparent', 'border')
         nav && nav.classList.replace('shadow-none', 'drop-shadow-md')
-        nav && nav.classList.replace('transparent', 'dark:bg-hexo-black-gray')
+        nav && nav.classList.replace('dark:bg-transparent', 'dark:bg-hexo-black-gray')
       }
 
       if (scrollInHeader) {
-        nav && nav.classList.replace('text-black', 'text-white')
+        nav && nav.classList.remove('text-black')
+        nav && nav.classList.add('text-white')
       } else {
-        nav && nav.classList.replace('text-white', 'text-black')
+        nav && nav.classList.remove('text-white')
+        nav && nav.classList.add('text-black')
       }
 
       // 导航栏不在头图里，且页面向下滚动一定程度 隐藏导航栏
       const showNav =
         scrollS <= windowTop ||
         scrollS < 5 ||
-        (header && scrollS <= header.clientHeight + 100)
+        (header && scrollS <= headerHeight + 100)
       if (!showNav) {
         nav && nav.classList.replace('top-0', '-top-20')
         windowTop = scrollS
@@ -149,9 +154,13 @@ const Header = props => {
       {/* 导航栏 */}
       <div
         id='sticky-nav'
-        style={{ backdropFilter: 'blur(8px)' }}
+        style={{
+          backdropFilter: 'blur(8px)',
+          WebkitBackdropFilter: 'blur(8px)',
+          willChange: 'top'
+        }}
         className={
-          'top-0 duration-300 transition-all shadow-none fixed bg-none dark:text-gray-200 text-black w-full z-20 transform border-transparent'
+          'top-0 duration-300 transition-all shadow-none fixed bg-transparent dark:bg-transparent dark:text-gray-200 text-black w-full z-20 transform border-transparent'
         }>
         <div className='w-full flex justify-between items-center px-4 py-2 glass-nav'>
           <div className='flex'>
@@ -166,7 +175,11 @@ const Header = props => {
             </div>
             <div
               onClick={toggleMenuOpen}
-              className='w-8 justify-center items-center h-8 cursor-pointer flex lg:hidden'>
+              className='w-8 justify-center items-center h-8 cursor-pointer flex lg:hidden'
+              role='button'
+              aria-label='Toggle menu'
+              aria-expanded={isOpen}
+              aria-controls='mobile-sidebar'>
               {isOpen ? (
                 <i className='fas fa-times' />
               ) : (
@@ -180,7 +193,7 @@ const Header = props => {
       </div>
 
       {/* 折叠侧边栏 */}
-      <SideBarDrawer isOpen={isOpen} onClose={toggleSideBarClose}>
+      <SideBarDrawer id='mobile-sidebar' isOpen={isOpen} onClose={toggleSideBarClose}>
         <SideBar {...props} />
       </SideBarDrawer>
     </div>

@@ -17,12 +17,20 @@ export default function ButtonRandomPost(props) {
     const randomPost = latestPosts[randomIndex]
     router.push(`${siteConfig('SUB_PATH', '')}/${randomPost?.slug}`)
   }
+  function handleKeyDown(e) {
+    if (e.key === 'Enter' || e.key === ' ') {
+      handleClick()
+    }
+  }
 
   return (
     <div
-      title={locale.MENU.WALK_AROUND}
-      className='cursor-pointer hover:bg-black hover:bg-opacity-10 rounded-full w-10 h-10 flex justify-center items-center duration-200 transition-all'
-      onClick={handleClick}>
+      role='button'
+      tabIndex={0}
+      aria-label={locale.MENU.WALK_AROUND}
+      className='cursor-pointer a11y-focus tap-target hover:bg-black hover:bg-opacity-10 focus:ring-2 focus:ring-indigo-500 rounded-full w-11 h-11 flex justify-center items-center duration-200 transition-all ease-out'
+      onClick={handleClick}
+      onKeyDown={handleKeyDown}>
       <i className='fa-solid fa-podcast'></i>
     </div>
   )
