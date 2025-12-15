@@ -9,7 +9,6 @@ import { generateSiteAllUrl } from '@/lib/sitemap'
 export const getServerSideProps = async ctx => {
   let fields = []
   const siteIds = BLOG.NOTION_PAGE_ID.split(',')
-
   for (let index = 0; index < siteIds.length; index++) {
     const siteId = siteIds[index]
     const id = extractLangId(siteId)
