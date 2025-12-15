@@ -54,10 +54,10 @@ const Footer = ({ title }) => {
         <a href="https://www.travellings.cn/go.html" target="_blank" title="开往-友链接力">
           <LazyImage src="https://www.travellings.cn/assets/logo.gif" alt="开往-友链接力" width={120} height={16} />
         </a>
-        <a href="https://www.foreverblog.cn/go.html" target="_blank">
-          <LazyImage src="https://foreverblog.cn/assets/logo/logo_en_default.png" alt="十年之约·虫洞" height={16}
-                     width={100} />
-        </a>
+        {/*<a href="https://www.foreverblog.cn/go.html" target="_blank">*/}
+        {/*  <LazyImage src="https://foreverblog.cn/assets/logo/logo_en_default.png" alt="十年之约·虫洞" height={16}*/}
+        {/*             width={100} />*/}
+        {/*</a>*/}
         <a href="https://storeweb.cn/member/o/2336" target="_blank">
           <LazyImage src="https://upload.storeweb.cn/image/logo.png" alt="个站商店" height={16}
                      width={16} />
