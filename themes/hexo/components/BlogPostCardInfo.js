@@ -20,7 +20,7 @@ export const BlogPostCardInfo = ({
 }) => {
   return (
     <article
-      className={`flex flex-col justify-between lg:p-6 p-4 ${showPageCover && !showPreview ? 'md:w-7/12 w-full md:max-h-60' : 'w-full'}`}>
+      className={`flex flex-col justify-between lg:p-6 p-4 ${showPageCover && !showPreview ? 'md:w-7/12 w-full' : 'w-full'}`}>
       <div>
         <header className="relative rounded-xl px-4 py-3">
           <div className={`flex ${showPreview ? 'justify-center' : 'justify-start'} items-start`}>
@@ -113,11 +113,14 @@ const SummaryCollapsible = ({ text }) => {
   const ref = useRef(null)
   const [expanded, setExpanded] = useState(false)
   const [overflow, setOverflow] = useState(false)
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => setMounted(true), [])
   useEffect(() => {
     const el = ref.current
     if (!el) return
     const max = 112
-    if (el.scrollHeight > max + 4) {
+    const roughLen = (text || '').replace(/\s+/g, '').length
+    if (roughLen > 140 || el.scrollHeight > max + 4) {
       setOverflow(true)
     } else {
       setOverflow(false)
@@ -130,16 +133,14 @@ const SummaryCollapsible = ({ text }) => {
         className={`${expanded ? 'max-h-none' : 'max-h-[112px]'} overflow-hidden relative text-primary dark:text-gray-300 text-[15px] font-normal leading-7`}>
         {text}
         {!expanded && overflow && (
-          <div className='absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-white/85 to-transparent dark:from-gray-900/70'></div>
+          <div className='absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-white/85 to-transparent dark:from-gray-900/70 pointer-events-none'></div>
         )}
       </div>
-      {overflow && (
-        <button
-          onClick={() => setExpanded(!expanded)}
-          className='mt-2 text-xs px-sm py-xs rounded-full bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 transition-all duration-300 ease-standard'>
-          {expanded ? '收起' : '展开全文'}
-        </button>
-      )}
+      <button
+        onClick={() => setExpanded(!expanded)}
+        className={`${mounted && (overflow || ((text || '').length > 40)) ? 'inline-block' : 'hidden'} mt-2 text-xs px-sm py-xs rounded-full border border-black/10 dark:border-white/15 bg-white/60 dark:bg-white/10 text-primary dark:text-gray-200 hover:bg-gradient-to-r hover:from-primary hover:to-blue-dark hover:text-white shadow-sm transition-all duration-300 ease-standard`}>
+        {expanded ? '收起' : '展开全文'}
+      </button>
     </div>
   )
 }
