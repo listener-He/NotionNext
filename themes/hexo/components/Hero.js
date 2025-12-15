@@ -130,7 +130,7 @@ const Hero = props => {
             id='header-cover'
             alt={siteInfo?.title}
             src={siteInfo?.pageCover}
-            className={`header-cover w-full ${headerHeight} object-cover object-center ${backgroundFixed ? 'fixed' : ''}`}
+            className={`header-cover w-full ${headerHeight} object-cover object-center ${backgroundFixed ? 'fixed' : ''} dark:hidden`}
           />
         )}
       </header>
@@ -174,7 +174,7 @@ const Hero = props => {
         id='header-cover'
         alt={siteInfo?.title}
         src={siteInfo?.pageCover}
-        className={`header-cover w-full  ${headerHeight} object-cover object-center ${backgroundFixed ? 'fixed' : ''}`}
+        className={`header-cover w-full  ${headerHeight} object-cover object-center ${backgroundFixed ? 'fixed' : ''} dark:hidden`}
       />
     </header>
   )

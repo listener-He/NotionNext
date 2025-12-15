@@ -130,17 +130,17 @@ const SummaryCollapsible = ({ text }) => {
     <div className='my-4'>
       <div
         ref={ref}
-        className={`${expanded ? 'max-h-none' : 'max-h-[112px]'} overflow-hidden relative text-primary dark:text-gray-300 text-[15px] font-normal leading-7`}>
+        className={`${expanded ? 'line-clamp-none' : 'line-clamp-2'} relative text-primary dark:text-gray-300 text-[15px] font-normal leading-7`}>
         {text}
         {!expanded && overflow && (
           <div className='absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-white/85 to-transparent dark:from-gray-900/70 pointer-events-none'></div>
         )}
+        <button
+          onClick={() => setExpanded(!expanded)}
+          className={`${mounted && (overflow || ((text || '').length > 40)) ? 'inline-block' : 'hidden'} absolute bottom-1 right-2 z-10 text-xs px-sm py-xs rounded-full border border-black/10 dark:border-white/15 bg-white/80 dark:bg-white/10 text-primary dark:text-gray-200 hover:bg-gradient-to-r hover:from-primary hover:to-blue-dark hover:text-white shadow-sm transition-all duration-300 ease-standard`}>
+          {expanded ? '收起' : '展开全文'}
+        </button>
       </div>
-      <button
-        onClick={() => setExpanded(!expanded)}
-        className={`${mounted && (overflow || ((text || '').length > 40)) ? 'inline-block' : 'hidden'} mt-2 text-xs px-sm py-xs rounded-full border border-black/10 dark:border-white/15 bg-white/60 dark:bg-white/10 text-primary dark:text-gray-200 hover:bg-gradient-to-r hover:from-primary hover:to-blue-dark hover:text-white shadow-sm transition-all duration-300 ease-standard`}>
-        {expanded ? '收起' : '展开全文'}
-      </button>
     </div>
   )
 }

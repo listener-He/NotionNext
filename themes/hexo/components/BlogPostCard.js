@@ -37,7 +37,7 @@ const BlogPostCard = ({ index, post, showSummary, siteInfo }) => {
           'data-aos-anchor-placement': 'top-bottom'
         })}
         id='blog-post-card'
-        className={`group w-full flex justify-between md:flex-row flex-col-reverse ${siteConfig('HEXO_POST_LIST_IMG_CROSSOVER', null, CONFIG) && index % 2 === 1 ? 'md:flex-row-reverse' : ''}
+        className={`group w-full flex justify-between items-stretch md:flex-row flex-col-reverse ${siteConfig('HEXO_POST_LIST_IMG_CROSSOVER', null, CONFIG) && index % 2 === 1 ? 'md:flex-row-reverse' : ''}
                     overflow-hidden rounded-2xl backdrop-blur-md bg-white/60 dark:bg-gray-900/50 border border-black/5 dark:border-white/10 shadow-md`}>
         {/* 文字内容 */}
         <BlogPostCardInfo
@@ -56,14 +56,14 @@ const BlogPostCard = ({ index, post, showSummary, siteInfo }) => {
 
         {/* 图片封面 */}
         {showPageCover && (
-          <div className='md:w-5/12 overflow-hidden'>
+          <div className='md:w-5/12 overflow-hidden h-full'>
             <SmartLink href={post?.href}>
               <>
                 <LazyImage
                   priority={index === 1}
                   alt={post?.title}
                   src={post?.pageCoverThumbnail}
-                  className='h-56 w-full object-cover object-center group-hover:scale-[1.02] duration-300 ease-standard'
+                  className='h-full w-full object-cover object-center group-hover:scale-[1.02] duration-300 ease-standard rounded-2xl'
                   title={post?.title} // 为图片添加title属性以提高SEO
                 />
               </>
