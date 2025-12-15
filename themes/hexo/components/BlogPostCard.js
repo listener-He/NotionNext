@@ -49,8 +49,8 @@ const BlogPostCard = ({ index, post, showSummary, siteInfo }) => {
             showPageCover &&
             siteConfig('HEXO_POST_LIST_IMG_CROSSOVER', null, CONFIG) &&
             index % 2 === 1
-              ? 'left'
-              : 'right'
+              ? 'right'
+              : 'left'
           }
         />
 

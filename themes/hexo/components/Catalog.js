@@ -67,18 +67,18 @@ const Catalog = ({ toc }) => {
   }
 
   return (
-    <div className='px-3 py-1'>
+    <div className='px-sm py-xs'>
       <div className='w-full'>
         <i className='mr-1 fas fa-stream' />
         {locale.COMMON.TABLE_OF_CONTENTS}
       </div>
-      <div className='w-full py-3'>
+      <div className='w-full py-sm'>
         <Progress />
       </div>
       <div
         className='overflow-y-auto max-h-36 lg:max-h-96 overscroll-none scroll-hidden'
         ref={tRef}>
-        <nav className='h-full  text-black'>
+        <nav className='h-full text-black'>
           {toc.map(tocItem => {
             const id = uuidToId(tocItem.id)
             tocIds.push(id)
@@ -86,7 +86,7 @@ const Catalog = ({ toc }) => {
               <a
                 key={id}
                 href={`#${id}`}
-                className={`${activeSection === id && 'dark:border-white border-indigo-800 text-indigo-800 font-bold'} hover:font-semibold border-l pl-4 block hover:text-indigo-800 border-lduration-300 transform dark:text-indigo-400 dark:border-indigo-400
+                className={`${activeSection === id && 'dark:border-white border-indigo-800 text-indigo-800 font-bold'} hover:font-semibold border-l pl-4 block hover:text-indigo-800 duration-300 ease-standard transform dark:text-indigo-400 dark:border-indigo-400
         notion-table-of-contents-item-indent-level-${tocItem.indentLevel} catalog-item `}>
                 <span
                   style={{

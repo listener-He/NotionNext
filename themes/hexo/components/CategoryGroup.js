@@ -5,7 +5,7 @@ const CategoryGroup = ({ currentCategory, categories }) => {
     return <></>
   }
   return <>
-    <div id='category-list' className='dark:border-gray-600 flex flex-wrap  mx-4'>
+    <div id='category-list' className='dark:border-gray-600 flex flex-wrap mx-md'>
       {categories.map(category => {
         const selected = currentCategory === category.name
         return (
@@ -14,9 +14,9 @@ const CategoryGroup = ({ currentCategory, categories }) => {
             href={`/category/${category.name}`}
             passHref
             className={(selected
-              ? 'hover:text-white dark:hover:text-white bg-indigo-600 text-white '
-              : 'dark:text-gray-400 text-gray-500 hover:text-white dark:hover:text-white hover:bg-indigo-600') +
-              '  text-sm w-full items-center duration-300 px-2  cursor-pointer py-1 font-light'}>
+              ? 'hover:text-white dark:hover:text-white bg-primary text-white '
+              : 'dark:text-gray-400 text-gray-600 hover:text-white dark:hover:text-white hover:bg-primary hover:text-white') +
+              ' text-sm w-full items-center duration-300 ease-standard px-sm cursor-pointer py-xs font-light rounded-md'}>
 
             <div> <i className={`mr-2 fas ${selected ? 'fa-folder-open' : 'fa-folder'}`} />{category.name}({category.count})</div>
 

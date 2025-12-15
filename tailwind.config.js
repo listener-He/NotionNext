@@ -63,8 +63,8 @@ module.exports = {
           7: '#D1D5DB',
           8: '#E5E7EB'
         },
-        primary: '#3758F9',
-        'blue-dark': '#1B44C8',
+        primary: '#1E3A8A',
+        'blue-dark': '#1E40AF',
         secondary: '#13C296',
         'body-color': '#637381',
         'body-secondary': '#8899A8',
@@ -128,7 +128,7 @@ module.exports = {
         },
         '.bg-day-gradient': {
           backgroundImage:
-            'linear-gradient(135deg, #f3f8ff 0%, #e8fff5 50%, #fff1f5 100%)'
+            'linear-gradient(135deg, #f5f9ff 0%, #eef7ff 50%, #ffffff 100%)'
         },
         '.bg-night-gradient': {
           backgroundImage:

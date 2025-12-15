@@ -4,6 +4,7 @@ import TwikooCommentCount from '@/components/TwikooCommentCount'
 import { siteConfig } from '@/lib/config'
 import { formatDateFmt } from '@/lib/utils/formatDate'
 import SmartLink from '@/components/SmartLink'
+import { useEffect, useRef, useState } from 'react'
 
 /**
  * 博客列表的文字内容
@@ -82,11 +83,8 @@ export const BlogPostCardInfo = ({
           )}
         </header>
 
-        {/* 摘要 */}
         {(!showPreview || showSummary) && !post.results && (
-          <main className='line-clamp-3 whitespace-normal replace my-4 text-primary dark:text-gray-300 text-[15px] font-normal leading-7'>
-            {post.summary}
-          </main>
+          <SummaryCollapsible text={post.summary} />
         )}
 
         {/* 搜索结果 */}
@@ -108,5 +106,40 @@ export const BlogPostCardInfo = ({
 
       {/* 底部日期区块移除，避免重复显示 */}
     </article>
+  )
+}
+
+const SummaryCollapsible = ({ text }) => {
+  const ref = useRef(null)
+  const [expanded, setExpanded] = useState(false)
+  const [overflow, setOverflow] = useState(false)
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const max = 112
+    if (el.scrollHeight > max + 4) {
+      setOverflow(true)
+    } else {
+      setOverflow(false)
+    }
+  }, [text])
+  return (
+    <div className='my-4'>
+      <div
+        ref={ref}
+        className={`${expanded ? 'max-h-none' : 'max-h-[112px]'} overflow-hidden relative text-primary dark:text-gray-300 text-[15px] font-normal leading-7`}>
+        {text}
+        {!expanded && overflow && (
+          <div className='absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-white/85 to-transparent dark:from-gray-900/70'></div>
+        )}
+      </div>
+      {overflow && (
+        <button
+          onClick={() => setExpanded(!expanded)}
+          className='mt-2 text-xs px-sm py-xs rounded-full bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 transition-all duration-300 ease-standard'>
+          {expanded ? '收起' : '展开全文'}
+        </button>
+      )}
+    </div>
   )
 }

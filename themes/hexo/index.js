@@ -249,12 +249,12 @@ const LayoutSearch = props => {
  * @param {*} props
  * @returns
  */
-const LayoutArchive = props => {
+  const LayoutArchive = props => {
   const { archivePosts } = props
   return (
     <div className='pt-8'>
       <Card className='w-full'>
-        <div className='mb-10 pb-20 bg-white md:p-12 p-3 min-h-full dark:bg-hexo-black-gray'>
+        <div className='mb-md pb-xl bg-day-gradient dark:bg-night-gradient md:p-12 p-sm min-h-full rounded-xl'>
           {Object.keys(archivePosts).map(archiveTitle => (
             <BlogPostArchive
               key={archiveTitle}
