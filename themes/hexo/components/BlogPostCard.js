@@ -26,7 +26,7 @@ const BlogPostCard = ({ index, post, showSummary, siteInfo }) => {
   const enableAOS = !isLowEndDevice
   return (
     <div
-      className={`${siteConfig('HEXO_POST_LIST_COVER_HOVER_ENLARGE', null, CONFIG) ? ' hover:scale-102 transition-all duration-150' : ''}`}>
+      className={`${siteConfig('HEXO_POST_LIST_COVER_HOVER_ENLARGE', null, CONFIG) ? ' hover:scale-102 transition-all duration-300 ease-standard' : ''}`}>
       <div
         key={post.id}
         {...(enableAOS && {
@@ -57,7 +57,7 @@ const BlogPostCard = ({ index, post, showSummary, siteInfo }) => {
                   priority={index === 1}
                   alt={post?.title}
                   src={post?.pageCoverThumbnail}
-                  className='h-56 w-full object-cover object-center group-hover:scale-[1.02] duration-500'
+                  className='h-56 w-full object-cover object-center group-hover:scale-[1.02] duration-300 ease-standard'
                   title={post?.title} // 为图片添加title属性以提高SEO
                 />
               </>

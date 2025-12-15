@@ -27,7 +27,7 @@ export const BlogPostCardInfo = ({
             <SmartLink
               href={post?.href}
               passHref
-              className={`ellipsis replace cursor-pointer text-2xl ${
+              className={`line-clamp-2 replace cursor-pointer text-2xl ${
                 showPreview ? 'text-center' : ''
               } leading-tight font-semibold text-gray-700 dark:text-gray-100 hover:text-indigo-700 dark:hover:text-indigo-400`}>
               {siteConfig('POST_TITLE_ICON') && (
@@ -61,14 +61,14 @@ export const BlogPostCardInfo = ({
 
         {/* 摘要 */}
         {(!showPreview || showSummary) && !post.results && (
-          <main className='ellipsis replace my-4 text-primary dark:text-gray-300 text-[15px] font-normal leading-7'>
+          <main className='line-clamp-3 whitespace-normal replace my-4 text-primary dark:text-gray-300 text-[15px] font-normal leading-7'>
             {post.summary}
           </main>
         )}
 
         {/* 搜索结果 */}
         {post.results && (
-          <p className='ellipsis mt-4 text-primary dark:text-gray-300 text-[15px] font-normal leading-7'>
+          <p className='line-clamp-3 whitespace-normal mt-4 text-primary dark:text-gray-300 text-[15px] font-normal leading-7'>
             {post.results.map((r, index) => (
               <span key={index}>{r}</span>
             ))}

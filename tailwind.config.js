@@ -27,6 +27,18 @@ module.exports = {
       padding: '16px'
     },
     extend: {
+      spacing: {
+        xs: '4px',
+        sm: '8px',
+        md: '12px',
+        lg: '16px',
+        xl: '24px'
+      },
+      borderRadius: {
+        sm: '6px',
+        md: '12px',
+        lg: '16px'
+      },
       colors: {
         day: {
           DEFAULT: BLOG.BACKGROUND_LIGHT || '#ffffff'
@@ -69,6 +81,9 @@ module.exports = {
         'screen-4xl': '1560px'
       },
       boxShadow: {
+        'elevation-sm': '0 1px 2px rgba(0,0,0,.06)',
+        'elevation-md': '0 4px 12px rgba(0,0,0,.08)',
+        'elevation-lg': '0 10px 24px rgba(0,0,0,.12)',
         input: '0px 7px 20px rgba(0, 0, 0, 0.03)',
         form: '0px 1px 55px -11px rgba(0, 0, 0, 0.01)',
         pricing: '0px 0px 40px 0px rgba(0, 0, 0, 0.08)',
@@ -77,11 +92,50 @@ module.exports = {
         'testimonial-btn': '0px 8px 15px 0px rgba(72, 72, 138, 0.08)',
         1: '0px 1px 3px 0px rgba(166, 175, 195, 0.40)',
         2: '0px 5px 12px 0px rgba(0, 0, 0, 0.10)'
+      },
+      transitionTimingFunction: {
+        standard: 'cubic-bezier(.2,.8,.2,1)'
+      },
+      keyframes: {
+        'bg-pulse': {
+          '0%, 100%': { filter: 'saturate(100%)' },
+          '50%': { filter: 'saturate(110%)' }
+        }
+      },
+      animation: {
+        'bg-pulse': 'bg-pulse 6s ease-in-out infinite'
       }
     }
   },
   variants: {
     extend: {}
   },
-  plugins: []
+  plugins: [
+    function ({ addUtilities, theme }) {
+      const newUtilities = {
+        '.tap-target': {
+          minWidth: '44px',
+          minHeight: '44px'
+        },
+        '.card-base': {
+          borderRadius: theme('borderRadius.lg'),
+          boxShadow: theme('boxShadow.elevation-md')
+        },
+        '.ellipsis': {
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap'
+        },
+        '.bg-day-gradient': {
+          backgroundImage:
+            'linear-gradient(135deg, #f3f8ff 0%, #e8fff5 50%, #fff1f5 100%)'
+        },
+        '.bg-night-gradient': {
+          backgroundImage:
+            'linear-gradient(135deg, #0b1220 0%, #0a1a2b 50%, #111827 100%)'
+        }
+      }
+      addUtilities(newUtilities, ['responsive'])
+    }
+  ]
 }

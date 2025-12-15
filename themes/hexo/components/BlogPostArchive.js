@@ -14,23 +14,23 @@ const BlogPostArchive = ({ posts = [], archiveTitle }) => {
     return (
       <div>
         <div
-          className='pt-16 pb-4 text-3xl dark:text-gray-300'
+          className='pt-xl pb-md text-3xl dark:text-gray-300'
           id={archiveTitle}>
           {archiveTitle}
         </div>
-        <ul className='space-y-2'>
+        <ul className='space-y-sm'>
           {posts?.map(post => {
             return (
               <li
                 key={post.id}
-                className='border-l-2 p-2 text-sm md:text-base items-center hover:border-black/20 dark:hover:border-white/30 dark:border-white/20 border-black/10 duration-200'>
+                className='border-l-2 py-xs px-sm text-sm md:text-base items-center hover:border-black/20 dark:hover:border-white/30 dark:border-white/20 border-black/10 duration-300 ease-standard'>
                 <div id={post?.publishDay}>
                   <span className='text-secondary'>{post.date?.start_date}</span>{' '}
                   &nbsp;
                   <SmartLink
                     href={post?.href}
                     passHref
-                    className='text-primary dark:text-gray-200 overflow-x-hidden hover:underline cursor-pointer'>
+                    className='text-primary dark:text-gray-200 truncate hover:underline cursor-pointer'>
                     {post.title}
                   </SmartLink>
                 </div>
