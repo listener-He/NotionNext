@@ -46,7 +46,16 @@ function generateLocalesSitemap(link, allPages, locale) {
   if (locale && locale.length > 0 && locale.indexOf('/') !== 0) {
     locale = '/' + locale
   }
-  const dateNow = new Date().toISOString().split('T')[0]
+  
+  // 更安全地获取当前日期的ISO字符串
+  let dateNow = new Date().toISOString();
+  try {
+    dateNow = dateNow.split('T')[0];
+  } catch (error) {
+    console.warn('Failed to format current date:', error);
+    dateNow = new Date().toISOString(); // 回退到完整ISO格式
+  }
+  
   const defaultFields = [
     {
       loc: `${link}${locale}`,
@@ -92,9 +101,23 @@ function generateLocalesSitemap(link, allPages, locale) {
         const slugWithoutLeadingSlash = post?.slug.startsWith('/')
           ? post?.slug?.slice(1)
           : post.slug
+          
+        // 更安全地处理文章发布日期
+        let postDate = new Date().toISOString().split('T')[0]; // 默认使用当前日期
+        if (post?.publishDay) {
+          try {
+            const date = new Date(post.publishDay);
+            if (date instanceof Date && !isNaN(date.getTime())) {
+              postDate = date.toISOString().split('T')[0];
+            }
+          } catch (error) {
+            console.warn('Failed to format post publish date:', post?.publishDay, error);
+          }
+        }
+        
         return {
           loc: `${link}${locale}/${slugWithoutLeadingSlash}`,
-          lastmod: new Date(post?.publishDay).toISOString().split('T')[0],
+          lastmod: postDate,
           changefreq: 'daily',
           priority: '0.7'
         }
