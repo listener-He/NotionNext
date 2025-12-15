@@ -149,17 +149,17 @@ const Header = props => {
       {/* 导航栏 */}
       <div
         id='sticky-nav'
-        style={{ backdropFilter: 'blur(3px)' }}
+        style={{ backdropFilter: 'blur(8px)' }}
         className={
-          'top-0 duration-300 transition-all shadow-none fixed bg-none dark:bg-hexo-black-gray dark:text-gray-200 text-black w-full z-20 transform border-transparent dark:border-transparent'
+          'top-0 duration-300 transition-all shadow-none fixed bg-none dark:text-gray-200 text-black w-full z-20 transform border-transparent'
         }>
-        <div className='w-full flex justify-between items-center px-4 py-2'>
+        <div className='w-full flex justify-between items-center px-4 py-2 glass-layer-strong'>
           <div className='flex'>
             <Logo {...props} />
           </div>
 
           {/* 右侧功能 */}
-          <div className='flex justify-end items-center space-x-2 text-xs text-gray-600 dark:text-gray-400 mr-1'>
+          <div className='flex justify-end items-center space-x-2 text-xs text-secondary dark:text-gray-400 mr-1'>
             <div className='hidden lg:flex'>
               {' '}
               <MenuListTop {...props} />

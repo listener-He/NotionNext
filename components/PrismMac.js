@@ -57,7 +57,7 @@ const PrismMac = () => {
       }
 
       renderPrismMac(codeLineNumbers)
-      renderMermaid(mermaidCDN)
+      renderMermaid(mermaidCDN, isDarkMode)
       renderCollapseCode(codeCollapse, codeCollapseExpandDefault)
     })
   }, [router, isDarkMode])
@@ -160,7 +160,7 @@ const renderCollapseCode = (codeCollapse, codeCollapseExpandDefault) => {
 /**
  * 将mermaid语言 渲染成图片
  */
-const renderMermaid = mermaidCDN => {
+const renderMermaid = (mermaidCDN, isDarkMode) => {
   const observer = new MutationObserver(mutationsList => {
     for (const m of mutationsList) {
       if (m.target.className === 'notion-code language-mermaid') {
@@ -181,12 +181,37 @@ const renderMermaid = mermaidCDN => {
             }
           }
           if (needLoad) {
-            loadExternalResource(mermaidCDN, 'js').then(url => {
-              setTimeout(() => {
-                const mermaid = window.mermaid
-                mermaid?.contentLoaded()
-              }, 100)
-            })
+            loadExternalResource(mermaidCDN, 'js')
+              .then(() => {
+                setTimeout(() => {
+                  const mermaid = window.mermaid
+                  if (mermaid?.initialize) {
+                    mermaid.initialize({ startOnLoad: false, securityLevel: 'loose', theme: isDarkMode ? 'dark' : 'default' })
+                  }
+                  try {
+                    if (mermaid?.run) {
+                      mermaid.run({ querySelector: '.mermaid' })
+                    } else {
+                      mermaid?.contentLoaded()
+                    }
+                  } catch (e) {
+                    const nodes = document.querySelectorAll('.mermaid')
+                    nodes.forEach(n => {
+                      if (n && n.firstChild?.nodeName !== 'svg') {
+                        n.innerHTML = 'Mermaid 语法错误'
+                      }
+                    })
+                  }
+                }, 100)
+              })
+              .catch(() => {
+                const nodes = document.querySelectorAll('.mermaid')
+                nodes.forEach(n => {
+                  if (n && n.firstChild?.nodeName !== 'svg') {
+                    n.innerHTML = 'Mermaid 资源加载失败'
+                  }
+                })
+              })
           }
         }
       }

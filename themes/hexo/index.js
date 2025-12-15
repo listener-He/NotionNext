@@ -94,7 +94,7 @@ const LayoutBase = props => {
     <ThemeGlobalHexo.Provider value={{ searchModal }}>
       <div
         id='theme-hexo'
-        className={`${fontStyle} dark:bg-black scroll-smooth ${isLowEndDevice ? 'reduce-motion' : ''}`}>
+        className={`${fontStyle} scroll-smooth ${isLowEndDevice ? 'reduce-motion' : ''} bg-gradient-to-br from-white to-gray-50 dark:from-black dark:to-gray-900`}>
         <Style />
         
         {/* 性能检测组件 */}
@@ -124,7 +124,7 @@ const LayoutBase = props => {
         {/* 主区块 */}
         <main
           id='wrapper'
-          className={`${homeBannerEnable ? '' : 'pt-16'} bg-hexo-background-gray dark:bg-black w-full py-8 md:px-8 lg:px-24 min-h-screen relative`}>
+          className={`${homeBannerEnable ? '' : 'pt-16'} w-full py-8 md:px-8 lg:px-24 min-h-screen relative bg-gradient-to-b from-transparent via-gray-50/60 to-transparent dark:via-gray-900/40`}>
           <div
             id='container-inner'
             className={
@@ -306,7 +306,7 @@ const LayoutSlug = props => {
   if (isLinksPage) {
     return (
       <>
-        <div className='w-full lg:hover:shadow lg:border rounded-t-xl lg:rounded-xl lg:px-2 lg:py-4 bg-white dark:bg-hexo-black-gray dark:border-black article'>
+        <div className='w-full lg:hover:shadow rounded-t-xl lg:rounded-xl lg:px-2 lg:py-4 glass-layer-strong article'>
           {lock && <ArticleLock validPassword={validPassword} />}
           {!lock && <LinksPage post={post || { title: '友情链接', slug: 'links' }} />}
         </div>
@@ -316,7 +316,7 @@ const LayoutSlug = props => {
   
   return (
     <>
-      <div className='w-full lg:hover:shadow lg:border rounded-t-xl lg:rounded-xl lg:px-2 lg:py-4 bg-white dark:bg-hexo-black-gray dark:border-black article'>
+      <div className='w-full lg:hover:shadow rounded-t-xl lg:rounded-xl lg:px-2 lg:py-4 glass-layer-strong article'>
         {lock && <ArticleLock validPassword={validPassword} />}
 
         {!lock && post && (
@@ -345,7 +345,7 @@ const LayoutSlug = props => {
             <div className='pt-4 border-dashed'></div>
 
             {/* 评论互动 */}
-            <div className='duration-200 overflow-x-auto bg-white dark:bg-hexo-black-gray px-3'>
+            <div className='duration-200 overflow-x-auto glass-layer-soft px-3'>
               <Comment frontMatter={post} />
             </div>
           </div>

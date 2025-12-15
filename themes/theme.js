@@ -1,12 +1,16 @@
 import BLOG, { LAYOUT_MAPPINGS } from '@/blog.config'
 import * as ThemeComponents from '@theme-components'
-import getConfig from 'next/config'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
 import { getQueryParam, getQueryVariable, isBrowser } from '../lib/utils'
 
-// 在next.config.js中扫描所有主题
-export const { THEMES = [] } = getConfig()?.publicRuntimeConfig || {}
+export const THEMES = (() => {
+  try {
+    return JSON.parse(process.env.NEXT_PUBLIC_THEMES || '[]')
+  } catch {
+    return []
+  }
+})()
 
 /**
  * 获取主题配置
