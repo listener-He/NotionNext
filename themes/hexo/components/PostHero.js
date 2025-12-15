@@ -10,7 +10,7 @@ import TagItemMini from './TagItemMini'
  * 文章详情页的Hero块
  */
 export default function PostHero({ post, siteInfo }) {
-  const { locale, fullWidth } = useGlobal()
+  const { locale, fullWidth, isDarkMode } = useGlobal()
 
   if (!post) {
     return <></>
@@ -33,7 +33,7 @@ export default function PostHero({ post, siteInfo }) {
 
       <header
         id='article-header-cover'
-        className='bg-black bg-opacity-70 absolute top-0 w-full h-96 py-10 flex justify-center items-center '>
+        className={`${isDarkMode ? 'bg-gradient-to-b from-black/70 via-black/40 to-transparent' : 'bg-gradient-to-b from-white/80 via-white/50 to-transparent'} absolute top-0 w-full h-96 py-10 flex justify-center items-center`}>
         <div className='mt-10'>
           <div className='mb-3 flex justify-center'>
             {post.category && (

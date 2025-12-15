@@ -94,7 +94,7 @@ const Hero = props => {
   // 修复：始终使用全屏高度，但在夜间模式下半屏时调整内容位置
   const headerHeight = 'h-screen'
   const contentPosition = isHalfScreenDarkMode ? 'bottom-1/2' : 'bottom-0'
-  const headerClass = `w-full ${headerHeight} relative bg-black`
+  const headerClass = `w-full ${headerHeight} relative bg-day-gradient dark:bg-night-gradient`
   
   // 预先获取所有需要的配置值，确保Hooks调用顺序一致
   const showNavButtons = siteConfig('HEXO_HOME_NAV_BUTTONS', null, CONFIG)

@@ -4,7 +4,6 @@ import TwikooCommentCount from '@/components/TwikooCommentCount'
 import { siteConfig } from '@/lib/config'
 import { formatDateFmt } from '@/lib/utils/formatDate'
 import SmartLink from '@/components/SmartLink'
-import TagItemMini from './TagItemMini'
 
 /**
  * 博客列表的文字内容
@@ -15,27 +14,37 @@ export const BlogPostCardInfo = ({
   post,
   showPreview,
   showPageCover,
-  showSummary
+  showSummary,
+  dateAlign = 'right'
 }) => {
   return (
     <article
       className={`flex flex-col justify-between lg:p-6 p-4 ${showPageCover && !showPreview ? 'md:w-7/12 w-full md:max-h-60' : 'w-full'}`}>
       <div>
-        <header className="rounded-xl px-4 py-3">
-          <h2>
-            {/* 标题 */}
-            <SmartLink
-              href={post?.href}
-              passHref
-              className={`line-clamp-2 replace cursor-pointer text-2xl ${
-                showPreview ? 'text-center' : ''
-              } leading-tight font-semibold text-gray-700 dark:text-gray-100 hover:text-indigo-700 dark:hover:text-indigo-400`}>
-              {siteConfig('POST_TITLE_ICON') && (
-                <NotionIcon icon={post.pageIcon} />
-              )}
-              <span className='menu-link '>{post.title}</span>
-            </SmartLink>
-          </h2>
+        <header className="relative rounded-xl px-4 py-3">
+          <div className={`flex ${showPreview ? 'justify-center' : 'justify-start'} items-start`}>
+            <h2 className="mr-3">
+              {/* 标题 */}
+              <SmartLink
+                href={post?.href}
+                passHref
+                className={`line-clamp-2 replace cursor-pointer text-2xl leading-tight font-semibold text-gray-700 dark:text-gray-100 hover:text-indigo-700 dark:hover:text-indigo-400`}>
+                {siteConfig('POST_TITLE_ICON') && (
+                  <NotionIcon icon={post.pageIcon} />
+                )}
+                <span className='menu-link'>{post.title}</span>
+              </SmartLink>
+            </h2>
+            {!showPreview && (
+              <SmartLink
+                href={`/archive#${formatDateFmt(post?.publishDate, 'yyyy-MM')}`}
+                passHref
+                className={`absolute top-1 ${dateAlign === 'left' ? 'left-4' : 'right-4'} text-xs leading-5 text-secondary dark:text-gray-400 whitespace-nowrap`}>
+                <i className='far fa-calendar-alt mr-1' />
+                {post?.publishDay || post.lastEditedDay}
+              </SmartLink>
+            )}
+          </div>
 
           {/* 分类 */}
           {post?.category && (
@@ -50,6 +59,20 @@ export const BlogPostCardInfo = ({
                 <i className='mr-1 far fa-folder' />
                 {post.category}
               </SmartLink>
+
+              {post.tagItems?.length > 0 && (
+                <div className='ml-3 inline-flex flex-wrap gap-x-1 gap-y-1'>
+                  {post.tagItems.map(tag => (
+                    <SmartLink
+                      key={tag.name}
+                      href={`/tag/${encodeURIComponent(tag.name)}`}
+                      passHref
+                      className='px-sm py-xs text-xs font-medium tag-badge-day dark:tag-badge-night hover:opacity-90 transition-all duration-300 ease-standard'>
+                      {tag.name}
+                    </SmartLink>
+                  ))}
+                </div>
+              )}
 
               <TwikooCommentCount
                 className='text-sm hover:text-indigo-700 dark:hover:text-indigo-400'
@@ -83,28 +106,7 @@ export const BlogPostCardInfo = ({
         )}
       </div>
 
-      <div>
-        {/* 日期标签 */}
-        <div className='text-secondary dark:text-gray-300 justify-between flex flex-wrap gap-2'>
-          {/* 日期 */}
-          <SmartLink
-            href={`/archive#${formatDateFmt(post?.publishDate, 'yyyy-MM')}`}
-            passHref
-            className='font-medium menu-link cursor-pointer text-sm leading-4 mr-3'>
-            <i className='far fa-calendar-alt mr-1' />
-            {post?.publishDay || post.lastEditedDay}
-          </SmartLink>
-
-          <div className='md:flex-nowrap flex-wrap md:justify-start inline-flex'>
-            <div className='flex flex-wrap gap-2'>
-              {' '}
-              {post.tagItems?.map(tag => (
-                <TagItemMini key={tag.name} tag={tag} />
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
+      {/* 底部日期区块移除，避免重复显示 */}
     </article>
   )
 }

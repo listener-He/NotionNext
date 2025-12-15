@@ -133,6 +133,18 @@ module.exports = {
         '.bg-night-gradient': {
           backgroundImage:
             'linear-gradient(135deg, #0b1220 0%, #0a1a2b 50%, #111827 100%)'
+        },
+        '.tag-badge-day': {
+          backgroundImage:
+            'linear-gradient(135deg, #fff7f9 0%, #eaf6ff 50%, #e7fff2 100%)',
+          color: '#111827',
+          borderRadius: theme('borderRadius.sm')
+        },
+        '.tag-badge-night': {
+          backgroundImage:
+            'linear-gradient(135deg, #1b2230 0%, #132033 50%, #111827 100%)',
+          color: '#ffffff',
+          borderRadius: theme('borderRadius.sm')
         }
       }
       addUtilities(newUtilities, ['responsive'])

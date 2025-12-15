@@ -41,11 +41,17 @@ const BlogPostCard = ({ index, post, showSummary, siteInfo }) => {
                     overflow-hidden rounded-2xl backdrop-blur-md bg-white/60 dark:bg-gray-900/50 border border-black/5 dark:border-white/10 shadow-md`}>
         {/* 文字内容 */}
         <BlogPostCardInfo
-          index={index}
           post={post}
           showPageCover={showPageCover}
           showPreview={showPreview}
           showSummary={showSummary}
+          dateAlign={
+            showPageCover &&
+            siteConfig('HEXO_POST_LIST_IMG_CROSSOVER', null, CONFIG) &&
+            index % 2 === 1
+              ? 'left'
+              : 'right'
+          }
         />
 
         {/* 图片封面 */}

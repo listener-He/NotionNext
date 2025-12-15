@@ -94,7 +94,7 @@ const LayoutBase = props => {
     <ThemeGlobalHexo.Provider value={{ searchModal }}>
       <div
         id='theme-hexo'
-        className={`${fontStyle} scroll-smooth ${isLowEndDevice ? 'reduce-motion' : ''} bg-gradient-to-br from-white to-gray-50 dark:from-black dark:to-gray-900`}>
+        className={`${fontStyle} scroll-smooth ${isLowEndDevice ? 'reduce-motion' : ''} bg-day-gradient dark:bg-night-gradient`}>
         <Style />
         
         {/* 性能检测组件 */}

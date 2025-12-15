@@ -6,13 +6,13 @@ const TagItemMini = ({ tag, selected = false }) => {
       key={tag}
       href={selected ? '/' : `/tag/${encodeURIComponent(tag.name)}`}
       passHref
-      className={`cursor-pointer inline-block rounded duration-200
-        mr-2 py-0.5 px-1 text-xs whitespace-nowrap 
+      className={`cursor-pointer inline-block rounded duration-300 ease-standard
+        mr-2 py-xs px-sm text-xs whitespace-nowrap 
          ${selected
         ? 'text-white dark:text-gray-300 bg-black/80 dark:bg-white/20'
-        : `text-secondary dark:text-gray-300 border border-black/10 dark:border-white/10 hover:bg-black/80 hover:text-white`}` }>
+        : `tag-badge-day dark:tag-badge-night`}` }>
 
-      <div className='font-light'>{selected && <i className='mr-1 fa-tag'/>} {tag.name + (tag.count ? `(${tag.count})` : '')} </div>
+      <div className='font-medium'>{selected && <i className='mr-1 fa-tag'/>} {tag.name + (tag.count ? `(${tag.count})` : '')} </div>
 
     </SmartLink>
   );
