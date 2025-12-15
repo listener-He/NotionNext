@@ -1,7 +1,7 @@
 import { loadExternalResource } from '@/lib/utils'
 import { useEffect } from 'react'
 import { getDevicePerformance } from '@/components/PerformanceDetector'
-import { isMobile } from '@/lib/utils'
+import { isMobile, isBrowser } from '@/lib/utils'
 // import AOS from 'aos'
 
 /**
@@ -12,6 +12,11 @@ import { isMobile } from '@/lib/utils'
 export default function AOSAnimation() {
   const { isLowEndDevice } = getDevicePerformance()
   const initAOS = () => {
+    // 确保只在浏览器环境中执行
+    if (!isBrowser) {
+      return
+    }
+    
     // 在低端设备上完全禁用AOS动画以提升性能
     if (isLowEndDevice) {
       console.log('Low-end device detected, AOS animation disabled for performance')
