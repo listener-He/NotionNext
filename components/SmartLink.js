@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { siteConfig } from '@/lib/config'
 
-// 过滤 <a> 标签不能识别的 props
+// 过滤 Link/<a> 标签不需要或已废弃的 props
 const filterDOMProps = props => {
   const { passHref, legacyBehavior, ...rest } = props
   return rest
@@ -43,7 +43,7 @@ const SmartLink = ({ href, children, ...rest }) => {
 
   // 内部链接（可为对象形式）
   return (
-    <Link href={href} {...rest}>
+    <Link href={href} {...filterDOMProps(rest)}>
       {children}
     </Link>
   )

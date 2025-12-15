@@ -278,15 +278,16 @@ const LinksPage = ({ post }) => {
         ) : (
           <div className='grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8'>
             {links.map((link, index) => (
-              <Link key={link.id || index} href={link.url} passHref legacyBehavior>
-                <a
-                   target='_blank'
-                   rel='noopener noreferrer'
-                   className='group block relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:scale-[1.05] bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 hover:border-blue-200 dark:hover:border-blue-600'
-                   style={{
-                     animation: `fadeInUp 0.6s ease-out ${index * 0.08}s both`
-                   }}
-                 >
+              <Link
+                key={link.id || index}
+                href={link.url}
+                target='_blank'
+                rel='noopener noreferrer'
+                className='group block relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:scale-[1.05] bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 hover:border-blue-200 dark:hover:border-blue-600'
+                style={{
+                  animation: `fadeInUp 0.6s ease-out ${index * 0.08}s both`
+                }}
+              >
                    {/* 背景装饰层 */}
                    <div className='absolute inset-0 bg-gradient-to-br from-blue-50/50 via-purple-50/30 to-pink-50/50 dark:from-blue-900/20 dark:via-purple-900/10 dark:to-pink-900/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500' />
 
@@ -372,7 +373,6 @@ const LinksPage = ({ post }) => {
                        </div>
                      </div>
                    </div>
-                 </a>
               </Link>
             ))}
           </div>
