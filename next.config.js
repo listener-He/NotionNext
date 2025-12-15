@@ -95,7 +95,7 @@ const nextConfig = {
   compress: true,
   poweredByHeader: false,
   generateEtags: true,
-  
+
   // HTTP缓存优化
   onDemandEntries: {
     maxInactiveAge: 60 * 1000, // 1分钟
@@ -298,6 +298,10 @@ const nextConfig = {
   webpack: (config, { dev, isServer }) => {
     // 动态主题：添加 resolve.alias 配置，将动态路径映射到实际路径
     config.resolve.alias['@'] = path.resolve(__dirname)
+    if (isServer) {
+      // 服务端排除客户端库
+      config.externals.push('@clerk/clerk-react', 'algoliasearch');
+    }
 
     if (!isServer) {
       console.log('[默认主题]', path.resolve(__dirname, 'themes', THEME))
@@ -327,7 +331,8 @@ const nextConfig = {
             vendor: {
               test: /[\\/]node_modules[\\/]/,
               name: 'vendors',
-              chunks: 'all'
+              chunks: 'all',
+              maxSize: 200000, // 限制单个包大小
             },
             common: {
               name: 'common',
