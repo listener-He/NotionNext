@@ -4,6 +4,7 @@ import SmartLink from '@/components/SmartLink'
 import CONFIG from '../config'
 import { BlogPostCardInfo } from './BlogPostCardInfo'
 import { getDevicePerformance } from '@/components/PerformanceDetector'
+import { useEffect, useRef } from 'react'
 
 const BlogPostCard = ({ index, post, showSummary, siteInfo }) => {
   const HEXO_POST_LIST_PREVIEW = siteConfig('HEXO_POST_LIST_PREVIEW', null, CONFIG)
@@ -12,6 +13,8 @@ const BlogPostCard = ({ index, post, showSummary, siteInfo }) => {
   const HEXO_POST_LIST_COVER_HOVER_ENLARGE = siteConfig('HEXO_POST_LIST_COVER_HOVER_ENLARGE', null, CONFIG)
   const HEXO_POST_LIST_COVER_DEFAULT = siteConfig('HEXO_POST_LIST_COVER_DEFAULT', null, CONFIG)
   const showPreviewConfig = HEXO_POST_LIST_PREVIEW && post.blockMap
+  const infoRef = useRef(null)
+  const imgWrapRef = useRef(null)
   if (
     post &&
     !post.pageCoverThumbnail &&
@@ -26,6 +29,24 @@ const BlogPostCard = ({ index, post, showSummary, siteInfo }) => {
 
   // 在低端设备上禁用AOS动画
   const enableAOS = !isLowEndDevice
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    const infoEl = infoRef.current
+    const imgEl = imgWrapRef.current
+    if (!infoEl || !imgEl) return
+    const apply = () => {
+      const h = infoEl.offsetHeight
+      if (h > 0) imgEl.style.height = h + 'px'
+    }
+    apply()
+    const ro = new ResizeObserver(() => apply())
+    ro.observe(infoEl)
+    window.addEventListener('resize', apply)
+    return () => {
+      ro.disconnect()
+      window.removeEventListener('resize', apply)
+    }
+  }, [post?.id])
   return (
     <div
       className={`${HEXO_POST_LIST_COVER_HOVER_ENLARGE ? ' hover:scale-102 transition-all duration-300 ease-standard' : ''}`}>
@@ -48,11 +69,12 @@ const BlogPostCard = ({ index, post, showSummary, siteInfo }) => {
           showPreview={showSummary ? false : showPreviewConfig}
           showSummary={showSummary}
           dateAlign={showPageCover && HEXO_POST_LIST_IMG_CROSSOVER && index % 2 === 1 ? 'right' : 'left'}
+          containerRef={infoRef}
         />
 
         {/* 图片封面 */}
         {showPageCover && (
-          <div className={`md:w-5/12 h-full relative overflow-hidden rounded-2xl 
+          <div ref={imgWrapRef} className={`md:w-6/12 relative overflow-hidden rounded-2xl 
             ${HEXO_POST_LIST_IMG_CROSSOVER && index % 2 === 1 
               ? 'md:rounded-l-2xl md:rounded-r-3xl'  // 图片在左，右内角更大
               : 'md:rounded-l-3xl md:rounded-r-2xl'  // 图片在右，左内角更大

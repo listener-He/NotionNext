@@ -4,6 +4,7 @@ import TwikooCommentCount from '@/components/TwikooCommentCount'
 import { siteConfig } from '@/lib/config'
 import { formatDateFmt } from '@/lib/utils/formatDate'
 import SmartLink from '@/components/SmartLink'
+import { useGlobal } from '@/lib/global'
 import { useEffect, useRef, useState } from 'react'
 
 /**
@@ -16,11 +17,14 @@ export const BlogPostCardInfo = ({
   showPreview,
   showPageCover,
   showSummary,
-  dateAlign = 'right'
+  dateAlign = 'right',
+  containerRef
 }) => {
+  const { isDarkMode } = useGlobal()
   return (
     <article
-      className={`flex flex-col justify-between lg:p-6 p-4 ${showPageCover && !showPreview ? 'md:w-7/12 w-full' : 'w-full'}`}>
+      ref={containerRef}
+      className={`flex flex-col justify-between lg:p-6 p-4 ${showPageCover && !showPreview ? 'md:w-6/12 w-full' : 'w-full'}`}>
       <div>
         <header className="relative rounded-xl px-4 py-3">
           <div className={`flex ${showPreview ? 'justify-center' : 'justify-start'} items-start`}>
@@ -29,7 +33,7 @@ export const BlogPostCardInfo = ({
               <SmartLink
                 href={post?.href}
                 passHref
-                className={`line-clamp-2 replace cursor-pointer text-2xl leading-tight font-semibold text-gray-700 dark:text-gray-100 hover:text-indigo-700 dark:hover:text-indigo-400`}>
+                className={`line-clamp-2 replace cursor-pointer text-xl leading-tight font-semibold text-gray-700 dark:text-gray-100 hover:text-indigo-700 dark:hover:text-indigo-400`}>
                 {siteConfig('POST_TITLE_ICON') && (
                   <NotionIcon icon={post.pageIcon} />
                 )}
@@ -63,15 +67,20 @@ export const BlogPostCardInfo = ({
 
               {post.tagItems?.length > 0 && (
                 <div className='ml-3 inline-flex flex-wrap gap-x-1 gap-y-1'>
-                  {post.tagItems.map(tag => (
-                    <SmartLink
-                      key={tag.name}
-                      href={`/tag/${encodeURIComponent(tag.name)}`}
-                      passHref
-                      className='px-sm py-xs text-xs font-medium tag-badge-day dark:tag-badge-night hover:opacity-90 transition-all duration-300 ease-standard'>
-                      {tag.name}
-                    </SmartLink>
-                  ))}
+                  {post.tagItems.map(tag => {
+                    const style = badgeStyle(tag.name, isDarkMode)
+                    const textColor = isDarkMode ? 'text-white' : 'text-gray-900'
+                    return (
+                      <SmartLink
+                        key={tag.name}
+                        href={`/tag/${encodeURIComponent(tag.name)}`}
+                        passHref
+                        className={`px-1.5 py-0.5 text-[11px] leading-4 font-medium rounded-md border hover:opacity-95 transition-all duration-300 ease-standard ${textColor}`}
+                        style={style}>
+                        {tag.name}
+                      </SmartLink>
+                    )
+                  })}
                 </div>
               )}
 
@@ -107,6 +116,28 @@ export const BlogPostCardInfo = ({
       {/* 底部日期区块移除，避免重复显示 */}
     </article>
   )
+}
+
+function badgeStyle(text, isDark) {
+  const hue = hashHue(text)
+  const s = isDark ? 55 : 35
+  const l1 = isDark ? 38 : 94
+  const l2 = isDark ? 24 : 88
+  const c1 = `hsl(${hue} ${s}% ${l1}%)`
+  const c2 = `hsl(${(hue + 20) % 360} ${s}% ${l2}%)`
+  return {
+    backgroundImage: `linear-gradient(135deg, ${c1} 0%, ${c2} 100%)`,
+    borderColor: isDark ? 'rgba(255,255,255,0.18)' : 'rgba(0,0,0,0.12)'
+  }
+}
+
+function hashHue(text) {
+  let hash = 0
+  for (let i = 0; i < text.length; i++) {
+    hash = (hash << 5) - hash + text.charCodeAt(i)
+    hash |= 0
+  }
+  return Math.abs(hash) % 360
 }
 
 const SummaryCollapsible = ({ text }) => {
