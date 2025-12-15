@@ -5,6 +5,7 @@ import { siteConfig } from '@/lib/config'
 import { getGlobalData } from '@/lib/db/getSiteData'
 import { DynamicLayout } from '@/themes/theme'
 import { getPageContentText } from '@/lib/notion/getPageContentText'
+import { leanListPost } from '@/lib/utils/leanPost'
 
 const Index = props => {
   const theme = siteConfig('THEME', BLOG.THEME, props.NOTION_CONFIG)
@@ -26,6 +27,7 @@ export async function getStaticProps({ params: { keyword }, locale }) {
     page => page.type === 'Post' && page.status === 'Published'
   )
   props.posts = await filterByMemCache(allPosts, keyword)
+  props.posts = props.posts.map(leanListPost)
   props.postCount = props.posts.length
   const POST_LIST_STYLE = siteConfig(
     'POST_LIST_STYLE',
@@ -41,6 +43,7 @@ export async function getStaticProps({ params: { keyword }, locale }) {
     props.posts = props.posts?.slice(0, POSTS_PER_PAGE)
   }
   props.keyword = keyword
+  delete props.allPages
   return {
     props,
     revalidate: process.env.EXPORT

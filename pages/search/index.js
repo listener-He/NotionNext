@@ -3,6 +3,7 @@ import { siteConfig } from '@/lib/config'
 import { getGlobalData } from '@/lib/db/getSiteData'
 import { DynamicLayout } from '@/themes/theme'
 import { useRouter } from 'next/router'
+import { leanListPost } from '@/lib/utils/leanPost'
 
 /**
  * 搜索路由
@@ -46,7 +47,8 @@ export async function getStaticProps({ locale }) {
   const { allPages } = props
   props.posts = allPages?.filter(
     page => page.type === 'Post' && page.status === 'Published'
-  )
+  )?.map(leanListPost)
+  delete props.allPages
   return {
     props,
     revalidate: process.env.EXPORT

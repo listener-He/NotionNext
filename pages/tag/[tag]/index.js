@@ -2,6 +2,7 @@ import BLOG from '@/blog.config'
 import { siteConfig } from '@/lib/config'
 import { getGlobalData } from '@/lib/db/getSiteData'
 import { DynamicLayout } from '@/themes/theme'
+import { leanListPost } from '@/lib/utils/leanPost'
 
 /**
  * 标签下的文章列表
@@ -22,6 +23,7 @@ export async function getStaticProps({ params: { tag }, locale }) {
     ?.filter(page => page.type === 'Post' && page.status === 'Published')
     // 修复标签筛选逻辑，检查tagItems数组中是否存在匹配的标签名称
     .filter(post => post && post?.tagItems && post?.tagItems.some(t => t.name === tag))
+    .map(leanListPost)
 
   // 处理文章页数
   props.postCount = props.posts.length
@@ -38,6 +40,8 @@ export async function getStaticProps({ params: { tag }, locale }) {
 
   props.tag = tag
   delete props.allPages
+  delete props.latestPosts
+  delete props.allNavPages
   return {
     props,
     revalidate: process.env.EXPORT

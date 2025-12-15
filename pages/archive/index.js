@@ -5,6 +5,7 @@ import { isBrowser } from '@/lib/utils'
 import { formatDateFmt } from '@/lib/utils/formatDate'
 import { DynamicLayout } from '@/themes/theme'
 import { useEffect } from 'react'
+import { leanListPost } from '@/lib/utils/leanPost'
 
 /**
  * 归档首页
@@ -40,7 +41,7 @@ export async function getStaticProps({ locale }) {
     : []
 
   // 确保 postsSortByDate 是数组（避免 forEach 报错）
-  const postsSortByDate = Array.isArray(props.posts) ? [...props.posts] : [];
+  const postsSortByDate = Array.isArray(props.posts) ? props.posts.map(leanListPost) : [];
 
   postsSortByDate.sort((a, b) => {
     return b?.publishDate - a?.publishDate
@@ -59,6 +60,10 @@ export async function getStaticProps({ locale }) {
 
   // 确保 archivePosts 不为 null 或 undefined
   props.archivePosts = archivePosts || {}
+  delete props.posts
+  delete props.allPages
+  delete props.latestPosts
+  delete props.allNavPages
 
   return {
     props,

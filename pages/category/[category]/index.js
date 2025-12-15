@@ -2,6 +2,7 @@ import BLOG from '@/blog.config'
 import { siteConfig } from '@/lib/config'
 import { getGlobalData } from '@/lib/db/getSiteData'
 import { DynamicLayout } from '@/themes/theme'
+import { leanListPost } from '@/lib/utils/leanPost'
 
 /**
  * 分类页
@@ -36,6 +37,7 @@ export async function getStaticProps({ params: { category }, locale }) {
       siteConfig('POSTS_PER_PAGE', 12, props?.NOTION_CONFIG)
     )
   }
+  props.posts = props.posts.map(leanListPost)
 
   delete props.allPages
 

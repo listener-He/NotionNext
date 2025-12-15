@@ -2,6 +2,7 @@ import BLOG from '@/blog.config'
 import { siteConfig } from '@/lib/config'
 import { getGlobalData } from '@/lib/db/getSiteData'
 import { DynamicLayout } from '@/themes/theme'
+import { leanListPost } from '@/lib/utils/leanPost'
 
 /**
  * 分类页
@@ -31,6 +32,7 @@ export async function getStaticProps({ params: { category, page } }) {
     POSTS_PER_PAGE * (page - 1),
     POSTS_PER_PAGE * page
   )
+  props.posts = props.posts.map(leanListPost)
 
   // 性能优化：清理不必要的数据
   delete props.allPages
