@@ -53,6 +53,34 @@ const preBuild = (function () {
     fs.unlinkSync(sitemap2Path)
     console.log('Deleted existing sitemap.xml from root directory')
   }
+  const lifecycle = process.env.npm_lifecycle_event || ''
+  const isProdBuild = process.env.NODE_ENV === 'production' || lifecycle === 'build' || lifecycle === 'export'
+  if (isProdBuild) {
+    const maxBytes = 15 * 1024 * 1024
+    const candidates = ['public', 'static', 'assets']
+      .map(d => path.resolve(__dirname, d))
+      .filter(p => fs.existsSync(p))
+    function collectOversized(dir, acc) {
+      const entries = fs.readdirSync(dir)
+      for (const entry of entries) {
+        const full = path.join(dir, entry)
+        const stat = fs.statSync(full)
+        if (stat.isDirectory()) {
+          collectOversized(full, acc)
+        } else {
+          if (stat.size > maxBytes) acc.push({ file: full, size: stat.size })
+        }
+      }
+    }
+    const overs = []
+    for (const dir of candidates) collectOversized(dir, overs)
+    if (overs.length) {
+      const details = overs
+        .map(o => `${path.relative(__dirname, o.file)} ${(o.size / 1024 / 1024).toFixed(2)}MB`)
+        .join('\n')
+      throw new Error(`Static assets exceed 15MB:\n${details}`)
+    }
+  }
 })()
 
 /**
@@ -348,6 +376,55 @@ const nextConfig = {
           }
         }
       }
+      config.performance = {
+        hints: 'error',
+        maxEntrypointSize: 100 * 1024 * 1024,
+        maxAssetSize: 15 * 1024 * 1024
+      }
+      class SizeLimitPlugin {
+        apply(compiler) {
+          compiler.hooks.emit.tap('SizeLimitPlugin', compilation => {
+            const maxAssetSize = 15 * 1024 * 1024
+            const oversized = []
+            for (const filename of Object.keys(compilation.assets)) {
+              const asset = compilation.assets[filename]
+              const size =
+                typeof asset.size === 'function' ? asset.size() : Buffer.byteLength(asset.source(), 'utf8')
+              if (size > maxAssetSize) {
+                oversized.push({ filename, size })
+              }
+            }
+            if (oversized.length) {
+              const details = oversized
+                .map(o => `${o.filename} ${(o.size / 1024 / 1024).toFixed(2)}MB`)
+                .join('\n')
+              throw new Error(`Assets exceed 15MB:\n${details}`)
+            }
+          })
+          compiler.hooks.afterEmit.tap('EntrypointSizeLimitPlugin', compilation => {
+            const maxEntrypointSize = 100 * 1024 * 1024
+            const overs = []
+            for (const [name, entry] of compilation.entrypoints) {
+              let total = 0
+              for (const file of entry.getFiles()) {
+                const asset = compilation.assets[file]
+                if (!asset) continue
+                const size =
+                  typeof asset.size === 'function' ? asset.size() : Buffer.byteLength(asset.source(), 'utf8')
+                total += size
+              }
+              if (total > maxEntrypointSize) overs.push({ name, total })
+            }
+            if (overs.length) {
+              const details = overs
+                .map(o => `${o.name} ${(o.total / 1024 / 1024).toFixed(2)}MB`)
+                .join('\n')
+              throw new Error(`Entrypoints exceed 100MB:\n${details}`)
+            }
+          })
+        }
+      }
+      config.plugins.push(new SizeLimitPlugin())
     }
 
     // 保持默认 devtool，避免开发模式性能退化
