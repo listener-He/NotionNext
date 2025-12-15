@@ -308,9 +308,17 @@ const nextConfig = {
       THEME
     )
 
-    // 性能优化配置
-    if (!dev) {
-      // 生产环境优化
+    if (!config.output) config.output = {}
+    config.output.globalObject = 'globalThis'
+    if (isServer) {
+      config.plugins.push(
+        new (require('webpack').DefinePlugin)({
+          self: 'globalThis'
+        })
+      )
+    }
+
+    if (!dev && !isServer) {
       config.optimization = {
         ...config.optimization,
         splitChunks: {
@@ -319,16 +327,16 @@ const nextConfig = {
             vendor: {
               test: /[\\/]node_modules[\\/]/,
               name: 'vendors',
-              chunks: 'all',
+              chunks: 'all'
             },
             common: {
               name: 'common',
               minChunks: 2,
               chunks: 'all',
-              enforce: true,
-            },
-          },
-        },
+              enforce: true
+            }
+          }
+        }
       }
     }
 
