@@ -35,7 +35,7 @@ export default function Live2D() {
 
   // 加载Live2D模型
   const loadLive2D = useCallback((modelUrl) => {
-    if (typeof window !== 'undefined' && window.loadlive2d) {
+    if (typeof window !== 'undefined' && window.loadlive2d && modelUrl) {
       window.loadlive2d('live2d', modelUrl)
     }
   }, [])
@@ -73,7 +73,9 @@ export default function Live2D() {
             try {
               const initialModel = getCurrentModelLink()
               setCurrentModel(initialModel)
-              loadlive2d('live2d', initialModel)
+              if (initialModel) {
+                loadLive2D(initialModel)
+              }
             } catch (error) {
               console.error('读取PET模型', error)
             }
@@ -84,7 +86,7 @@ export default function Live2D() {
       // 清理函数
       return () => clearTimeout(loadTimer)
     }
-  }, [showPet, isLowEndDevice])
+  }, [showPet, isLowEndDevice, loadLive2D, getCurrentModelLink])
 
   function handleClick() {
     if (petSwitchTheme) {

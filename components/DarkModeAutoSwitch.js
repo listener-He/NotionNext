@@ -10,6 +10,8 @@ export default function DarkModeAutoSwitch() {
   const { isDarkMode, toggleDarkMode, NOTION_CONFIG } = useGlobal()
   const intervalRef = useRef(null)
   const lastCheckRef = useRef(null)
+  const mediaRef = useRef(null)
+  const handledRef = useRef(false)
 
   // 获取夜间模式配置
   const appearance = siteConfig('APPEARANCE', 'light', NOTION_CONFIG)
@@ -73,6 +75,18 @@ export default function DarkModeAutoSwitch() {
       if (shouldBeDark !== isDarkMode) {
         console.log(`System theme changed: ${e.matches ? 'dark' : 'light'} mode`)
         toggleDarkMode()
+        handledRef.current = true
+        if (mediaRef.current) {
+          if (mediaRef.current.removeEventListener) {
+            mediaRef.current.removeEventListener('change', handleSystemThemeChange)
+          } else {
+            mediaRef.current.removeListener(handleSystemThemeChange)
+          }
+        }
+        if (intervalRef.current) {
+          clearInterval(intervalRef.current)
+          intervalRef.current = null
+        }
       }
     }
   }
@@ -87,15 +101,18 @@ export default function DarkModeAutoSwitch() {
     checkAndToggleTheme()
 
     // 设置定时检查（每分钟检查一次）
-    intervalRef.current = setInterval(checkAndToggleTheme, 60000)
+    intervalRef.current = setInterval(() => {
+      if (!handledRef.current) {
+        checkAndToggleTheme()
+      }
+    }, 600000)
 
     // 监听系统主题变化
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
-    if (mediaQuery.addEventListener) {
-      mediaQuery.addEventListener('change', handleSystemThemeChange)
+    mediaRef.current = window.matchMedia('(prefers-color-scheme: dark)')
+    if (mediaRef.current.addEventListener) {
+      mediaRef.current.addEventListener('change', handleSystemThemeChange)
     } else {
-      // 兼容旧版浏览器
-      mediaQuery.addListener(handleSystemThemeChange)
+      mediaRef.current.addListener(handleSystemThemeChange)
     }
 
     // 监听页面可见性变化，当页面重新可见时检查主题
@@ -111,11 +128,12 @@ export default function DarkModeAutoSwitch() {
       if (intervalRef.current) {
         clearInterval(intervalRef.current)
       }
-      
-      if (mediaQuery.removeEventListener) {
-        mediaQuery.removeEventListener('change', handleSystemThemeChange)
-      } else {
-        mediaQuery.removeListener(handleSystemThemeChange)
+      if (mediaRef.current) {
+        if (mediaRef.current.removeEventListener) {
+          mediaRef.current.removeEventListener('change', handleSystemThemeChange)
+        } else {
+          mediaRef.current.removeListener(handleSystemThemeChange)
+        }
       }
       
       document.removeEventListener('visibilitychange', handleVisibilityChange)
