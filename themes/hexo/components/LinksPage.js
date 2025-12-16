@@ -3,6 +3,7 @@ import LazyImage from '@/components/LazyImage'
 import Comment from '@/components/Comment'
 import { getTextContent } from 'notion-utils'
 import { siteConfig } from '@/lib/config'
+import useNotification from '@/components/Notification'
 
 // 友情链接缓存
 let linksCache = null
@@ -245,6 +246,62 @@ const extractLinksFromNotionPage = (post) => {
 const LinksPage = ({ post }) => {
   // 直接计算链接数据，避免状态管理导致的水合错误
   const links = post ? extractLinksFromNotionPage(post) : []
+  const siteTitle = siteConfig('TITLE') || siteConfig('AUTHOR') || 'Honesty'
+  const siteLink = siteConfig('LINK') || 'https://www.hehouhui.cn'
+  const siteDescription = siteConfig('BIO') || '请提供一句简洁的介绍'
+  const siteAvatar = 'https://www.hehouhui.cn/images/avatar.jpeg'
+
+  // 生成友链信息的不同格式
+  const generateFriendLinksData = (format) => {
+    switch (format) {
+      case 'json':
+        return JSON.stringify({
+          title: siteTitle,
+          url: siteLink,
+          desc: siteDescription,
+          avatar: siteAvatar
+        }, null, 2)
+
+      case 'markdown':
+        // 符合Hexo友链标准格式
+        return [
+          '- name: ' + siteTitle,
+          '  link: ' + siteLink,
+          '  avatar: ' + siteAvatar,
+          '  descr: ' + siteDescription
+        ].join('\n')
+
+      case 'yaml':
+        return [
+          'title: ' + siteTitle,
+          'url: ' + siteLink,
+          'avatar: ' + siteAvatar,
+          'descr: ' + siteDescription
+        ].join('\n')
+
+      default: // text format
+        return [
+          '网站名称：' + siteTitle,
+          '网站链接：' + siteLink,
+          '网站描述：' + siteDescription,
+          '头像地址：' + siteAvatar
+        ].join('\n')
+    }
+  }
+
+  // 使用现有的通知组件
+  const { showNotification } = useNotification()
+  // 复制功能
+  const copyToClipboard = async (format) => {
+    try {
+      const data = generateFriendLinksData(format)
+      await navigator.clipboard.writeText(data)
+      showNotification(`${format.toUpperCase()} 格式已复制到剪贴板！`)
+    } catch (err) {
+      console.error('复制失败:', err)
+      showNotification('复制失败，请手动复制')
+    }
+  }
 
   return (
     <div className='min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50/30 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900' id='article-wrapper'>
@@ -423,32 +480,73 @@ const LinksPage = ({ post }) => {
                 <li className='flex items-start'>
                   <span className='text-blue-500 mr-2 mt-1'>•</span>
                   <div>
-                    <span className='text-gray-700 dark:text-gray-300 text-base'>网站名称：</span>
-                    <span className='text-gray-900 dark:text-white text-base font-medium'>{siteConfig('TITLE') || siteConfig('AUTHOR') || 'Honesty'}</span>
+                    <span className='text-gray-700 dark:text-gray-300 text-base'>站点名称：</span>
+                    <span className='text-gray-900 dark:text-white text-base font-medium'>{siteTitle}</span>
                   </div>
                 </li>
                 <li className='flex items-start'>
                   <span className='text-blue-500 mr-2 mt-1'>•</span>
                   <div>
-                    <span className='text-gray-700 dark:text-gray-300 text-base'>网站链接：</span>
-                    <span className='text-gray-900 dark:text-white text-base font-medium'>{siteConfig('LINK') || 'https://www.hehouhui.cn'}</span>
+                    <span className='text-gray-700 dark:text-gray-300 text-base'>站点链接：</span>
+                    <span className='text-gray-900 dark:text-white text-base font-medium'>{siteLink}</span>
                   </div>
                 </li>
                 <li className='flex items-start'>
                   <span className='text-blue-500 mr-2 mt-1'>•</span>
                   <div>
-                    <span className='text-gray-700 dark:text-gray-300 text-base'>网站描述：</span>
-                    <span className='text-gray-900 dark:text-white text-base font-medium'>{siteConfig('BIO') || '请提供一句简洁的介绍'}</span>
+                    <span className='text-gray-700 dark:text-gray-300 text-base'>简介：</span>
+                    <span className='text-gray-900 dark:text-white text-base font-medium'>{siteDescription}</span>
                   </div>
                 </li>
                 <li className='flex items-start'>
                   <span className='text-blue-500 mr-2 mt-1'>•</span>
                   <div className='break-all'>
                     <span className='text-gray-700 dark:text-gray-300 text-base'>头像地址：</span>
-                    <span className='text-gray-900 dark:text-white text-base font-medium'>https://www.hehouhui.cn/images/avatar.jpeg</span>
+                    <span className='text-gray-900 dark:text-white text-base font-medium'>{siteAvatar}</span>
                   </div>
                 </li>
               </ul>
+
+              {/* 复制图标和选项 */}
+              <div className='mt-4 relative group'>
+                <div className='flex items-center text-gray-700 dark:text-gray-300'>
+                  <span className='text-base'>复制以上信息：</span>
+                  <div className='ml-2 relative'>
+                    <button className='text-gray-600 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 transition-colors duration-300'>
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" />
+                        <path d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z" />
+                      </svg>
+                    </button>
+
+                    {/* 格式选项弹出框 */}
+                    <div className='absolute left-0 mt-2 w-48 origin-top-left bg-white dark:bg-gray-800 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-10'>
+                      <div className='py-1'>
+                        <button
+                          onClick={() => copyToClipboard('text')}
+                          className='block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'>
+                          文本
+                        </button>
+                        <button
+                          onClick={() => copyToClipboard('json')}
+                          className='block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'>
+                          JSON
+                        </button>
+                        <button
+                          onClick={() => copyToClipboard('markdown')}
+                          className='block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'>
+                          Markdown
+                        </button>
+                        <button
+                          onClick={() => copyToClipboard('yaml')}
+                          className='block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'>
+                          Yaml
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
