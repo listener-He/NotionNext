@@ -3,7 +3,6 @@ import LazyImage from '@/components/LazyImage'
 import Comment from '@/components/Comment'
 import { getTextContent } from 'notion-utils'
 import { siteConfig } from '@/lib/config'
-import useNotification from '@/components/Notification'
 
 // 友情链接缓存
 let linksCache = null
@@ -289,17 +288,15 @@ const LinksPage = ({ post }) => {
     }
   }
 
-  // 使用现有的通知组件
-  const { showNotification } = useNotification()
   // 复制功能
   const copyToClipboard = async (format) => {
     try {
       const data = generateFriendLinksData(format)
       await navigator.clipboard.writeText(data)
-      showNotification(`${format.toUpperCase()} 格式已复制到剪贴板！`)
+      alert(`${format.toUpperCase()} 格式已复制到剪贴板！`)
     } catch (err) {
       console.error('复制失败:', err)
-      showNotification('复制失败，请手动复制')
+      alert('复制失败，请手动复制')
     }
   }
 
@@ -511,7 +508,7 @@ const LinksPage = ({ post }) => {
               <div className='mt-4 relative group'>
                 <div className='flex items-center text-gray-700 dark:text-gray-300'>
                   <span className='text-base'>复制以上信息：</span>
-                  <div className='ml-2 relative'>
+                  <div className='ml-2 relative top-1'>
                     <button className='text-gray-600 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 transition-colors duration-300'>
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                         <path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" />

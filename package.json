@@ -71,35 +71,25 @@
     "react-notion-x": "7.7.1",
     "react-share": "^5.2.2",
     "react-tweet-embed": "~2.0.0",
-    "web-vitals": "^5.1.0",
-    "zstd-codec": "^0.1.5"
+    "web-vitals": "^5.1.0"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.1.4",
-    "@testing-library/react": "^14.1.2",
-    "@testing-library/user-event": "^14.5.1",
     "@types/node": "22.15.3",
     "@types/react": "18.3.10",
     "@typescript-eslint/eslint-plugin": "^7.18.0",
     "@typescript-eslint/parser": "^7.18.0",
     "@waline/client": "^3.6.0",
-    "autoprefixer": "^10.4.21",
-    "cross-env": "^7.0.3",
-    "eslint": "^8.57.1",
+    "autoprefixer": "^10.4.23",
     "eslint-config-next": "^15.0.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.5.1",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^4.6.2",
-    "jest": "^29.7.0",
-    "jest-environment-jsdom": "^29.7.0",
-    "jest-junit": "^16.0.0",
     "next-sitemap": "^1.9.12",
     "postcss": "^8.5.6",
-    "prettier": "^3.6.2",
-    "tailwindcss": "^3.4.17",
-    "typescript": "5.6.2",
-    "webpack-bundle-analyzer": "^4.5.0"
+    "tailwindcss": "^3",
+    "typescript": "5.9.3"
   },
   "resolutions": {
     "axios": ">=0.21.1"

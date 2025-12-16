@@ -332,6 +332,8 @@ const nextConfig = {
     if (isServer) {
       // 服务端排除客户端库
       config.externals.push('@clerk/clerk-react', 'algoliasearch');
+      // 添加更多不需要在服务端打包的库
+      config.externals.push('canvas', 'jsdom', 'puppeteer');
     }
 
     if (!isServer) {
@@ -443,7 +445,7 @@ const nextConfig = {
   experimental: {
     scrollRestoration: true,
     // 性能优化实验性功能
-    optimizePackageImports: ['@heroicons/react', 'lodash'],
+    optimizePackageImports: ['@heroicons/react', 'lodash', '@clerk/nextjs', 'react-notion-x'],
     // 启用并发功能
   },
   // Next.js 15: serverComponentsExternalPackages 移至顶层配置
