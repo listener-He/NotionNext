@@ -23,7 +23,13 @@ export const getServerSideProps = async ctx => {
       siteData?.siteInfo?.link,
       siteData.NOTION_CONFIG
     )
-    const localeFields = generateSiteAllUrl(link, new Date(), siteData.allPages)
+    const urls = generateSiteAllUrl(link, new Date().toISOString(), siteData.allPages) || []
+    const localeFields = urls.map(u => ({
+      loc: u.url,
+      lastmod: (typeof u.lastmod === 'string' ? u.lastmod.split('T')[0] : new Date().toISOString().split('T')[0]),
+      changefreq: u.changefreq,
+      priority: u.priority
+    }))
     fields = fields.concat(localeFields)
   }
 
@@ -46,7 +52,7 @@ function generateLocalesSitemap(link, allPages, locale) {
   if (locale && locale.length > 0 && locale.indexOf('/') !== 0) {
     locale = '/' + locale
   }
-  
+
   // 更安全地获取当前日期的ISO字符串
   let dateNow = new Date().toISOString();
   try {
@@ -55,7 +61,7 @@ function generateLocalesSitemap(link, allPages, locale) {
     console.warn('Failed to format current date:', error);
     dateNow = new Date().toISOString(); // 回退到完整ISO格式
   }
-  
+
   const defaultFields = [
     {
       loc: `${link}${locale}`,
@@ -101,7 +107,7 @@ function generateLocalesSitemap(link, allPages, locale) {
         const slugWithoutLeadingSlash = post?.slug.startsWith('/')
           ? post?.slug?.slice(1)
           : post.slug
-          
+
         // 更安全地处理文章发布日期
         let postDate = new Date().toISOString().split('T')[0]; // 默认使用当前日期
         if (post?.publishDay) {
@@ -114,7 +120,7 @@ function generateLocalesSitemap(link, allPages, locale) {
             console.warn('Failed to format post publish date:', post?.publishDay, error);
           }
         }
-        
+
         return {
           loc: `${link}${locale}/${slugWithoutLeadingSlash}`,
           lastmod: postDate,
