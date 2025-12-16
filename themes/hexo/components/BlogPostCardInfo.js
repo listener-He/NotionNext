@@ -44,7 +44,7 @@ export const BlogPostCardInfo = ({
               <SmartLink
                 href={`/archive#${formatDateFmt(post?.publishDate, 'yyyy-MM')}`}
                 passHref
-                className={`absolute top-1 ${dateAlign === 'left' ? 'left-4' : 'right-4'} text-xs leading-5 text-secondary dark:text-gray-400 whitespace-nowrap`}>
+                className={`absolute top-0 ${dateAlign === 'left' ? 'left-4' : 'right-4'} text-xs leading-5 text-secondary dark:text-gray-400 whitespace-nowrap`}>
                 <i className='far fa-calendar-alt mr-1' />
                 {post?.publishDay || post.lastEditedDay}
               </SmartLink>
