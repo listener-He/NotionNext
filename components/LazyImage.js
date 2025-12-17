@@ -1,8 +1,6 @@
 import { siteConfig } from '@/lib/config'
 import Head from 'next/head'
 import { useEffect, useRef, useState } from 'react'
-import { isBrowser } from '@/lib/utils'
-import { getDevicePerformance } from '@/components/PerformanceDetector'
 
 /**
  * 图片懒加载
@@ -10,24 +8,24 @@ import { getDevicePerformance } from '@/components/PerformanceDetector'
  * @returns
  */
 export default function LazyImage({
-  priority,
-  id,
-  src,
-  alt,
-  placeholderSrc,
-  className,
-  width,
-  height,
-  title,
-  onLoad,
-  onClick,
-  style
-}) {
+                                    priority,
+                                    id,
+                                    src,
+                                    alt,
+                                    placeholderSrc,
+                                    className,
+                                    width,
+                                    height,
+                                    title,
+                                    onLoad,
+                                    onClick,
+                                    style
+                                  }) {
   const maxWidth = siteConfig('IMAGE_COMPRESS_WIDTH')
   const defaultPlaceholderSrc = siteConfig('IMG_LAZY_LOAD_PLACEHOLDER')
   const imageRef = useRef(null)
   const [currentSrc, setCurrentSrc] = useState(
-    placeholderSrc || defaultPlaceholderSrc || src // 默认使用实际图片而非占位图
+    placeholderSrc || defaultPlaceholderSrc
   )
 
   /**
@@ -67,19 +65,15 @@ export default function LazyImage({
   }
 
   useEffect(() => {
-    // 如果没有源图片，直接返回
-    if (!src) {
-      return
-    }
-
-    const adjustedImageSrc = adjustImgSize(src, maxWidth) || src
+    const adjustedImageSrc =
+      adjustImgSize(src, maxWidth) || defaultPlaceholderSrc
 
     // 如果是优先级图片，直接加载
     if (priority) {
-      setCurrentSrc(adjustedImageSrc) // 立即设置为实际图片
       const img = new Image()
       img.src = adjustedImageSrc
       img.onload = () => {
+        setCurrentSrc(adjustedImageSrc)
         handleImageLoaded(adjustedImageSrc)
       }
       img.onerror = handleImageError
@@ -89,21 +83,15 @@ export default function LazyImage({
     // 检查浏览器是否支持IntersectionObserver
     if (!window.IntersectionObserver) {
       // 降级处理：直接加载图片
-      setCurrentSrc(adjustedImageSrc) // 立即设置为实际图片
       const img = new Image()
       img.src = adjustedImageSrc
       img.onload = () => {
+        setCurrentSrc(adjustedImageSrc)
         handleImageLoaded(adjustedImageSrc)
       }
       img.onerror = handleImageError
       return
     }
-
-    // 根据设备性能调整rootMargin
-    const { isLowEndDevice } = getDevicePerformance()
-    const rootMargin = isLowEndDevice
-      ? siteConfig('LAZY_LOAD_THRESHOLD', '100px')
-      : siteConfig('LAZY_LOAD_THRESHOLD', '250px')
 
     const observer = new IntersectionObserver(
       entries => {
@@ -115,15 +103,9 @@ export default function LazyImage({
             if ('decoding' in img) {
               img.decoding = 'async'
             }
-
-            // 添加预加载提示
-            if ('loading' in HTMLImageElement.prototype) {
-              img.loading = 'lazy'
-            }
-
             img.src = adjustedImageSrc
             img.onload = () => {
-              setCurrentSrc(adjustedImageSrc) // 加载完成后再设置为实际图片
+              setCurrentSrc(adjustedImageSrc)
               handleImageLoaded(adjustedImageSrc)
             }
             img.onerror = handleImageError
@@ -133,8 +115,8 @@ export default function LazyImage({
         })
       },
       {
-        rootMargin, // 根据设备性能动态调整
-        threshold: 0.01 // 更灵敏的触发
+        rootMargin: siteConfig('LAZY_LOAD_THRESHOLD', '200px'),
+        threshold: 0.1
       }
     )
 
@@ -169,17 +151,11 @@ export default function LazyImage({
     ...(siteConfig('WEBP_SUPPORT') && { 'data-webp': true }),
     ...(siteConfig('AVIF_SUPPORT') && { 'data-avif': true }),
     // 添加图片优化属性
-    fetchpriority: priority ? 'high' : 'auto', // 修改为auto而非low
+    fetchpriority: priority ? 'high' : 'low',
     // 为图片添加适当的尺寸属性，帮助浏览器提前计算布局
     ...(width && height && {
       'data-width': width,
       'data-height': height
-    }),
-    // 添加重要性能优化属性
-    ...(priority && { importance: 'high' }),
-    // 为现代浏览器添加额外优化
-    ...(isBrowser && 'loading' in HTMLImageElement.prototype && {
-      loading: priority ? 'eager' : 'lazy'
     })
   }
 
@@ -193,7 +169,7 @@ export default function LazyImage({
   return (
     <>
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img {...imgProps}  alt={alt ? alt : ''}/>
+      <img {...imgProps} alt={alt || ''}/>
       {/* 预加载 */}
       {priority && (
         <Head>
