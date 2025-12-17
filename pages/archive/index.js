@@ -34,10 +34,10 @@ const ArchiveIndex = props => {
 export async function getStaticProps({ locale }) {
   const props = await getGlobalData({ from: 'archive-index', locale })
   // 处理分页
-  props.posts = Array.isArray(props.allPages) 
+  props.posts = Array.isArray(props.allPages)
     ? props.allPages.filter(
         page => page.type === 'Post' && page.status === 'Published'
-      ) 
+      )
     : []
 
   // 确保 postsSortByDate 是数组（避免 forEach 报错）
@@ -65,15 +65,16 @@ export async function getStaticProps({ locale }) {
   delete props.latestPosts
   delete props.allNavPages
 
+  const revalidate = process.env.EXPORT
+    ? undefined
+    : siteConfig(
+      'NEXT_REVALIDATE_SECOND',
+      BLOG.NEXT_REVALIDATE_SECOND,
+      props.NOTION_CONFIG
+    )  * 3;
   return {
     props,
-    revalidate: process.env.EXPORT
-      ? undefined
-      : siteConfig(
-          'NEXT_REVALIDATE_SECOND',
-          BLOG.NEXT_REVALIDATE_SECOND,
-          props.NOTION_CONFIG
-        )
+    revalidate: revalidate
   }
 }
 

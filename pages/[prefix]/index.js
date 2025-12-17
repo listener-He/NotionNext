@@ -157,7 +157,7 @@ export async function getStaticProps({ params: { prefix }, locale }) {
     }
     await processPostData(props, from)
   }
-  
+
   // 确保 prev 和 next 不是 undefined，防止序列化错误
   if (!props.prev) {
     props.prev = null
@@ -165,7 +165,7 @@ export async function getStaticProps({ params: { prefix }, locale }) {
   if (!props.next) {
     props.next = null
   }
-  
+
   // 计算文章缓存时间
   let revalidate = process.env.EXPORT
     ? undefined
@@ -174,13 +174,17 @@ export async function getStaticProps({ params: { prefix }, locale }) {
         BLOG.NEXT_REVALIDATE_SECOND,
         props.NOTION_CONFIG
       )
-  
+
   // 如果是文章页面，根据最后更新时间计算缓存时间
   if (props?.post?.lastEditedDate) {
     const lastEditedTimestamp = new Date(props.post.lastEditedDate).getTime()
     revalidate = calculatePostCacheTime(BLOG.NEXT_REVALIDATE_SECOND, lastEditedTimestamp)
   }
-  
+  // 如果是单页面
+  if (props?.page) {
+    revalidate = BLOG.NEXT_REVALIDATE_SECOND * 8
+  }
+
   return {
     props,
     revalidate
