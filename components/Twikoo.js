@@ -3,28 +3,35 @@ import { loadExternalResource } from '@/lib/utils'
 import { useEffect, useRef, useState } from 'react'
 
 /**
- * Giscus评论 @see https://giscus.app/zh-CN
- * Contribute by @txs https://github.com/txs/NotionNext/commit/1bf7179d0af21fb433e4c7773504f244998678cb
+ * Twikoo 评论组件 @see https://twikoo.js.org/
  * @returns {JSX.Element}
  * @constructor
  */
-
 const Twikoo = ({ isDarkMode }) => {
   const envId = siteConfig('COMMENT_TWIKOO_ENV_ID')
   const el = siteConfig('COMMENT_TWIKOO_ELEMENT_ID', '#twikoo')
   const twikooCDNURL = siteConfig('COMMENT_TWIKOO_CDN_URL')
   const lang = siteConfig('LANG')
-  const [isInit] = useState(useRef(false))
+  const [isInit, setIsInit] = useState(false)
+  const initAttempted = useRef(false)
+
+  // 检查必要的配置是否存在
+  const isConfigValid = envId && twikooCDNURL
 
   const loadTwikoo = async () => {
+    // 如果已经初始化或没有有效配置，则退出
+    if (isInit || initAttempted.current || !isConfigValid) {
+      return
+    }
+
+    initAttempted.current = true
+    
     try {
       // 先加载 cloudbase SDK
       await loadExternalResource('https://imgcache.qq.com/qcloud/cloudbase-js-sdk/1.3.3/cloudbase.full.js', 'js')
-      console.log('Cloudbase SDK loaded successfully')
       
       // 然后加载 Twikoo
       await loadExternalResource(twikooCDNURL, 'js')
-      console.log('Twikoo SDK loaded successfully')
       
       const twikoo = window?.twikoo
       if (
@@ -33,31 +40,29 @@ const Twikoo = ({ isDarkMode }) => {
         typeof twikoo.init === 'function'
       ) {
         twikoo.init({
-          envId: envId, // 腾讯云环境填 envId；Vercel 环境填地址（https://xxx.vercel.app）
-          el: el, // 容器元素
-          lang: lang // 用于手动设定评论区语言，支持的语言列表 https://github.com/imaegoo/twikoo/blob/main/src/client/utils/i18n/index.js
-          // region: 'ap-guangzhou', // 环境地域，默认为 ap-shanghai，腾讯云环境填 ap-shanghai 或 ap-guangzhou；Vercel 环境不填
-          // path: location.pathname, // 用于区分不同文章的自定义 js 路径，如果您的文章路径不是 location.pathname，需传此参数
+          envId: envId,
+          el: el,
+          lang: lang
         })
-        console.log('Twikoo initialized successfully', twikoo)
-        isInit.current = true
+        setIsInit(true)
       }
     } catch (error) {
-      console.error('Twikoo 加载失败', error)
+      console.error('Twikoo 加载失败:', error)
     }
   }
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      if (isInit.current) {
-        console.log('twioo init! clear interval')
-        clearInterval(interval)
-      } else {
-        loadTwikoo()
-      }
-    }, 1000)
-    return () => clearInterval(interval)
-  }, [isDarkMode])
+    // 只有在配置有效的情况下才尝试加载
+    if (isConfigValid) {
+      loadTwikoo()
+    }
+  }, [isDarkMode, isConfigValid])
+
+  // 如果没有配置有效的 Twikoo，则不渲染任何内容
+  if (!isConfigValid) {
+    return null
+  }
+
   return <div id="twikoo"></div>
 }
 

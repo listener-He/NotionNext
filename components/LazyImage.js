@@ -27,7 +27,7 @@ export default function LazyImage({
   const defaultPlaceholderSrc = siteConfig('IMG_LAZY_LOAD_PLACEHOLDER')
   const imageRef = useRef(null)
   const [currentSrc, setCurrentSrc] = useState(
-    placeholderSrc || defaultPlaceholderSrc
+    placeholderSrc || defaultPlaceholderSrc || src // 默认使用实际图片而非占位图
   )
 
   /**
@@ -67,15 +67,19 @@ export default function LazyImage({
   }
 
   useEffect(() => {
-    const adjustedImageSrc =
-      adjustImgSize(src, maxWidth) || defaultPlaceholderSrc
+    // 如果没有源图片，直接返回
+    if (!src) {
+      return
+    }
+
+    const adjustedImageSrc = adjustImgSize(src, maxWidth) || src
 
     // 如果是优先级图片，直接加载
     if (priority) {
+      setCurrentSrc(adjustedImageSrc) // 立即设置为实际图片
       const img = new Image()
       img.src = adjustedImageSrc
       img.onload = () => {
-        setCurrentSrc(adjustedImageSrc)
         handleImageLoaded(adjustedImageSrc)
       }
       img.onerror = handleImageError
@@ -85,10 +89,10 @@ export default function LazyImage({
     // 检查浏览器是否支持IntersectionObserver
     if (!window.IntersectionObserver) {
       // 降级处理：直接加载图片
+      setCurrentSrc(adjustedImageSrc) // 立即设置为实际图片
       const img = new Image()
       img.src = adjustedImageSrc
       img.onload = () => {
-        setCurrentSrc(adjustedImageSrc)
         handleImageLoaded(adjustedImageSrc)
       }
       img.onerror = handleImageError
@@ -119,7 +123,7 @@ export default function LazyImage({
 
             img.src = adjustedImageSrc
             img.onload = () => {
-              setCurrentSrc(adjustedImageSrc)
+              setCurrentSrc(adjustedImageSrc) // 加载完成后再设置为实际图片
               handleImageLoaded(adjustedImageSrc)
             }
             img.onerror = handleImageError
