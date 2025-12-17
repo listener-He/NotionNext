@@ -10,7 +10,7 @@ module.exports = {
   // 字体CSS 例如 https://npm.elemecdn.com/lxgw-wenkai-webfont@1.6.0/style.css
   FONT_URL: [
     // 'https://npm.elemecdn.com/lxgw-wenkai-webfont@1.6.0/style.css',
-    (process.env.NEXT_PUBLIC_CHINA_OPTIMIZATION_ENABLED === 'true' 
+    (process.env.NEXT_PUBLIC_CHINA_OPTIMIZATION_ENABLED === 'true'
       ? 'https://fonts.loli.net/css?family=Bitter:300,400,700&display=swap'
       : 'https://fonts.googleapis.com/css?family=Bitter:300,400,700&display=swap'),
     (process.env.NEXT_PUBLIC_CHINA_OPTIMIZATION_ENABLED === 'true'
@@ -60,7 +60,7 @@ module.exports = {
   ],
   FONT_AWESOME:
     process.env.NEXT_PUBLIC_FONT_AWESOME_PATH ||
-    (process.env.NEXT_PUBLIC_CHINA_OPTIMIZATION_ENABLED === 'true' 
+    (process.env.NEXT_PUBLIC_CHINA_OPTIMIZATION_ENABLED === 'true'
       ? (process.env.NEXT_PUBLIC_FONT_AWESOME_MIRROR || 'https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css')
       : 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css') // font-awesome 字体图标地址; 可选 /css/all.min.css ， https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/font-awesome/6.0.0/css/all.min.css
 

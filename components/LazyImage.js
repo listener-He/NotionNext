@@ -1,6 +1,8 @@
 import { siteConfig } from '@/lib/config'
 import Head from 'next/head'
 import { useEffect, useRef, useState } from 'react'
+import { isBrowser } from '@/lib/utils'
+import { getDevicePerformance } from '@/components/PerformanceDetector'
 
 /**
  * 图片懒加载
@@ -93,6 +95,12 @@ export default function LazyImage({
       return
     }
 
+    // 根据设备性能调整rootMargin
+    const { isLowEndDevice } = getDevicePerformance()
+    const rootMargin = isLowEndDevice
+      ? siteConfig('LAZY_LOAD_THRESHOLD', '100px')
+      : siteConfig('LAZY_LOAD_THRESHOLD', '250px')
+
     const observer = new IntersectionObserver(
       entries => {
         entries.forEach(entry => {
@@ -103,6 +111,12 @@ export default function LazyImage({
             if ('decoding' in img) {
               img.decoding = 'async'
             }
+
+            // 添加预加载提示
+            if ('loading' in HTMLImageElement.prototype) {
+              img.loading = 'lazy'
+            }
+
             img.src = adjustedImageSrc
             img.onload = () => {
               setCurrentSrc(adjustedImageSrc)
@@ -115,8 +129,8 @@ export default function LazyImage({
         })
       },
       {
-        rootMargin: siteConfig('LAZY_LOAD_THRESHOLD', '200px'),
-        threshold: 0.1
+        rootMargin, // 根据设备性能动态调整
+        threshold: 0.01 // 更灵敏的触发
       }
     )
 
@@ -151,11 +165,17 @@ export default function LazyImage({
     ...(siteConfig('WEBP_SUPPORT') && { 'data-webp': true }),
     ...(siteConfig('AVIF_SUPPORT') && { 'data-avif': true }),
     // 添加图片优化属性
-    fetchpriority: priority ? 'high' : 'low',
+    fetchpriority: priority ? 'high' : 'auto', // 修改为auto而非low
     // 为图片添加适当的尺寸属性，帮助浏览器提前计算布局
     ...(width && height && {
       'data-width': width,
       'data-height': height
+    }),
+    // 添加重要性能优化属性
+    ...(priority && { importance: 'high' }),
+    // 为现代浏览器添加额外优化
+    ...(isBrowser && 'loading' in HTMLImageElement.prototype && {
+      loading: priority ? 'eager' : 'lazy'
     })
   }
 
@@ -169,7 +189,7 @@ export default function LazyImage({
   return (
     <>
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img {...imgProps} />
+      <img {...imgProps}  alt={alt ? alt : ''}/>
       {/* 预加载 */}
       {priority && (
         <Head>

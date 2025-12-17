@@ -14,6 +14,7 @@ import { loadExternalResource } from '@/lib/utils'
 import { useRouter } from 'next/navigation'
 import { useGlobal } from '@/lib/global'
 import { siteConfig } from '@/lib/config'
+import { getDevicePerformance } from '@/components/PerformanceDetector'
 
 /**
  * 代码美化相关
@@ -240,10 +241,27 @@ function renderPrismMac(codeLineNumbers) {
       })
     }
   }
-  // 重新渲染之前检查所有的多余text
 
+  // 限制代码块数量以提高性能
+  const { isLowEndDevice } = getDevicePerformance()
+  const maxCodeBlocks = isLowEndDevice ? 3 : 10
+
+  // 重新渲染之前检查所有的多余text
   try {
-    Prism.highlightAll()
+    // 获取所有代码块
+    const allCodeBlocks = container?.querySelectorAll('pre[class*="language-"]') || []
+
+    // 在低端设备上限制处理的代码块数量
+    const codeBlocksToProcess = isLowEndDevice
+      ? Array.from(allCodeBlocks).slice(0, maxCodeBlocks)
+      : allCodeBlocks
+
+    // 只对需要处理的代码块进行高亮
+    codeBlocksToProcess.forEach(block => {
+      if (block.querySelector('code')) {
+        Prism.highlightElement(block.querySelector('code'))
+      }
+    })
   } catch (err) {
     console.log('代码渲染', err)
   }
@@ -262,7 +280,7 @@ function renderPrismMac(codeLineNumbers) {
     })
   }
 
-  // 折叠代码行号bug
+  // 折叠代码行号bug - 仅在需要时执行
   if (codeLineNumbers) {
     fixCodeLineStyle()
   }

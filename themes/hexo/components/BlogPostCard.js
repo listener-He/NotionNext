@@ -25,10 +25,16 @@ const BlogPostCard = ({ index, post, showSummary, siteInfo }) => {
   const showPageCover =
     HEXO_POST_LIST_COVER && post?.pageCoverThumbnail && !showPreviewConfig
   // 获取设备性能信息
-  const { isLowEndDevice } = getDevicePerformance()
+  const { isLowEndDevice, performanceLevel } = getDevicePerformance()
 
-  // 在低端设备上禁用AOS动画
+  // 根据设备性能调整AOS动画
   const enableAOS = !isLowEndDevice
+  const aosDuration = performanceLevel === 'high' ? '800' : '600'
+  const aosDelay = index * (performanceLevel === 'high' ? 50 : 100)
+  
+  // 为低端设备禁用更多效果
+  const shouldUseAdvancedEffects = !isLowEndDevice && performanceLevel !== 'low'
+
   useEffect(() => {
     if (typeof window === 'undefined') return
     const infoEl = infoRef.current
@@ -47,15 +53,22 @@ const BlogPostCard = ({ index, post, showSummary, siteInfo }) => {
       window.removeEventListener('resize', apply)
     }
   }, [post?.id])
+  
+  // 根据设备性能调整悬停效果
+  const hovereffectclass = !shouldUseAdvancedEffects 
+    ? '' 
+    : (HEXO_POST_LIST_COVER_HOVER_ENLARGE ? ' hover:scale-102 transition-all duration-300 ease-standard' : '')
+
   return (
     <div
-      className={`${HEXO_POST_LIST_COVER_HOVER_ENLARGE ? ' hover:scale-102 transition-all duration-300 ease-standard' : ''}`}>
+      className={hovereffectclass}>
       <div
         key={post.id}
         {...(enableAOS && {
           'data-aos': 'fade-up',
           'data-aos-easing': 'ease-in-out',
-          'data-aos-duration': '800',
+          'data-aos-duration': aosDuration,
+          'data-aos-delay': aosDelay,
           'data-aos-once': 'false',
           'data-aos-anchor-placement': 'top-bottom'
         })}
@@ -85,9 +98,10 @@ const BlogPostCard = ({ index, post, showSummary, siteInfo }) => {
                   priority={index === 1}
                   alt={post?.title}
                   src={post?.pageCoverThumbnail}
-                  className='absolute inset-0 h-full w-full object-cover object-center group-hover:scale-[1.02] duration-300 ease-standard'
+                  className={`absolute inset-0 h-full w-full object-cover object-center ${!shouldUseAdvancedEffects ? '' : 'group-hover:scale-[1.02] duration-300 ease-standard'}`}
                   title={post?.title} // 为图片添加title属性以提高SEO
                 />
+
               </>
             </SmartLink>
           </div>

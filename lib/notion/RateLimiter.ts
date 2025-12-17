@@ -16,13 +16,13 @@ export class RateLimiter {
   private windowStart = Date.now()
 
   constructor(
-    private maxRequestsPerMinute = 200,
+    private maxRequestsPerMinute = 200, // 限制qps
     private lockFilePath?: string
   ) { }
 
   private async acquireLock() {
     if (!this.lockFilePath) return
-    // 如果锁文件存在且创建时间过久（比如 >5分钟），认为是陈旧锁，直接删除
+    // 如果锁文件存在且创建时间过久（比如 >30秒），认为是陈旧锁，直接删除
     if (fs.existsSync(this.lockFilePath)) {
       const stats = fs.statSync(this.lockFilePath)
       const age = Date.now() - stats.ctimeMs
@@ -35,12 +35,18 @@ export class RateLimiter {
         }
       }
     }
+    const startTime = Date.now();
     while (true) {
+      // 增加超时机制，避免无限等待
+      if (Date.now() - startTime > 10000) { // 10秒超时
+        throw new Error('获取锁超时');
+      }
+
       try {
         fs.writeFileSync(this.lockFilePath, process.pid.toString(), { flag: 'wx' })
         return
       } catch (err: any) {
-        if (err.code === 'EEXIST') await new Promise(res => setTimeout(res, 100))
+        if (err.code === 'EEXIST') await new Promise(res => setTimeout(res, 50))
         else throw err
       }
     }

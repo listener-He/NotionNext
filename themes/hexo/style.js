@@ -360,6 +360,42 @@ const Style = () => {
       #theme-hexo .card-shadow:hover {
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.18), 0 6px 12px rgba(0, 0, 0, 0.22);
       }
+      
+      // 优化文本可读性
+      #theme-hexo .article-content {
+        line-height: 1.8;
+        font-size: 1.125rem;
+        letter-spacing: 0.01em;
+      }
+      
+      // 优化代码块显示
+      #theme-hexo pre[class*="language-"] {
+        line-height: 1.5;
+        font-size: 0.95rem;
+        border-radius: 0.5rem;
+        overflow: auto;
+      }
+      
+      // 优化标签显示
+      #theme-hexo .tag-item {
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        transition: all 0.2s ease-in-out;
+      }
+      
+      // 优化文章标题
+      #theme-hexo .post-title {
+        letter-spacing: -0.025em;
+        line-height: 1.2;
+      }
+      
+      // 优化分页导航
+      #theme-hexo .pagination-number {
+        font-weight: 600;
+        transition: all 0.2s ease-in-out;
+      }
     `}</style>
   )
 }

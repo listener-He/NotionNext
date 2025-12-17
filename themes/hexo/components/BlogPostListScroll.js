@@ -54,22 +54,24 @@ const BlogPostListScroll = ({
     })
   }
 
-  // 在低端设备上减少滚动事件监听频率
+  // 根据设备性能优化滚动事件处理
   const throttleScroll = (() => {
     let lastTime = 0
+    // 根据设备性能调整节流延迟
+    const { isLowEndDevice, performanceLevel } = getDevicePerformance()
+    let throttleDelay = 100
+    
+    if (isLowEndDevice) {
+      throttleDelay = 300
+    } else if (performanceLevel === 'high') {
+      throttleDelay = 50
+    }
+    
     return function () {
       const now = Date.now()
-      // 低端设备上降低滚动事件触发频率
-      if (isLowEndDevice) {
-        if (now - lastTime >= 300) {
-          lastTime = now
-          scrollTrigger()
-        }
-      } else {
-        if (now - lastTime >= 100) {
-          lastTime = now
-          scrollTrigger()
-        }
+      if (now - lastTime >= throttleDelay) {
+        lastTime = now
+        scrollTrigger()
       }
     }
   })()
@@ -84,6 +86,36 @@ const BlogPostListScroll = ({
 
   const targetRef = useRef(null)
   const { locale } = useGlobal()
+
+  // 优化加载更多按钮的显示
+  const renderLoadMoreButton = () => {
+    // 在低端设备上简化按钮样式
+    const { isLowEndDevice } = getDevicePerformance()
+    
+    if (isLowEndDevice) {
+      return (
+        <div className="w-full my-4 py-4 text-center">
+          <button 
+            onClick={handleGetMore}
+            className="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded-lg"
+          >
+            {hasMore ? locale.COMMON.MORE : `${locale.COMMON.NO_MORE}`}
+          </button>
+        </div>
+      )
+    }
+    
+    return (
+      <div>
+        <div
+          onClick={handleGetMore}
+          className='w-full my-4 py-4 text-center cursor-pointer rounded-xl dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors'>
+          {' '}
+          {hasMore ? locale.COMMON.MORE : `${locale.COMMON.NO_MORE}`}{' '}
+        </div>
+      </div>
+    )
+  }
 
   if (!postsToShow || postsToShow.length === 0) {
     return <BlogPostListEmpty currentSearch={currentSearch} />
@@ -102,14 +134,7 @@ const BlogPostListScroll = ({
           ))}
         </div>
 
-        <div>
-          <div
-            onClick={handleGetMore}
-            className='w-full my-4 py-4 text-center cursor-pointer rounded-xl dark:text-gray-200'>
-            {' '}
-            {hasMore ? locale.COMMON.MORE : `${locale.COMMON.NO_MORE}`}{' '}
-          </div>
-        </div>
+        {renderLoadMoreButton()}
       </div>
     )
   }
