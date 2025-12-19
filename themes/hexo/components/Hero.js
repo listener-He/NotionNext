@@ -35,7 +35,8 @@ const Hero = props => {
   useEffect(() => {
     updateHeaderHeight()
 
-    if (!typed && window && window !== 'undefined' && document.getElementById('typed')) {
+    // 在黑暗模式下不启用打字机效果
+    if (isClient && !isDarkMode && !typed && window && window !== 'undefined' && document.getElementById('typed')) {
       loadExternalResource('/js/typed.min.js', 'js').then(() => {
         if (window.Typed) {
           changeType(
@@ -95,7 +96,7 @@ const Hero = props => {
   const headerHeight = 'h-screen'
   const contentPosition = isHalfScreenDarkMode ? 'bottom-1/2' : 'bottom-0'
   const headerClass = `w-full ${headerHeight} relative bg-day-gradient dark:bg-night-gradient`
-  
+
   // 预先获取所有需要的配置值，确保Hooks调用顺序一致
   const showNavButtons = siteConfig('HEXO_HOME_NAV_BUTTONS', null, CONFIG)
   const showStartReading = siteConfig('HEXO_SHOW_START_READING', null, CONFIG)
@@ -111,13 +112,18 @@ const Hero = props => {
         className={headerClass}>
         <div className={`text-white absolute bottom-0 flex flex-col h-full items-center justify-center w-full ${contentPosition}`}>
           {/* 站点标题 */}
-          <div className='font-black text-4xl md:text-5xl shadow-text'>
-            {siteInfo?.title || siteTitle}
-          </div>
-          {/* 站点欢迎语 */}
-          <div className='mt-2 h-12 items-center text-center font-medium shadow-text text-lg'>
-            <span id='typed' />
-          </div>
+          {!isHalfScreenDarkMode && (
+            <div className='font-black text-4xl md:text-5xl shadow-text'>
+              {siteInfo?.title || siteTitle}
+            </div>
+          )}
+
+          {/* 站点欢迎语 - 仅在非黑暗模式下显示打字机效果 */}
+          {!isHalfScreenDarkMode && (
+            <div className='mt-2 h-12 items-center text-center font-medium shadow-text text-lg'>
+              <span id='typed' />
+            </div>
+          )}
 
           {/* 首页导航大按钮 */}
           {showNavButtons && (
@@ -144,13 +150,18 @@ const Hero = props => {
       className={headerClass}>
       <div className={`text-white absolute bottom-0 flex flex-col h-full items-center justify-center w-full ${contentPosition}`}>
         {/* 站点标题 */}
-        <div className='font-black text-4xl md:text-5xl shadow-text'>
-          {siteInfo?.title || siteTitle}
-        </div>
-        {/* 站点欢迎语 */}
-        <div className='mt-2 h-12 items-center text-center font-medium shadow-text text-lg'>
-          <span id='typed' />
-        </div>
+        {!isHalfScreenDarkMode && (
+          <div className='font-black text-4xl md:text-5xl shadow-text'>
+            {siteInfo?.title || siteTitle}
+          </div>
+        )}
+
+        {/* 站点欢迎语 - 仅在非黑暗模式下显示打字机效果 */}
+        {!isHalfScreenDarkMode && (
+          <div className='mt-2 h-12 items-center text-center font-medium shadow-text text-lg'>
+            <span id='typed' />
+          </div>
+        )}
 
         {/* 首页导航大按钮 */}
         {showNavButtons && (

@@ -24,10 +24,21 @@
 }
 
 pre[class*='language-'] {
-  margin-top: 0rem !important;
+  margin-top: 0 !important;
   // margin-bottom: 0rem !important;
   padding-top: 1.5rem !important;
+  /* 减小代码块字体大小 */
+  font-size: 0.65rem !important;
+}
 
+pre[class*='language-'] code {
+  /* 确保代码元素也使用较小的字体 */
+  font-size: 0.65rem !important;
+}
+
+.line-numbers-rows {
+  /* 减小行号字体大小 */
+  font-size: 0.65rem !important;
 }
 
 .pre-mac {

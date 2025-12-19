@@ -10,21 +10,13 @@ import { useEffect, useRef, useState } from 'react'
  * @returns {JSX.Element|null}
  */
 const PageMusicPlayer = ({ musicId }) => {
-  const [isClient, setIsClient] = useState(false)
   const [librariesLoaded, setLibrariesLoaded] = useState(false)
   const ref = useRef(null)
 
-  // 确保只在客户端渲染
   useEffect(() => {
-    setIsClient(true)
-  }, [])
-
-  if (!isClient || !musicId || musicId === '') {
-    return <div className="page-music-player-placeholder" style={{ display: 'none' }} suppressHydrationWarning />
-  }
-  // 加载必要的库
-  useEffect(() => {
-    if (!isClient) return
+    if (!musicId || musicId === '') {
+      return
+    }
 
     const loadLibraries = async () => {
       try {
@@ -41,8 +33,12 @@ const PageMusicPlayer = ({ musicId }) => {
       }
     }
 
-    loadLibraries()
-  }, [isClient])
+    loadLibraries().then(r => console.log('页面音乐播放器库加载完成'))
+  }, [musicId])
+
+  if (!musicId || musicId === '') {
+    return <div className="page-music-player-placeholder" style={{ display: 'none' }} suppressHydrationWarning />
+  }
 
   const api = siteConfig(
     'MUSIC_PLAYER_METING_API',
@@ -50,7 +46,6 @@ const PageMusicPlayer = ({ musicId }) => {
   )
   const server = siteConfig('MUSIC_PLAYER_METING_SERVER', 'netease')
   const type = 'song'
-
 
   return (
     <div className="page-music-player w-full my-4" suppressHydrationWarning>

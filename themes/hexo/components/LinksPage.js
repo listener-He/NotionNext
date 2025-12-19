@@ -1,13 +1,9 @@
 import Link from 'next/link'
 import LazyImage from '@/components/LazyImage'
-import Comment from '@/components/Comment'
 import { getTextContent } from 'notion-utils'
 import { siteConfig } from '@/lib/config'
+import Comment from '@/components/Comment'
 
-// 友情链接缓存
-let linksCache = null
-let cacheTimestamp = 0
-const CACHE_DURATION = 3 * 60 * 60 * 1000 // 3小时
 
 // 全局标签颜色映射，确保相同标签使用相同颜色
 const tagColorMap = new Map()
@@ -52,12 +48,6 @@ const getTagColor = (tagName) => {
  * @returns {Array} 友情链接数组
  */
 const extractLinksFromNotionPage = (post) => {
-  // 检查缓存
-  const now = Date.now()
-  if (linksCache && (now - cacheTimestamp) < CACHE_DURATION) {
-    return linksCache
-  }
-
   if (!post?.blockMap) {
     return []
   }
@@ -229,11 +219,6 @@ const extractLinksFromNotionPage = (post) => {
       }
     }
   })
-
-  // 更新缓存
-  linksCache = links
-  cacheTimestamp = Date.now()
-
   return links
 }
 
@@ -553,7 +538,6 @@ const LinksPage = ({ post }) => {
             </p>
           </div>
         </div>
-
         {/* 评论区域 */}
         <div className='mt-12 sm:mt-16 lg:mt-20 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-lg p-4 sm:p-6 lg:p-8'>
           <Comment frontMatter={post} />

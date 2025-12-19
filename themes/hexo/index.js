@@ -1,4 +1,3 @@
-import Comment from '@/components/Comment'
 import replaceSearchResult from '@/components/Mark'
 import NotionPage from '@/components/NotionPage'
 import ShareBar from '@/components/ShareBar'
@@ -9,7 +8,7 @@ import { Transition } from '@headlessui/react'
 import dynamic from 'next/dynamic'
 import SmartLink from '@/components/SmartLink'
 import { useRouter } from 'next/router'
-import { createContext, useContext, useEffect, useRef, useMemo, useState } from 'react'
+import { createContext, useContext, useEffect, useRef, useState } from 'react'
 import ArticleAdjacent from './components/ArticleAdjacent'
 import ArticleCopyright from './components/ArticleCopyright'
 import { ArticleLock } from './components/ArticleLock'
@@ -36,6 +35,7 @@ import { Style } from './style'
 import LinksPage from './components/LinksPage'
 import { getDevicePerformance } from '@/components/PerformanceDetector'
 import PerformanceDetector from '@/components/PerformanceDetector'
+import Comment from '@/components/Comment'
 
 // 使用 useMemo 优化动态导入
 const AlgoliaSearchModal = dynamic(
@@ -45,10 +45,7 @@ const AlgoliaSearchModal = dynamic(
     loading: () => <div className="hidden">Loading...</div> // 添加加载状态
   }
 )
-// 单页音乐播放器
-const PageMusicPlayer = dynamic(() => import('@/components/PageMusicPlayer'), {
-  ssr: false
-})
+
 
 // 主题全局状态
 const ThemeGlobalHexo = createContext()
@@ -281,6 +278,11 @@ const LayoutSlug = props => {
   const { post, lock, validPassword } = props
   const router = useRouter()
   const waiting404 = siteConfig('POST_WAITING_TIME_FOR_404') * 1000
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   // 检查是否为友情链接页面 - 从路由和post数据中判断
   const isLinksPage = router.asPath === '/links' || router.asPath.startsWith('/links?') ||
@@ -314,7 +316,6 @@ const LayoutSlug = props => {
           {lock && <ArticleLock validPassword={validPassword} />}
           {!lock && <LinksPage post={post || { title: '友情链接', slug: 'links' }} />}
         </div>
-        <PageMusicPlayer musicId={post?.musicId} />
       </>
     )
   }
@@ -351,12 +352,11 @@ const LayoutSlug = props => {
 
             {/* 评论互动 */}
             <div className='duration-200 overflow-x-auto glass-layer-soft px-3'>
-              <Comment frontMatter={post} />
+               <Comment frontMatter={post} />
             </div>
           </div>
         )}
       </div>
-      <PageMusicPlayer musicId={post?.musicId} />
     </>
   )
 }
