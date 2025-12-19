@@ -34,7 +34,7 @@ export default function PostHero({ post, siteInfo }) {
 
       <header
         id='article-header-cover'
-        className={`${isDarkMode ? 'bg-gradient-to-b from-black/70 via-black/40 to-transparent' : 'bg-gradient-to-b from-white/90 via-white/70 to-transparent'} absolute top-0 w-full h-96 py-10 flex justify-center items-center`}>
+        className={`${isDarkMode ? 'from-black/70 via-black/40 to-transparent' : 'from-white/90 via-white/70 to-transparent'} absolute top-0 w-full h-96 py-10 flex justify-center items-center`}>
         <div className='mt-10'>
           <div className='mb-3 flex justify-center'>
             {post.category && (
@@ -79,7 +79,8 @@ export default function PostHero({ post, siteInfo }) {
                 {locale.COMMON.VIEWS}
               </div>
             )}
-            {post?.wordCount && post?.readTime && (
+            {/*除了文章页面外不显示阅读统计*/}
+            {post?.type && post.type === 'Post' && post?.wordCount && post?.readTime && (
               <WordCount wordCount={post.wordCount} readTime={post.readTime} />
             )}
           </section>
