@@ -243,10 +243,6 @@ const nextConfig = {
       THEME
     )
 
-    /* ---- 关键修正 1：server cache 按平台 ---- */
-    if (isServer && ['cloudflare', 'edgeone'].includes(PLATFORM)) {
-      config.cache = false
-    }
 
     if (isServer) {
       config.externals.push(
