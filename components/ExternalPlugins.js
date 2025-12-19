@@ -165,15 +165,198 @@ const ExternalPlugin = props => {
 
   const router = useRouter()
   useEffect(() => {
-    // 异步渲染谷歌广告
-    if (ADSENSE_GOOGLE_ID) {
-      setTimeout(() => {
-        initGoogleAdsense(ADSENSE_GOOGLE_ID)
-      }, 3000)
-    }
+    // 延迟加载非关键资源，提高首屏渲染速度
+    const delayNonCriticalResources = () => {
+      // 延迟3秒加载谷歌广告
+      if (ADSENSE_GOOGLE_ID) {
+        setTimeout(() => {
+          initGoogleAdsense(ADSENSE_GOOGLE_ID)
+        }, 3000)
+      }
+
+      // 延迟2秒加载51.LA统计
+      if (ANALYTICS_51LA_ID && ANALYTICS_51LA_CK) {
+        setTimeout(() => {
+          const LA = window.LA
+          if (LA) {
+            LA.init({ 
+              id: `${ANALYTICS_51LA_ID}`, 
+              ck: `${ANALYTICS_51LA_CK}`, 
+              hashMode: true, 
+              autoTrack: true 
+            })
+          }
+        }, 2000)
+      }
+
+      // 延迟2秒加载ChatBase
+      if (CHATBASE_ID) {
+        setTimeout(() => {
+          window.chatbaseConfig = {
+            chatbotId: CHATBASE_ID,
+          }
+        }, 2000)
+      }
+
+      // 延迟2秒加载Clarity
+      if (CLARITY_ID) {
+        setTimeout(() => {
+          (function(c, l, a, r, i, t, y) {
+            c[a] = c[a] || function() {
+              (c[a].q = c[a].q || []).push(arguments);
+            };
+            t = l.createElement(r);
+            t.async = 1;
+            t.src = "https://www.clarity.ms/tag/" + i;
+            y = l.getElementsByTagName(r)[0];
+            if (y && y.parentNode) {
+              y.parentNode.insertBefore(t, y);
+            } else {
+              l.head.appendChild(t);
+            }
+          })(window, document, "clarity", "script", CLARITY_ID);
+        }, 2000)
+      }
+
+      // 延迟2秒加载DaoVoice
+      if (COMMENT_DAO_VOICE_ID) {
+        setTimeout(() => {
+          (function(i, s, o, g, r, a, m) {
+            i["DaoVoiceObject"] = r;
+            i[r] = i[r] || function() {
+              (i[r].q = i[r].q || []).push(arguments);
+            };
+            i[r].l = 1 * new Date();
+            a = s.createElement(o);
+            m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            a.charset = "utf-8";
+            if (m && m.parentNode) {
+              m.parentNode.insertBefore(a, m);
+            } else {
+              s.head.appendChild(a);
+            }
+          })(window, document, "script", ('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/daf1a94b.js", "daovoice")
+          
+          daovoice('init', {
+            app_id: COMMENT_DAO_VOICE_ID
+          });
+          daovoice('update');
+        }, 2000)
+      }
+
+      // 延迟2秒加载WWADS
+      if (AD_WWADS_ID) {
+        setTimeout(() => {
+          const script = document.createElement('script');
+          script.type = 'text/javascript';
+          script.src = 'https://cdn.wwads.cn/js/makemoney.js';
+          document.body.appendChild(script);
+        }, 2000)
+      }
+
+      // 延迟2秒加载Tidio
+      if (COMMENT_TIDIO_ID) {
+        setTimeout(() => {
+          const script = document.createElement('script');
+          script.async = true;
+          script.src = `//code.tidio.co/${COMMENT_TIDIO_ID}.js`;
+          document.body.appendChild(script);
+        }, 2000)
+      }
+
+      // 延迟2秒加载Gitter
+      if (COMMENT_GITTER_ROOM) {
+        setTimeout(() => {
+          const script1 = document.createElement('script');
+          script1.src = 'https://sidecar.gitter.im/dist/sidecar.v1.js';
+          script1.async = true;
+          script1.defer = true;
+          document.body.appendChild(script1);
+
+          setTimeout(() => {
+            ((window.gitter = {}).chat = {}).options = {
+              room: COMMENT_GITTER_ROOM
+            };
+          }, 1000);
+        }, 2000)
+      }
+
+      // 延迟2秒加载百度统计
+      if (ANALYTICS_BAIDU_ID) {
+        setTimeout(() => {
+          var _hmt = _hmt || [];
+          (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?" + ANALYTICS_BAIDU_ID;
+            var s = document.getElementsByTagName("script")[0]; 
+            s.parentNode.insertBefore(hm, s);
+          })();
+        }, 2000)
+      }
+
+      // 延迟2秒加载站长统计
+      if (ANALYTICS_CNZZ_ID) {
+        setTimeout(() => {
+          document.write(unescape("%3Cspan style='display:none' id='cnzz_stat_icon_" + ANALYTICS_CNZZ_ID + "'%3E%3C/span%3E%3Cscript src='https://s9.cnzz.com/z_stat.php%3Fid%3D" + ANALYTICS_CNZZ_ID + "' type='text/javascript'%3E%3C/script%3E"));
+        }, 2000)
+      }
+
+      // 延迟2秒加载Umami统计
+      if (UMAMI_ID) {
+        setTimeout(() => {
+          const script = document.createElement('script');
+          script.async = true;
+          script.defer = true;
+          script.src = UMAMI_HOST;
+          script.setAttribute('data-website-id', UMAMI_ID);
+          document.body.appendChild(script);
+        }, 2000)
+      }
+
+      // 延迟2秒加载谷歌统计
+      if (ANALYTICS_GOOGLE_ID) {
+        setTimeout(() => {
+          const script1 = document.createElement('script');
+          script1.async = true;
+          script1.defer = true;
+          script1.src = `https://www.googletagmanager.com/gtag/js?id=${ANALYTICS_GOOGLE_ID}`;
+          document.body.appendChild(script1);
+
+          setTimeout(() => {
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', ANALYTICS_GOOGLE_ID, {
+              page_path: window.location.pathname,
+            });
+          }, 1000);
+        }, 2000)
+      }
+
+      // 延迟2秒加载Matomo统计
+      if (MATOMO_HOST_URL && MATOMO_SITE_ID) {
+        setTimeout(() => {
+          var _paq = window._paq = window._paq || [];
+          _paq.push(['trackPageView']);
+          _paq.push(['enableLinkTracking']);
+          (function() {
+            var u="//" + MATOMO_HOST_URL + "/";
+            _paq.push(['setTrackerUrl', u+'matomo.php']);
+            _paq.push(['setSiteId', MATOMO_SITE_ID]);
+            var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+            g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+          })();
+        }, 2000)
+      }
+    };
+
+    // 延迟1秒执行非关键资源加载
+    setTimeout(delayNonCriticalResources, 1000);
 
     setTimeout(() => {
-      // 映射url
+      // 映射url（关键功能，不延迟）
       convertInnerUrl({ allPages: props?.allNavPages, lang: lang })
     }, 500)
   }, [router])

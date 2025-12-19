@@ -40,11 +40,15 @@ import PerformanceDetector from '@/components/PerformanceDetector'
 // 使用 useMemo 优化动态导入
 const AlgoliaSearchModal = dynamic(
   () => import('@/components/AlgoliaSearchModal'),
-  { 
+  {
     ssr: false,
     loading: () => <div className="hidden">Loading...</div> // 添加加载状态
   }
 )
+// 单页音乐播放器
+const PageMusicPlayer = dynamic(() => import('@/components/PageMusicPlayer'), {
+  ssr: false
+})
 
 // 主题全局状态
 const ThemeGlobalHexo = createContext()
@@ -96,7 +100,7 @@ const LayoutBase = props => {
         id='theme-hexo'
         className={`${fontStyle} scroll-smooth ${isLowEndDevice ? 'reduce-motion' : ''} bg-day-gradient dark:bg-night-gradient`}>
         <Style />
-        
+
         {/* 性能检测组件 */}
         <PerformanceDetector />
 
@@ -277,11 +281,11 @@ const LayoutSlug = props => {
   const { post, lock, validPassword } = props
   const router = useRouter()
   const waiting404 = siteConfig('POST_WAITING_TIME_FOR_404') * 1000
-  
+
   // 检查是否为友情链接页面 - 从路由和post数据中判断
-  const isLinksPage = router.asPath === '/links' || router.asPath.startsWith('/links?') || 
+  const isLinksPage = router.asPath === '/links' || router.asPath.startsWith('/links?') ||
                       post?.slug === 'links' || post?.title === '友链' || post?.title === '友情链接'
-  
+
   useEffect(() => {
     // 404检测 - 但排除友情链接页面
     if (!post && !isLinksPage) {
@@ -301,7 +305,7 @@ const LayoutSlug = props => {
       return () => clearTimeout(timeoutId) // 清理定时器
     }
   }, [post, isLinksPage])
-  
+
   // 如果是友情链接页面，使用特殊的LinksPage组件
   if (isLinksPage) {
     return (
@@ -310,10 +314,11 @@ const LayoutSlug = props => {
           {lock && <ArticleLock validPassword={validPassword} />}
           {!lock && <LinksPage post={post || { title: '友情链接', slug: 'links' }} />}
         </div>
+        <PageMusicPlayer musicId={post?.musicId} />
       </>
     )
   }
-  
+
   return (
     <>
       <div className='w-full lg:hover:shadow rounded-t-xl lg:rounded-xl lg:px-2 lg:py-4 glass-layer-strong article'>
@@ -351,6 +356,7 @@ const LayoutSlug = props => {
           </div>
         )}
       </div>
+      <PageMusicPlayer musicId={post?.musicId} />
     </>
   )
 }
