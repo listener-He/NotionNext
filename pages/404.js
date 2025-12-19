@@ -17,7 +17,10 @@ export async function getStaticProps(req) {
   const { locale } = req
 
   const props = (await getGlobalData({ from: '404', locale })) || {}
-  return { props }
+  return {
+        props,
+        revalidate: process.env.EXPORT
+      ? undefined : 3600}
 }
 
 export default NoFound
