@@ -187,7 +187,36 @@ const renderMermaid = (mermaidCDN, isDarkMode) => {
                 setTimeout(() => {
                   const mermaid = window.mermaid
                   if (mermaid?.initialize) {
-                    mermaid.initialize({ startOnLoad: false, securityLevel: 'loose', theme: isDarkMode ? 'dark' : 'default' })
+                    const darkVars = {
+                      fontFamily:
+                        "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif",
+                      fontSize: '16px',
+                      background: '#0b0f14',
+                      textColor: '#e5e7eb',
+                      labelColor: '#e5e7eb',
+                      primaryColor: '#111827',
+                      primaryTextColor: '#e5e7eb',
+                      primaryBorderColor: '#a78bfa',
+                      lineColor: '#60a5fa',
+                      secondaryColor: '#0b0f14'
+                    }
+                    const lightVars = {
+                      fontFamily:
+                        "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif",
+                      fontSize: '16px',
+                      background: 'transparent',
+                      primaryColor: '#f3f4f6',
+                      primaryTextColor: '#1f2937',
+                      primaryBorderColor: '#6366f1',
+                      lineColor: '#2563eb',
+                      secondaryColor: '#ffffff'
+                    }
+                    mermaid.initialize({
+                      startOnLoad: false,
+                      securityLevel: 'loose',
+                      theme: isDarkMode ? 'dark' : 'default',
+                      themeVariables: isDarkMode ? darkVars : lightVars
+                    })
                   }
                   try {
                     if (mermaid?.run) {

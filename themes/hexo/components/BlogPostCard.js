@@ -4,7 +4,7 @@ import SmartLink from '@/components/SmartLink'
 import CONFIG from '../config'
 import { BlogPostCardInfo } from './BlogPostCardInfo'
 import { getDevicePerformance } from '@/components/PerformanceDetector'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 const BlogPostCard = ({ index, post, showSummary, siteInfo }) => {
   const HEXO_POST_LIST_PREVIEW = siteConfig('HEXO_POST_LIST_PREVIEW', null, CONFIG)
@@ -59,9 +59,24 @@ const BlogPostCard = ({ index, post, showSummary, siteInfo }) => {
     ? '' 
     : (HEXO_POST_LIST_COVER_HOVER_ENLARGE ? ' hover:scale-102 transition-all duration-300 ease-standard' : '')
 
+  const containerRef = useRef(null)
+  const [visible, setVisible] = useState(false)
+  useEffect(() => {
+    const rootMargin = isLowEndDevice ? '600px' : '400px'
+    const io = new IntersectionObserver(
+      entries => {
+        entries.forEach(e => {
+          if (e.isIntersecting) setVisible(true)
+        })
+      },
+      { root: null, rootMargin, threshold: 0 }
+    )
+    if (containerRef.current) io.observe(containerRef.current)
+    return () => io.disconnect()
+  }, [])
+
   return (
-    <div
-      className={hovereffectclass}>
+    <div ref={containerRef} className={hovereffectclass}>
       <div
         key={post.id}
         {...(enableAOS && {
@@ -76,17 +91,21 @@ const BlogPostCard = ({ index, post, showSummary, siteInfo }) => {
         className={`group w-full flex justify-between items-stretch md:flex-row flex-col-reverse ${HEXO_POST_LIST_IMG_CROSSOVER && index % 2 === 1 ? 'md:flex-row-reverse' : ''}
                     overflow-hidden rounded-2xl backdrop-blur-md bg-white/60 dark:bg-gray-900/50 border border-black/5 dark:border-white/10 shadow-md`}>
         {/* 文字内容 */}
-        <BlogPostCardInfo
-          post={post}
-          showPageCover={showPageCover}
-          showPreview={showSummary ? false : showPreviewConfig}
-          showSummary={showSummary}
-          dateAlign={showPageCover && HEXO_POST_LIST_IMG_CROSSOVER && index % 2 === 1 ? 'right' : 'left'}
-          containerRef={infoRef}
-        />
+        {visible ? (
+          <BlogPostCardInfo
+            post={post}
+            showPageCover={showPageCover}
+            showPreview={showSummary ? false : showPreviewConfig}
+            showSummary={showSummary}
+            dateAlign={showPageCover && HEXO_POST_LIST_IMG_CROSSOVER && index % 2 === 1 ? 'right' : 'left'}
+            containerRef={infoRef}
+          />
+        ) : (
+          <div className='md:w-6/12 w-full min-h-[200px] bg-gray-100 dark:bg-gray-800' />
+        )}
 
         {/* 图片封面 */}
-        {showPageCover && (
+        {showPageCover && visible && (
           <div ref={imgWrapRef} className={`md:w-6/12 relative overflow-hidden rounded-2xl 
             ${HEXO_POST_LIST_IMG_CROSSOVER && index % 2 === 1 
               ? 'md:rounded-l-2xl md:rounded-r-3xl'  // 图片在左，右内角更大

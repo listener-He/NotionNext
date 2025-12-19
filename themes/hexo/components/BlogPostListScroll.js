@@ -39,7 +39,7 @@ const BlogPostListScroll = ({
     updatePage(page + 1)
   }
 
-  // 监听滚动自动分页加载
+  // 监听滚动自动分页加载（保留作为后备）
   const scrollTrigger = () => {
     requestAnimationFrame(() => {
       const scrollS = window.scrollY + window.outerHeight
@@ -76,10 +76,26 @@ const BlogPostListScroll = ({
     }
   })()
 
-  // 监听滚动
+  // 通过 IntersectionObserver 更平滑地分页
+  const sentinelRef = useRef(null)
   useEffect(() => {
+    const rootMargin = isLowEndDevice ? '1200px' : '600px'
+    const observer = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            handleGetMore()
+          }
+        })
+      },
+      { root: null, rootMargin, threshold: 0 }
+    )
+    if (sentinelRef.current) observer.observe(sentinelRef.current)
+    // 后备滚动处理
     window.addEventListener('scroll', throttleScroll)
     return () => {
+      if (sentinelRef.current) observer.unobserve(sentinelRef.current)
+      observer.disconnect()
       window.removeEventListener('scroll', throttleScroll)
     }
   }, []) // 添加空依赖数组以避免重复绑定
@@ -134,6 +150,8 @@ const BlogPostListScroll = ({
           ))}
         </div>
 
+        {/* 观察哨，用于提前加载下一页 */}
+        <div ref={sentinelRef} className='w-full h-8' />
         {renderLoadMoreButton()}
       </div>
     )

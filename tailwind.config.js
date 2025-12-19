@@ -128,7 +128,7 @@ module.exports = {
         },
         '.bg-day-gradient': {
           backgroundImage:
-            'linear-gradient(135deg, #f5f9ff 0%, #eef7ff 50%, #ffffff 100%)'
+            'linear-gradient(135deg, #fff5f7 0%, #eafcff 40%, #fef9ff 70%, #ffffff 100%)'
         },
         '.bg-night-gradient': {
           backgroundImage:

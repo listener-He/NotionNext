@@ -363,18 +363,122 @@ const Style = () => {
       
       // 优化文本可读性
       #theme-hexo .article-content {
-        line-height: 1.8;
-        font-size: 1.125rem;
-        letter-spacing: 0.01em;
+        line-height: 1.9;
+        font-size: clamp(1rem, 0.98rem + 0.25vw, 1.125rem);
+        letter-spacing: 0.003em;
+        color: #111827;
+        text-rendering: optimizeLegibility;
+        -webkit-font-smoothing: antialiased;
+        font-family: "Noto Sans SC","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Source Han Sans SC","Segoe UI","Roboto","Helvetica Neue",Arial,sans-serif;
+      }
+      .dark #theme-hexo .article-content {
+        color: #e5e7eb;
+      }
+      #theme-hexo .article-content p {
+        margin: 0.75rem 0;
+      }
+      #theme-hexo .article-content li {
+        margin: 0.3rem 0;
+      }
+      #theme-hexo .article-content strong, 
+      #theme-hexo .article-content b {
+        font-weight: 700;
+      }
+      #theme-hexo .article-content a {
+        text-decoration-thickness: 0.08em;
+        text-underline-offset: 3px;
+      }
+      #theme-hexo .article-content blockquote {
+        border-left: 4px solid color-mix(in srgb, var(--theme-color) 55%, #888);
+        background: color-mix(in srgb, var(--theme-color) 6%, transparent);
+        padding: 0.6rem 0.9rem;
+        border-radius: 0.25rem;
+      }
+      #theme-hexo .article-content h1,
+      #theme-hexo .article-content .notion-h1 {
+        font-size: clamp(1.75rem, 1.4rem + 1.2vw, 2.25rem);
+        line-height: 1.25;
+        font-weight: 800;
+        margin: 1.25rem 0 0.75rem 0;
+        letter-spacing: -0.02em;
+        color: #111827;
+      }
+      .dark #theme-hexo .article-content h1,
+      .dark #theme-hexo .article-content .notion-h1 {
+        color: #f9fafb;
+      }
+      #theme-hexo .article-content h2,
+      #theme-hexo .article-content .notion-h2 {
+        font-size: clamp(1.5rem, 1.25rem + 0.8vw, 2rem);
+        font-weight: 700;
+        margin: 1rem 0 0.5rem 0;
+        letter-spacing: -0.01em;
+        color: #111827;
+      }
+      .dark #theme-hexo .article-content h2,
+      .dark #theme-hexo .article-content .notion-h2 {
+        color: #f3f4f6;
+      }
+      #theme-hexo .article-content h3,
+      #theme-hexo .article-content .notion-h3 {
+        font-size: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
+        font-weight: 700;
+        margin: 0.75rem 0 0.5rem 0;
+        letter-spacing: -0.005em;
+        color: #111827;
+      }
+      .dark #theme-hexo .article-content h3,
+      .dark #theme-hexo .article-content .notion-h3 {
+        color: #e5e7eb;
+      }
+      #theme-hexo .article-content p,
+      #theme-hexo .article-content .notion-text {
+        color: #111827;
+      }
+      .dark #theme-hexo .article-content p,
+      .dark #theme-hexo .article-content .notion-text {
+        color: #e5e7eb;
+      }
+      #theme-hexo .article-content a,
+      #theme-hexo .article-content .notion-link {
+        color: #1f2937;
+        text-decoration-thickness: 0.08em;
+        text-underline-offset: 3px;
+      }
+      #theme-hexo .article-content a:hover,
+      #theme-hexo .article-content .notion-link:hover {
+        color: var(--theme-color);
+      }
+      .dark #theme-hexo .article-content a,
+      .dark #theme-hexo .article-content .notion-link {
+        color: #93c5fd;
+      }
+      .dark #theme-hexo .article-content .notion-link {
+        border-color: #60a5fa !important;
       }
       
       // 优化代码块显示
       #theme-hexo pre[class*="language-"] {
-        line-height: 1.5;
+        line-height: 1.6;
         font-size: 0.95rem;
         border-radius: 0.5rem;
         overflow: auto;
+        background-color: #f8fafc;
+        border: 1px solid #e5e7eb;
       }
+      .dark #theme-hexo pre[class*="language-"] {
+        background-color: #0b0f14;
+        border: 1px solid #1f2937;
+      }
+      #theme-hexo .code-toolbar {
+        box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+      }
+      .dark #theme-hexo .code-toolbar {
+        box-shadow: 0 1px 2px rgba(255,255,255,0.06);
+      }
+      #theme-hexo .pre-mac > span:nth-child(1){ background: #ef4444; }
+      #theme-hexo .pre-mac > span:nth-child(2){ background: #f59e0b; }
+      #theme-hexo .pre-mac > span:nth-child(3){ background: #10b981; }
       
       // 优化标签显示
       #theme-hexo .tag-item {
@@ -384,6 +488,16 @@ const Style = () => {
         font-weight: 500;
         transition: all 0.2s ease-in-out;
       }
+      #theme-hexo .tag-item {
+        background-color: rgba(17,24,39,0.06);
+        color: #111827;
+        border: 1px solid rgba(17,24,39,0.12);
+      }
+      .dark #theme-hexo .tag-item {
+        background-color: rgba(255,255,255,0.08);
+        color: #e5e7eb;
+        border: 1px solid rgba(255,255,255,0.18);
+      }
       
       // 优化文章标题
       #theme-hexo .post-title {
@@ -391,10 +505,127 @@ const Style = () => {
         line-height: 1.2;
       }
       
+      /* Mermaid 容器 - 移除卡片，仅增强可见度 */
+      #theme-hexo .article-content .mermaid {
+        display: block;
+        width: 100%;
+        overflow-x: auto;
+        padding: 0; /* 去掉卡片内边距 */
+        border: 0; /* 去掉边框 */
+        background: transparent; /* 去掉卡片背景 */
+        color: inherit;
+      }
+      .dark #theme-hexo .article-content .mermaid {
+        background: #0b0f14;
+        color: #e5e7eb;
+      }
+      #theme-hexo .article-content .mermaid svg {
+        height: auto;
+      }
+      #theme-hexo .article-content .mermaid svg text {
+        fill: currentColor !important;
+      }
+
+      /* 文章详情页元信息样式优化 */
+      #theme-hexo #header .article-meta {
+        gap: 0.5rem;
+        font-size: 0.95rem;
+        line-height: 1.75;
+        letter-spacing: 0.01em;
+      }
+      #theme-hexo #header .article-meta > * {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.25rem 0.6rem;
+        border-radius: 9999px;
+        backdrop-filter: saturate(120%) blur(2px);
+      }
+      #theme-hexo #header .article-meta a,
+      #theme-hexo #header .article-meta div,
+      #theme-hexo #header .article-meta span {
+        text-decoration: none;
+      }
+      #theme-hexo #header .article-meta > * {
+        background-color: rgba(255,255,255,0.35);
+        color: #111827;
+        border: 1px solid rgba(17,24,39,0.12);
+      }
+      .dark #theme-hexo #header .article-meta > * {
+        background-color: rgba(17,24,39,0.35);
+        color: #f3f4f6;
+        border: 1px solid rgba(255,255,255,0.18);
+      }
+      /* 字数与阅读时长胶囊 */
+      #theme-hexo #header .article-meta #wordCountWrapper > span {
+        padding: 0.25rem 0.6rem;
+        border-radius: 9999px;
+      }
+
+      /* 目录标题与条目美化 */
+      #theme-hexo .catalog-title {
+        display: flex;
+        align-items: center;
+        gap: .5rem;
+        font-weight: 700;
+      }
+      #theme-hexo .catalog-item {
+        border-left-width: 2px;
+        padding-left: .75rem;
+        border-color: rgba(17,24,39,.1);
+        color: #374151;
+      }
+      .dark #theme-hexo .catalog-item {
+        border-color: rgba(255,255,255,.15);
+        color: #cbd5e1;
+      }
+      #theme-hexo .catalog-item:hover {
+        color: var(--theme-color);
+      }
+      #theme-hexo .catalog-item-active {
+        background: color-mix(in srgb, var(--theme-color) 12%, transparent);
+        border-color: var(--theme-color);
+        color: var(--theme-color);
+        border-radius: .375rem;
+      }
+      .dark #theme-hexo .catalog-item-active {
+        background: color-mix(in srgb, var(--theme-color) 18%, transparent);
+      }
+
       // 优化分页导航
       #theme-hexo .pagination-number {
         font-weight: 600;
         transition: all 0.2s ease-in-out;
+      }
+
+      /* 顶部阅读进度条美化 */
+      #theme-hexo .reading-progress-track {
+        height: 8px;
+        border-radius: 9999px;
+        background: rgba(17,24,39,.08);
+        backdrop-filter: blur(3px);
+      }
+      .dark #theme-hexo .reading-progress-track {
+        background: rgba(255,255,255,.12);
+      }
+      #theme-hexo .reading-progress-bar {
+        height: 8px;
+        border-radius: 9999px;
+        background: linear-gradient(90deg, color-mix(in srgb, var(--theme-color) 90%, white), color-mix(in srgb, var(--theme-color) 70%, #67e8f9));
+        position: relative;
+      }
+      #theme-hexo .reading-progress-dot {
+        position: absolute;
+        right: -6px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 12px;
+        height: 12px;
+        border-radius: 9999px;
+        background: white;
+        box-shadow: 0 0 0 2px color-mix(in srgb, var(--theme-color) 60%, #93c5fd);
+      }
+      .dark #theme-hexo .reading-progress-dot {
+        background: #0b0f14;
       }
     `}</style>
   )

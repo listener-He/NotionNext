@@ -23,7 +23,7 @@ export default function ArticleRecommend({ recommendPosts, siteInfo }) {
   return (
     <div className='pt-8'>
       <div className=' mb-2 px-1 flex flex-nowrap justify-between'>
-        <div className='dark:text-gray-300'>
+        <div className='dark:text-gray-300 font-semibold'>
           <i className='mr-2 fas fa-thumbs-up' />
           {locale.COMMON.RELATE_POSTS}
         </div>
@@ -40,21 +40,22 @@ export default function ArticleRecommend({ recommendPosts, siteInfo }) {
               title={post.title}
               href={post?.href}
               passHref
-              className='flex h-32 cursor-pointer overflow-hidden'>
+              className='group block relative overflow-hidden rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-800 h-32'>
               <div className='h-full w-full relative group'>
-                <div className='flex items-center justify-center w-full h-full duration-300 '>
-                  <div className='z-10 text-sm px-4 font-bold text-white text-center shadow-text select-none'>
-                    {post.title}
-                  </div>
-                </div>
                 <LazyImage
                   src={headerImage}
-                  className='absolute top-0 w-full h-full object-cover object-center group-hover:scale-110 group-hover:brightness-50 transform duration-200'
+                  className='absolute top-0 w-full h-full object-cover object-center group-hover:scale-105 transform duration-300'
                 />
 
-                {/* 卡片的阴影遮罩，为了凸显图片上的文字 */}
-                <div className='h-3/4 w-full absolute left-0 bottom-0'>
-                  <div className='h-full w-full absolute opacity-80 group-hover:opacity-100 transition-all duration-1000 bg-gradient-to-b from-transparent to-black'></div>
+                <div className='absolute inset-0 bg-gradient-to-b from-black/0 via-black/15 to-black/45 dark:from-black/0 dark:via-black/25 dark:to-black/55' />
+                <div className='absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-r from-pink-200/20 via-cyan-200/15 to-transparent dark:from-pink-400/10 dark:via-cyan-400/10' />
+
+                <div className='relative z-10 h-full w-full flex items-end'>
+                  <div className='p-3 w-full'>
+                    <div className='line-clamp-2 text-sm font-semibold text-white'>
+                      {post.title}
+                    </div>
+                  </div>
                 </div>
               </div>
             </SmartLink>

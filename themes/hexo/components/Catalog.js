@@ -68,7 +68,7 @@ const Catalog = ({ toc }) => {
 
   return (
     <div className='px-sm py-xs'>
-      <div className='w-full'>
+      <div className='w-full catalog-title'>
         <i className='mr-1 fas fa-stream' />
         {locale.COMMON.TABLE_OF_CONTENTS}
       </div>
@@ -86,14 +86,15 @@ const Catalog = ({ toc }) => {
               <a
                 key={id}
                 href={`#${id}`}
-                className={`${activeSection === id && 'dark:border-white border-indigo-800 text-indigo-800 font-bold'} hover:font-semibold border-l pl-4 block hover:text-indigo-800 duration-300 ease-standard transform dark:text-indigo-400 dark:border-indigo-400
+                aria-current={activeSection === id ? 'true' : 'false'}
+                className={`${activeSection === id ? 'catalog-item-active' : ''} hover:font-semibold border-l pl-4 block hover:text-indigo-800 duration-300 ease-standard transform dark:text-indigo-400 dark:border-indigo-400
         notion-table-of-contents-item-indent-level-${tocItem.indentLevel} catalog-item `}>
                 <span
                   style={{
                     display: 'inline-block',
                     marginLeft: tocItem.indentLevel * 16
                   }}
-                  className={`truncate ${activeSection === id ? ' font-bold text-indigo-800 dark:text-white underline' : ''}`}>
+                  className={`truncate ${activeSection === id ? ' font-bold text-indigo-800 dark:text-white' : ''}`}>
                   {tocItem.text}
                 </span>
               </a>

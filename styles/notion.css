@@ -565,7 +565,7 @@ summary > .notion-h {
   text-decoration: inherit;
   border-bottom: 0.05em solid !important;
   border-color: var(--fg-color-2);
-  opacity: 0.7;
+  opacity: 0.95;
   transition:
     border-color 100ms ease-in,
     opacity 100ms ease-in;
@@ -772,7 +772,7 @@ code[class*='language-'] {
   overflow: auto;
   font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, Courier,
     monospace;
-  @apply w-full mb-0 dark:bg-black !important;
+  @apply w-full mb-0 bg-gray-50 dark:bg-black !important;
 }
 
 .notion-column {
@@ -2019,7 +2019,7 @@ tbody tr {
 }
 
 pre[class*='language-mermaid'] {
-  @apply bg-gray-50 dark:bg-gray-200 !important;
+  background-color: transparent !important;
 }
 
 /* mermaid 原文隐藏 */
@@ -2037,6 +2037,12 @@ code.language-mermaid {
 
 .mermaid > svg {
   margin: auto;
+}
+/* Mermaid 外层代码块去卡片化 */
+.notion-code.language-mermaid {
+  background-color: transparent !important;
+  border: 0 !important;
+  padding: 0 !important;
 }
 
 .notion-equation-inline .katex-display {

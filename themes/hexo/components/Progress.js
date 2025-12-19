@@ -28,13 +28,16 @@ const Progress = ({ targetRef, showPercent = true }) => {
   }, [])
 
   return (
-    <div className="h-4 w-full shadow-2xl bg-gray-700 rounded-sm">
+    <div className='w-full reading-progress-track'>
       <div
-        className="h-4 bg-indigo-600 duration-200 rounded-sm"
+        className='reading-progress-bar duration-200'
         style={{ width: `${percent}%` }}
       >
+        <span className='reading-progress-dot' />
         {showPercent && (
-          <div className="text-right text-white text-xs">{percent}%</div>
+          <div className='text-right text-xs px-1 select-none'>
+            {percent}%
+          </div>
         )}
       </div>
     </div>
