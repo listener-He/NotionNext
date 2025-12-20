@@ -294,7 +294,10 @@ img {
       #f2f2f2;
   background-size:300% 100%;
   animation: l1 1s infinite linear;
+  object-fit: cover;
+  object-position: center;
   }
+  
   @keyframes l1 {
   0% {background-position: right}
 }

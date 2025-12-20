@@ -63,6 +63,13 @@ const BlogPostCard = ({ index, post, showSummary, siteInfo }) => {
   const containerRef = useRef(null)
   const [visible, setVisible] = useState(false)
   useEffect(() => {
+    // 在移动端始终设为可见，避免图片不渲染的问题
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
+    if (isMobile) {
+      setVisible(true)
+      return
+    }
+    
     const rootMargin = isLowEndDevice ? '600px' : '400px'
     const io = new IntersectionObserver(
       entries => {
@@ -118,7 +125,7 @@ const BlogPostCard = ({ index, post, showSummary, siteInfo }) => {
                   priority={index === 1}
                   alt={post?.title}
                   src={post?.pageCoverThumbnail}
-                  className={`absolute inset-0 h-full w-full object-cover object-center ${!shouldUseAdvancedEffects ? '' : 'group-hover:scale-[1.02] duration-300 ease-standard'} ${visible ? '' : 'hidden'}`}
+                  className={`absolute inset-0 h-full w-full object-cover object-center ${!shouldUseAdvancedEffects ? '' : 'group-hover:scale-[1.02] duration-300 ease-standard'}`}
                   title={post?.title} // 为图片添加title属性以提高SEO
                 />
 

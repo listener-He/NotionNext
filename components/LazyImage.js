@@ -140,7 +140,11 @@ export default function LazyImage({
     onLoad: handleThumbnailLoaded,
     onError: handleImageError,
     className: `${className || ''} lazy-image-placeholder`,
-    style,
+    style: {
+      ...style,
+      objectFit: 'cover',
+      objectPosition: 'center'
+    },
     width: width || 'auto',
     height: height || 'auto',
     onClick,
