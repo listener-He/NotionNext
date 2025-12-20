@@ -129,22 +129,22 @@ module.exports = {
         '.bg-day-gradient': {
           backgroundImage:
             'linear-gradient(135deg, ' +
-            '#f0f9ff 0%, ' +
-            '#e0f2fe 6.25%, ' +
-            '#f0f8ff 12.5%, ' +
-            '#e0f7ff 18.75%, ' +
-            '#f5f3ff 25%, ' +
-            '#faf3ff 31.25%, ' +
-            '#fdf4ff 37.5%, ' +
-            '#fff3f4 43.75%, ' +
-            '#ffe4e6 50%, ' +
-            '#fff5f5 56.25%, ' +
-            '#fffafa 62.5%, ' +
-            '#fffdf5 68.75%, ' +
-            '#f0f4ff 75%, ' +
-            '#f5f7ff 81.25%, ' +
-            '#f8f9ff 87.5%, ' +
-            '#fafbff 93.75%, ' +
+            '#fafbff 0%, ' +
+            '#f0f8ff 6.25%, ' +
+            '#e6f4ff 12.5%, ' +
+            '#e0f2fe 18.75%, ' +
+            '#ebf8ff 25%, ' +
+            '#edf6ff 31.25%, ' +
+            '#f0f9ff 37.5%, ' +
+            '#f3fbff 43.75%, ' +
+            '#f5faff 50%, ' +
+            '#f8fcff 56.25%, ' +
+            '#fbfdff 62.5%, ' +
+            '#fdfdff 68.75%, ' +
+            '#ffffff 75%, ' +
+            '#ffffff 81.25%, ' +
+            '#ffffff 87.5%, ' +
+            '#ffffff 93.75%, ' +
             '#ffffff 100%)'
         },
         '.bg-night-gradient': {
