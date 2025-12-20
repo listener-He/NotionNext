@@ -16,10 +16,10 @@ const Footer = ({ title }) => {
       <div className="max-w-screen-xl mx-auto">
         <div className="flex flex-col md:flex-row justify-center items-center gap-2 md:gap-4">
           <div className="flex items-center">
-            <i className='fas fa-copyright' /> 
+            <i className='fas fa-copyright' />
             <span className="ml-1">{`${copyrightDate}`}</span>
           </div>
-          
+
           <div className="flex items-center">
             <i className='mx-1 animate-pulse fas fa-heart' />
             <a
@@ -29,7 +29,7 @@ const Footer = ({ title }) => {
             </a>
           </div>
         </div>
-        
+
         <div className="flex flex-col md:flex-row justify-center items-center gap-2 md:gap-4 mt-2">
           <BeiAnSite />
           <BeiAnGongAn />
@@ -42,20 +42,20 @@ const Footer = ({ title }) => {
             <span className='px-1 busuanzi_value_site_uv'> </span>
           </div>
         </div>
-        
+
         {(title || siteConfig('BIO')) && (
           <h1 className='text-xs pt-4 text-gray-500 dark:text-gray-400'>
             {title} {siteConfig('BIO') && <>|</>} {siteConfig('BIO')}
           </h1>
         )}
-        
+
         <div className="pt-4">
           <PoweredBy className='justify-center' />
         </div>
       </div>
-      
+
       <div className='flex justify-center items-center gap-4 flex-wrap pt-6 mt-6 border-t border-gray-200 dark:border-gray-700'>
-        <a href="https://blogscn.fun/random.html" title="BLOGS·CN" target="_blank" 
+        <a href="https://blogscn.fun/random.html" title="BLOGS·CN" target="_blank"
            className="transition-transform hover:scale-105">
           <LazyImage src="https://photo.xiangming.site/img/blogscn.png" alt="本站已加入BLOGS·CN"
                      width={60} height={16} />
@@ -87,6 +87,45 @@ const Footer = ({ title }) => {
            className="transition-transform hover:scale-105">
           <LazyImage src="https://boke.lu/logo/横板新图标透明背景.png" alt="博客录" height={16}
                      width={100} />
+        </a>
+        &nbsp;
+        {/*<LazyImage src='https://blog-file.hehouhui.cn/20250724094940374.png' width={15} height={15} alt='萌20257012号'/>*/}
+        {/*<a href="https://icp.gov.moe/?keyword=20257012" target="_blank">萌20257012号</a>*/}
+        {/*&nbsp;*/}
+        {/*<LazyImage src="https://icp.redcha.cn/static/picture/icplogoi.png" width={20} height={20} alt="茶图标"/>*/}
+        {/*<a href="https://icp.redcha.cn/beian/ICP-2025080099.html">茶2025080099号</a>*/}
+        {/* &nbsp;*/}
+        <a href="https://bloginc.cn/18872.html">
+          <div style={{
+            display: 'inline-flex',
+            height: '24px',
+            fontFamily: 'Arial, sans-serif',
+            fontSize: '14px',
+            lineHeight: '24px',
+            textAlign: 'center',
+            borderRadius: '8px',
+            overflow: 'hidden',
+            boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
+          }}>
+            <div style={{
+              backgroundColor: '#04314D',
+              color: 'white',
+              padding: '0 12px',
+              borderTopLeftRadius: '8px',
+              borderBottomLeftRadius: '8px',
+            }}>
+              晓梦羊&reg;
+            </div>
+            <div style={{
+              backgroundColor: '#FF6A00',
+              color: 'white',
+              padding: '0 12px',
+              borderTopRightRadius: '8px',
+              borderBottomRightRadius: '8px',
+            }}>
+              18872号
+            </div>
+          </div>
         </a>
       </div>
     </footer>
