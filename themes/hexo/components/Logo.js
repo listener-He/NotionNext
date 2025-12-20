@@ -11,7 +11,7 @@ const Logo = props => {
   return (
     <SmartLink href='/'>
       <div className='flex flex-col justify-center items-center cursor-pointer space-y-3'>
-        <div className='font-medium text-lg p-1.5 rounded text-primary dark:text-white menu-link transform duration-200'>
+        <div className='font-medium text-lg p-1.5 rounded text-gray-700 dark:text-white menu-link transform duration-200'>
           {siteInfo?.title || siteConfig('TITLE')}
         </div>
       </div>

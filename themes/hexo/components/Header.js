@@ -107,14 +107,14 @@ const Header = props => {
       {categories && (
         <section className='mt-8'>
           <div className='text-sm flex flex-nowrap justify-between font-light px-2'>
-            <div className='text-gray-600 dark:text-gray-200'>
+            <div className='text-gray-700 dark:text-gray-200'>
               <i className='mr-2 fas fa-th-list' />
               {locale.COMMON.CATEGORY}
             </div>
             <SmartLink
               href={'/category'}
               passHref
-              className='mb-3 text-gray-400 hover:text-black dark:text-gray-400 dark:hover:text-white hover:underline cursor-pointer'>
+              className='mb-3 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white hover:underline cursor-pointer'>
               {locale.COMMON.MORE} <i className='fas fa-angle-double-right' />
             </SmartLink>
           </div>
@@ -127,15 +127,15 @@ const Header = props => {
 
       {tags && (
         <section className='mt-4'>
-          <div className='text-sm py-2 px-2 flex flex-nowrap justify-between font-light dark:text-gray-200'>
-            <div className='text-gray-600 dark:text-gray-200'>
+          <div className='text-sm py-2 px-2 flex flex-nowrap justify-between font-light'>
+            <div className='text-gray-700 dark:text-gray-200'>
               <i className='mr-2 fas fa-tag' />
               {locale.COMMON.TAGS}
             </div>
             <SmartLink
               href={'/tag'}
               passHref
-              className='text-gray-400 hover:text-black  dark:hover:text-white hover:underline cursor-pointer'>
+              className='text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white hover:underline cursor-pointer'>
               {locale.COMMON.MORE} <i className='fas fa-angle-double-right' />
             </SmartLink>
           </div>
@@ -160,7 +160,7 @@ const Header = props => {
           willChange: 'top'
         }}
         className={
-          'top-0 duration-300 transition-all shadow-none fixed bg-transparent dark:bg-transparent dark:text-gray-200 text-black w-full z-20 transform border-transparent'
+          'top-0 duration-300 transition-all shadow-none fixed bg-transparent dark:bg-transparent dark:text-gray-200 text-gray-700 w-full z-20 transform border-transparent'
         }>
         <div className='w-full flex justify-between items-center px-4 py-2 glass-nav'>
           <div className='flex'>
@@ -168,22 +168,22 @@ const Header = props => {
           </div>
 
           {/* 右侧功能 */}
-          <div className='flex justify-end items-center space-x-2 text-xs text-secondary dark:text-gray-400 mr-1'>
+          <div className='flex justify-end items-center space-x-2 text-xs text-gray-700 dark:text-gray-400 mr-1'>
             <div className='hidden lg:flex'>
               {' '}
               <MenuListTop {...props} />
             </div>
             <div
               onClick={toggleMenuOpen}
-              className='w-8 justify-center items-center h-8 cursor-pointer flex lg:hidden'
+              className='w-8 justify-center items-center h-8 cursor-pointer flex lg:hidden text-gray-700 dark:text-gray-400'
               role='button'
               aria-label='Toggle menu'
               aria-expanded={isOpen}
               aria-controls='mobile-sidebar'>
               {isOpen ? (
-                <i className='fas fa-times' />
+                <i className='fas fa-times text-gray-700 dark:text-gray-400' />
               ) : (
-                <i className='fas fa-bars' />
+                <i className='fas fa-bars text-gray-700 dark:text-gray-400' />
               )}
             </div>
             {showSearchButton && <SearchButton />}

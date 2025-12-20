@@ -21,7 +21,7 @@ export const MenuItemDrop = ({ link }) => {
         <SmartLink
           href={link?.href}
           target={link?.target}
-          className=' menu-link pl-2 pr-4 no-underline tracking-widest pb-1 text-secondary hover:text-black dark:hover:text-white'>
+          className=' menu-link pl-2 pr-4 no-underline tracking-widest pb-1 text-gray-700 hover:text-black dark:text-gray-400 dark:hover:text-white'>
           {link?.icon && <i className={link?.icon} />} {link?.name}
           {hasSubMenu && <i className='px-2 fa fa-angle-down'></i>}
         </SmartLink>
@@ -29,7 +29,7 @@ export const MenuItemDrop = ({ link }) => {
 
       {hasSubMenu && (
         <>
-          <div className='cursor-pointer menu-link pl-2 pr-4 no-underline tracking-widest pb-1 relative text-secondary hover:text-black dark:hover:text-white'>
+          <div className='cursor-pointer menu-link pl-2 pr-4 no-underline tracking-widest pb-1 relative text-gray-700 hover:text-black dark:text-gray-400 dark:hover:text-white'>
             {link?.icon && <i className={link?.icon} />} {link?.name}
             <i
               className={`px-2 fa fa-angle-down duration-300  ${show ? 'rotate-180' : 'rotate-0'}`}></i>
@@ -44,7 +44,7 @@ export const MenuItemDrop = ({ link }) => {
       {/* 子菜单 */}
       {hasSubMenu && (
         <ul
-          className={`${show ? 'visible opacity-100 top-12 pointer-events-auto' : 'invisible opacity-0 top-20 pointer-events-none'} overflow-hidden rounded-md transition-all duration-300 z-20 absolute block glass-layer-strong text-primary dark:text-gray-200`}>
+          className={`${show ? 'visible opacity-100 top-12 pointer-events-auto' : 'invisible opacity-0 top-20 pointer-events-none'} overflow-hidden rounded-md transition-all duration-300 z-20 absolute block glass-layer-strong text-gray-700 dark:text-gray-200`}>
           {link.subMenus.map((sLink, index) => {
             return (
               <li
