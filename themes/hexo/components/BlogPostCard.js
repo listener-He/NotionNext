@@ -69,7 +69,7 @@ const BlogPostCard = ({ index, post, showSummary, siteInfo }) => {
       setVisible(true)
       return
     }
-    
+
     const rootMargin = isLowEndDevice ? '600px' : '400px'
     const io = new IntersectionObserver(
       entries => {
@@ -97,7 +97,7 @@ const BlogPostCard = ({ index, post, showSummary, siteInfo }) => {
         })}
         id='blog-post-card'
         className={`group w-full flex justify-between items-stretch md:flex-row flex-col-reverse ${HEXO_POST_LIST_IMG_CROSSOVER && index % 2 === 1 ? 'md:flex-row-reverse' : ''}
-                    overflow-hidden rounded-2xl glass-layer-soft`}>
+                    overflow-hidden rounded-xl glass-layer-soft`}>
         {/* 文字内容 */}
         {visible ? (
           <BlogPostCardInfo
@@ -109,12 +109,12 @@ const BlogPostCard = ({ index, post, showSummary, siteInfo }) => {
             containerRef={infoRef}
           />
         ) : (
-          <div className='md:w-6/12 w-full min-h-[200px] bg-transparent' />
+          <div className='md:w-6/12 w-full min-h-[160px] bg-transparent' />
         )}
 
         {/* 图片封面 */}
         {showPageCover && (
-          <div ref={imgWrapRef} className={`md:w-6/12 relative overflow-hidden rounded-2xl 
+          <div ref={imgWrapRef} className={`md:w-5/12 relative overflow-hidden rounded-2xl 
             ${HEXO_POST_LIST_IMG_CROSSOVER && index % 2 === 1 
               ? 'md:rounded-l-2xl md:rounded-r-3xl'  // 图片在左，右内角更大
               : 'md:rounded-l-3xl md:rounded-r-2xl'  // 图片在右，左内角更大

@@ -552,6 +552,7 @@ const Style = () => {
         #theme-hexo .post-title {
             letter-spacing: -0.025em;
             line-height: 1.2;
+            font-size: 0.8rem;
         }
 
         /* Mermaid 容器 - 移除卡片，仅增强可见度 */
