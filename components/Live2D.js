@@ -2,7 +2,7 @@
 import { siteConfig } from '@/lib/config'
 import { useGlobal } from '@/lib/global'
 import { isMobile, loadExternalResource } from '@/lib/utils'
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, useRef } from 'react'
 import { getDevicePerformance } from '@/components/PerformanceDetector'
 
 /**
@@ -12,6 +12,7 @@ import { getDevicePerformance } from '@/components/PerformanceDetector'
 export default function Live2D() {
   const { theme, switchTheme, isDarkMode } = useGlobal()
   const [currentModel, setCurrentModel] = useState('')
+  const animationFrameRef = useRef()
   const showPet = JSON.parse(siteConfig('WIDGET_PET'))
   const petLink = siteConfig('WIDGET_PET_LINK')
   const petLinkDuring = siteConfig('WIDGET_PET_LINK_DURING')
@@ -47,7 +48,16 @@ export default function Live2D() {
       console.log(`Live2D: Switching model to ${isDarkMode ? 'night' : 'day'} mode`, newModelLink)
       setCurrentModel(newModelLink)
       if (newModelLink) {
-        loadLive2D(newModelLink)
+        // 使用 requestIdleCallback 延迟加载模型切换
+        if ('requestIdleCallback' in window) {
+          window.requestIdleCallback(() => {
+            loadLive2D(newModelLink)
+          }, { timeout: 2000 })
+        } else {
+          setTimeout(() => {
+            loadLive2D(newModelLink)
+          }, 100)
+        }
       }
     }
   }, [isDarkMode, getCurrentModelLink, currentModel, loadLive2D])
@@ -84,7 +94,12 @@ export default function Live2D() {
       }, 3000) // 延迟3秒加载
 
       // 清理函数
-      return () => clearTimeout(loadTimer)
+      return () => {
+        clearTimeout(loadTimer)
+        if (animationFrameRef.current) {
+          cancelAnimationFrame(animationFrameRef.current)
+        }
+      }
     }
   }, [showPet, isLowEndDevice, loadLive2D, getCurrentModelLink])
 

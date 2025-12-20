@@ -51,11 +51,28 @@ export default function DarkModeAutoSwitch() {
    * 检查并切换主题
    */
   const checkAndToggleTheme = () => {
+    // 使用 requestIdleCallback 来推迟非关键任务
+    if ('requestIdleCallback' in window) {
+      window.requestIdleCallback(() => {
+        performThemeCheck()
+      }, { timeout: 1000 })
+    } else {
+      // 兼容不支持 requestIdleCallback 的浏览器
+      setTimeout(() => {
+        performThemeCheck()
+      }, 0)
+    }
+  }
+  
+  /**
+   * 执行主题检查的实际逻辑
+   */
+  const performThemeCheck = () => {
     const shouldBeDark = shouldBeDarkMode()
     const currentTime = Date.now()
     
-    // 避免频繁切换，至少间隔1分钟
-    if (lastCheckRef.current && currentTime - lastCheckRef.current < 60000) {
+    // 避免频繁切换，至少间隔2分钟
+    if (lastCheckRef.current && currentTime - lastCheckRef.current < 120000) {
       return
     }
     
@@ -100,12 +117,12 @@ export default function DarkModeAutoSwitch() {
     // 初始检查
     checkAndToggleTheme()
 
-    // 设置定时检查（每分钟检查一次）
+    // 设置定时检查（每5分钟检查一次，减少频率以改善性能）
     intervalRef.current = setInterval(() => {
       if (!handledRef.current) {
         checkAndToggleTheme()
       }
-    }, 600000)
+    }, 300000) // 从600000改为300000(5分钟)，并优化执行方式
 
     // 监听系统主题变化
     mediaRef.current = window.matchMedia('(prefers-color-scheme: dark)')
@@ -118,7 +135,16 @@ export default function DarkModeAutoSwitch() {
     // 监听页面可见性变化，当页面重新可见时检查主题
     const handleVisibilityChange = () => {
       if (!document.hidden) {
-        checkAndToggleTheme()
+        // 页面可见时使用 requestIdleCallback 延迟检查
+        if ('requestIdleCallback' in window) {
+          window.requestIdleCallback(() => {
+            checkAndToggleTheme()
+          }, { timeout: 2000 })
+        } else {
+          setTimeout(() => {
+            checkAndToggleTheme()
+          }, 100)
+        }
       }
     }
     document.addEventListener('visibilitychange', handleVisibilityChange)
