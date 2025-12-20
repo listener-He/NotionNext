@@ -314,8 +314,8 @@ img {
 }
 
 :root {
-  --brand-start: #eef2ff;
-  --brand-end: #f5f3ff;
+  --brand-start: #f0f9ff;
+  --brand-end: #f0f4ff;
   --brand-accent: #e0f2fe;
   --surface: rgba(255, 255, 255, 0.3);
   --surface-border: rgba(0, 0, 0, 0.03);
@@ -332,7 +332,24 @@ img {
   --text-secondary: #cbd5e1;
 }
 .gradient-brand {
-  background-image: linear-gradient(135deg, var(--brand-start) 0%, var(--brand-end) 100%);
+  background-image: linear-gradient(135deg, 
+    #fafbff 0%, 
+    #f0f8ff 6.25%, 
+    #e6f4ff 12.5%, 
+    #e0f2fe 18.75%, 
+    #ebf8ff 25%, 
+    #edf6ff 31.25%, 
+    #f0f9ff 37.5%, 
+    #f3fbff 43.75%, 
+    #f5faff 50%, 
+    #f8fcff 56.25%, 
+    #fbfdff 62.5%, 
+    #fdfdff 68.75%, 
+    #ffffff 75%, 
+    #ffffff 81.25%, 
+    #ffffff 87.5%, 
+    #ffffff 93.75%, 
+    #ffffff 100%);
 }
 .gradient-accent {
   background-image: linear-gradient(135deg, var(--brand-accent) 0%, var(--brand-end) 100%);
