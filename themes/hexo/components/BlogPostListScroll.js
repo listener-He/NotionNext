@@ -113,7 +113,7 @@ const BlogPostListScroll = ({
         <div className="w-full my-4 py-4 text-center">
           <button 
             onClick={handleGetMore}
-            className="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded-lg"
+            className="px-4 py-2 rounded-lg glass-layer-soft"
           >
             {hasMore ? locale.COMMON.MORE : `${locale.COMMON.NO_MORE}`}
           </button>
@@ -125,7 +125,7 @@ const BlogPostListScroll = ({
       <div>
         <div
           onClick={handleGetMore}
-          className='w-full my-4 py-4 text-center cursor-pointer rounded-xl dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors'>
+          className='w-full my-4 py-4 text-center cursor-pointer rounded-xl dark:text-gray-200 transition-colors glass-layer-soft'>
           {' '}
           {hasMore ? locale.COMMON.MORE : `${locale.COMMON.NO_MORE}`}{' '}
         </div>
@@ -137,9 +137,9 @@ const BlogPostListScroll = ({
     return <BlogPostListEmpty currentSearch={currentSearch} />
   } else {
     return (
-      <div id='container' ref={targetRef} className='w-full'>
+      <div id='container' ref={targetRef} className='w-full bg-transparent'>
         {/* 文章列表 */}
-        <div className='space-y-md px-sm md:px-md lg:px-xl'>
+        <div className='space-y-md px-sm md:px-md lg:px-xl bg-transparent'>
           {postsToShow.map(post => (
             <BlogPostCard
               key={post.id}

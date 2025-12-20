@@ -322,7 +322,7 @@ const LinksPage = ({ post }) => {
                 href={link.url}
                 target='_blank'
                 rel='noopener noreferrer'
-                className='group block relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:scale-[1.05] bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 hover:border-blue-200 dark:hover:border-blue-600'
+                className='group block relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:scale-[1.05] border border-gray-100 dark:border-gray-700 hover:border-blue-200 dark:hover:border-blue-600 glass-layer-soft'
                 style={{
                   animation: `fadeInUp 0.6s ease-out ${index * 0.08}s both`
                 }}
@@ -418,7 +418,7 @@ const LinksPage = ({ post }) => {
         )}
 
         {/* 申请条件和规范说明 */}
-        <div className='bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 mt-12 mb-8 border border-gray-150 dark:border-gray-700'>
+        <div className='rounded-2xl shadow-lg p-6 mt-12 mb-8 border border-gray-150 dark:border-gray-700 glass-layer-soft'>
           <h2 className='text-2xl font-bold text-gray-800 dark:text-white mb-6 pb-2 border-b border-gray-200 dark:border-gray-700'>申请友链</h2>
 
           <div className='grid grid-cols-1 md:grid-cols-2 gap-8'>
@@ -539,7 +539,7 @@ const LinksPage = ({ post }) => {
           </div>
         </div>
         {/* 评论区域 */}
-        <div className='mt-12 sm:mt-16 lg:mt-20 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-lg p-4 sm:p-6 lg:p-8'>
+        <div className='mt-12 sm:mt-16 lg:mt-20 rounded-2xl shadow-lg p-4 sm:p-6 lg:p-8 glass-layer-soft'>
           <Comment frontMatter={post} />
         </div>
       </div>

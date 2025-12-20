@@ -6,6 +6,7 @@ import { BlogPostCardInfo } from './BlogPostCardInfo'
 import { getDevicePerformance } from '@/components/PerformanceDetector'
 import { useEffect, useRef, useState } from 'react'
 
+
 const BlogPostCard = ({ index, post, showSummary, siteInfo }) => {
   const HEXO_POST_LIST_PREVIEW = siteConfig('HEXO_POST_LIST_PREVIEW', null, CONFIG)
   const HEXO_POST_LIST_COVER = siteConfig('HEXO_POST_LIST_COVER', null, CONFIG)
@@ -31,7 +32,7 @@ const BlogPostCard = ({ index, post, showSummary, siteInfo }) => {
   const enableAOS = !isLowEndDevice
   const aosDuration = performanceLevel === 'high' ? '800' : '600'
   const aosDelay = index * (performanceLevel === 'high' ? 50 : 100)
-  
+
   // 为低端设备禁用更多效果
   const shouldUseAdvancedEffects = !isLowEndDevice && performanceLevel !== 'low'
 
@@ -53,10 +54,10 @@ const BlogPostCard = ({ index, post, showSummary, siteInfo }) => {
       window.removeEventListener('resize', apply)
     }
   }, [post?.id])
-  
+
   // 根据设备性能调整悬停效果
-  const hovereffectclass = !shouldUseAdvancedEffects 
-    ? '' 
+  const hovereffectclass = !shouldUseAdvancedEffects
+    ? ''
     : (HEXO_POST_LIST_COVER_HOVER_ENLARGE ? ' hover:scale-102 transition-all duration-300 ease-standard' : '')
 
   const containerRef = useRef(null)
@@ -89,7 +90,7 @@ const BlogPostCard = ({ index, post, showSummary, siteInfo }) => {
         })}
         id='blog-post-card'
         className={`group w-full flex justify-between items-stretch md:flex-row flex-col-reverse ${HEXO_POST_LIST_IMG_CROSSOVER && index % 2 === 1 ? 'md:flex-row-reverse' : ''}
-                    overflow-hidden rounded-2xl backdrop-blur-md bg-white/60 dark:bg-gray-900/50 border border-black/5 dark:border-white/10 shadow-md`}>
+                    overflow-hidden rounded-2xl glass-layer-soft`}>
         {/* 文字内容 */}
         {visible ? (
           <BlogPostCardInfo
@@ -101,23 +102,23 @@ const BlogPostCard = ({ index, post, showSummary, siteInfo }) => {
             containerRef={infoRef}
           />
         ) : (
-          <div className='md:w-6/12 w-full min-h-[200px] bg-gray-100 dark:bg-gray-800' />
+          <div className='md:w-6/12 w-full min-h-[200px] bg-transparent' />
         )}
 
         {/* 图片封面 */}
-        {showPageCover && visible && (
+        {showPageCover && (
           <div ref={imgWrapRef} className={`md:w-6/12 relative overflow-hidden rounded-2xl 
             ${HEXO_POST_LIST_IMG_CROSSOVER && index % 2 === 1 
               ? 'md:rounded-l-2xl md:rounded-r-3xl'  // 图片在左，右内角更大
               : 'md:rounded-l-3xl md:rounded-r-2xl'  // 图片在右，左内角更大
-            }`}>
-            <SmartLink href={post?.href}>
+            } bg-transparent`}>
+            <SmartLink href={post?.href} className='bg-transparent'>
               <>
                 <LazyImage
                   priority={index === 1}
                   alt={post?.title}
                   src={post?.pageCoverThumbnail}
-                  className={`absolute inset-0 h-full w-full object-cover object-center ${!shouldUseAdvancedEffects ? '' : 'group-hover:scale-[1.02] duration-300 ease-standard'}`}
+                  className={`absolute inset-0 h-full w-full object-cover object-center ${!shouldUseAdvancedEffects ? '' : 'group-hover:scale-[1.02] duration-300 ease-standard'} ${visible ? '' : 'hidden'}`}
                   title={post?.title} // 为图片添加title属性以提高SEO
                 />
 

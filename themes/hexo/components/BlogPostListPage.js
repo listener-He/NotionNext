@@ -21,9 +21,9 @@ const BlogPostListPage = ({ page = 1, posts = [], postCount, siteInfo }) => {
     return <BlogPostListEmpty />
   } else {
     return (
-      <div id='container' className='w-full'>
+      <div id='container' className='w-full bg-transparent'>
         {/* 文章列表 */}
-        <div className='space-y-md px-sm md:px-md lg:px-xl'>
+        <div className='space-y-md px-sm md:px-md lg:px-xl bg-transparent'>
           {posts?.map(post => (
             <BlogPostCard
               index={posts.indexOf(post)}

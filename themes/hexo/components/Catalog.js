@@ -67,8 +67,8 @@ const Catalog = ({ toc }) => {
   }
 
   return (
-    <div className='px-sm py-xs'>
-      <div className='w-full catalog-title'>
+    <div className='px-sm py-xs bg-transparent'>
+      <div className='w-full catalog-title bg-transparent'>
         <i className='mr-1 fas fa-stream' />
         {locale.COMMON.TABLE_OF_CONTENTS}
       </div>
@@ -78,7 +78,7 @@ const Catalog = ({ toc }) => {
       <div
         className='overflow-y-auto max-h-36 lg:max-h-96 overscroll-none scroll-hidden'
         ref={tRef}>
-        <nav className='h-full text-black'>
+        <nav className='h-full text-black bg-transparent'>
           {toc.map(tocItem => {
             const id = uuidToId(tocItem.id)
             tocIds.push(id)
@@ -88,7 +88,7 @@ const Catalog = ({ toc }) => {
                 href={`#${id}`}
                 aria-current={activeSection === id ? 'true' : 'false'}
                 className={`${activeSection === id ? 'catalog-item-active' : ''} hover:font-semibold border-l pl-4 block hover:text-indigo-800 duration-300 ease-standard transform dark:text-indigo-400 dark:border-indigo-400
-        notion-table-of-contents-item-indent-level-${tocItem.indentLevel} catalog-item `}>
+        notion-table-of-contents-item-indent-level-${tocItem.indentLevel} catalog-item bg-transparent`}>
                 <span
                   style={{
                     display: 'inline-block',

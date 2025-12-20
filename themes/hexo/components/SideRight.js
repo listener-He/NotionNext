@@ -57,7 +57,7 @@ export default function SideRight(props) {
     <div
       id='sideRight'
       className={` lg:w-80 lg:pt-8 ${post ? 'lg:pt-0' : 'lg:pt-4'}`}>
-      <div className='sticky top-8 space-y-4'>
+      <div className='sticky top-8 space-y-4 bg-transparent'>
         {post && post.toc && post.toc.length > 1 && (
           <Card>
             <Catalog toc={post.toc} />

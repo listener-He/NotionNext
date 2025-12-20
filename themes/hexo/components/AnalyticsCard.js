@@ -3,10 +3,10 @@ import Card from './Card'
 export function AnalyticsCard (props) {
   const { postCount } = props
   return <Card>
-    <div className='ml-sm mb-md'>
+    <div className='ml-sm mb-md bg-transparent'>
       <i className='fas fa-chart-area' /> 统计
     </div>
-    <div className='text-xs font-light justify-center mx-xl'>
+    <div className='text-xs font-light justify-center mx-xl bg-transparent'>
       <div className='inline'>
         <div className='flex justify-between'>
           <div>文章数:</div>

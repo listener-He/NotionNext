@@ -24,11 +24,11 @@ export const BlogPostCardInfo = ({
   return (
     <article
       ref={containerRef}
-      className={`flex flex-col justify-between lg:p-6 p-4 ${showPageCover && !showPreview ? 'md:w-6/12 w-full' : 'w-full'}`}>
+      className={`flex flex-col justify-between lg:p-6 p-4 ${showPageCover && !showPreview ? 'md:w-6/12 w-full' : 'w-full'} rounded-xl bg-transparent`}>
       <div>
-        <header className="relative rounded-xl px-4 py-3">
-          <div className={`flex ${showPreview ? 'justify-center' : 'justify-start'} items-start`}>
-            <h2 className="mr-3">
+        <header className="relative px-4 py-3 bg-transparent">
+          <div className={`flex ${showPreview ? 'justify-center' : 'justify-start'} items-start bg-transparent`}>
+            <h2 className="mr-3 bg-transparent">
               {/* 标题 */}
               <SmartLink
                 href={post?.href}
@@ -56,17 +56,17 @@ export const BlogPostCardInfo = ({
             <div
               className={`flex mt-3 items-center ${
                 showPreview ? 'justify-center' : 'justify-start'
-              } flex-wrap text-secondary dark:text-gray-300 `}>
+              } flex-wrap text-secondary dark:text-gray-300 bg-transparent`}>
               <SmartLink
                 href={`/category/${post.category}`}
                 passHref
-                className='cursor-pointer font-light text-sm menu-link hover:text-indigo-700 dark:hover:text-indigo-400 transform'>
+                className='cursor-pointer font-light text-sm menu-link hover:text-indigo-700 dark:hover:text-indigo-400 transform bg-transparent'>
                 <i className='mr-1 far fa-folder' />
                 {post.category}
               </SmartLink>
 
               {post.tagItems?.length > 0 && (
-                <div className='ml-3 inline-flex flex-wrap gap-x-1 gap-y-1'>
+                <div className='ml-3 inline-flex flex-wrap gap-x-1 gap-y-1 bg-transparent'>
                   {post.tagItems.map(tag => {
                     const style = badgeStyle(tag.name, isDarkMode)
                     const textColor = isDarkMode ? 'text-white' : 'text-gray-900'
@@ -75,7 +75,7 @@ export const BlogPostCardInfo = ({
                         key={tag.name}
                         href={`/tag/${encodeURIComponent(tag.name)}`}
                         passHref
-                        className={`px-1.5 py-0.5 text-[11px] leading-4 font-medium rounded-md border hover:opacity-95 transition-all duration-300 ease-standard ${textColor}`}
+                        className={`px-1.5 py-0.5 text-[11px] leading-4 font-medium rounded-md border hover:opacity-95 transition-all duration-300 ease-standard ${textColor} bg-transparent`}
                         style={style}>
                         {tag.name}
                       </SmartLink>
@@ -98,16 +98,16 @@ export const BlogPostCardInfo = ({
 
         {/* 搜索结果 */}
         {post.results && (
-          <p className='line-clamp-3 whitespace-normal mt-4 text-primary dark:text-gray-300 text-[15px] font-normal leading-7'>
+          <p className='line-clamp-3 whitespace-normal mt-4 text-primary dark:text-gray-300 text-[15px] font-normal leading-7 bg-transparent'>
             {post.results.map((r, index) => (
-              <span key={index}>{r}</span>
+              <span key={index} className='bg-transparent'>{r}</span>
             ))}
           </p>
         )}
 
         {/* 预览 */}
         {showPreview && (
-          <div className='overflow-ellipsis truncate'>
+          <div className='overflow-ellipsis truncate bg-transparent'>
             <NotionPage post={post} />
           </div>
         )}
@@ -127,7 +127,7 @@ function badgeStyle(text, isDark) {
   const c2 = `hsl(${(hue + 20) % 360} ${s}% ${l2}%)`
   return {
     backgroundImage: `linear-gradient(135deg, ${c1} 0%, ${c2} 100%)`,
-    borderColor: isDark ? 'rgba(255,255,255,0.18)' : 'rgba(0,0,0,0.12)'
+    borderColor: isDark ? 'rgba(255,255,255,0.25)' : 'rgba(0,0,0,0.15)'
   }
 }
 
@@ -158,17 +158,17 @@ const SummaryCollapsible = ({ text }) => {
     }
   }, [text])
   return (
-    <div className='my-4'>
+    <div className='my-4 bg-transparent'>
       <div
         ref={ref}
-        className={`${expanded ? 'line-clamp-none' : 'line-clamp-2'} relative text-primary dark:text-gray-300 text-[15px] font-normal leading-7`}>
+        className={`${expanded ? 'line-clamp-none' : 'line-clamp-2'} relative text-primary dark:text-gray-300 text-[15px] font-normal leading-7 bg-transparent`}>
         {text}
         {!expanded && overflow && (
-          <div className='absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-white/85 to-transparent dark:from-gray-900/70 pointer-events-none'></div>
+          <div className='absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-white/30 to-transparent dark:from-gray-900/30 pointer-events-none'></div>
         )}
         <button
           onClick={() => setExpanded(!expanded)}
-          className={`${mounted && (overflow || ((text || '').length > 40)) ? 'inline-block' : 'hidden'} absolute bottom-1 right-2 z-10 text-xs px-sm py-xs rounded-full border border-black/10 dark:border-white/15 bg-white/80 dark:bg-white/10 text-primary dark:text-gray-200 hover:bg-gradient-to-r hover:from-primary hover:to-blue-dark hover:text-white shadow-sm transition-all duration-300 ease-standard`}>
+          className={`${mounted && (overflow || ((text || '').length > 40)) ? 'inline-block' : 'hidden'} absolute bottom-1 right-2 z-10 text-xs px-sm py-xs rounded-full border border-black/10 dark:border-white/15 bg-white/90 dark:bg-white/20 text-primary dark:text-gray-200 hover:bg-gradient-to-r hover:from-primary hover:to-blue-dark hover:text-white shadow-sm transition-all duration-300 ease-standard ${expanded ? 'bg-gradient-to-r from-primary to-blue-dark text-white' : ''}`}>
           {expanded ? '收起' : '展开全文'}
         </button>
       </div>

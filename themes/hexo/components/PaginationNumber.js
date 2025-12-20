@@ -67,9 +67,9 @@ function getPageElement(page, currentPage, pagePrefix) {
       passHref
       className={`${
         selected
-          ? 'font-bold bg-primary text-white dark:bg-white/20'
-          : 'border-b border-black/20 text-secondary hover:border-primary hover:bg-primary hover:text-white dark:text-gray-300'
-      } duration-300 ease-standard cursor-pointer pb-0.5 w-6 text-center`}>
+          ? 'font-bold bg-primary text-white dark:bg-white/20 shadow-md'
+          : 'text-secondary hover:border-primary hover:bg-primary hover:text-white dark:text-gray-300 glass-layer-soft hover:shadow-md'
+      } duration-300 ease-standard cursor-pointer pb-0.5 w-6 text-center rounded-lg`}>
       {page}
     </SmartLink>
   )

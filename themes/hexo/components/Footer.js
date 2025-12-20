@@ -12,7 +12,7 @@ const Footer = ({ title }) => {
     parseInt(since) < currentYear ? since + '-' + currentYear : currentYear
 
   return (
-    <footer style={{zIndex: 0}} className='relative z-10 flex-shrink-0 justify-center text-center m-auto w-full leading-6 text-secondary dark:text-gray-100 text-sm p-6 glass-layer-strong'>
+    <footer style={{zIndex: 0}} className='relative z-10 flex-shrink-0 justify-center text-center m-auto w-full leading-6 text-secondary dark:text-gray-100 text-sm p-6 glass-layer-strong rounded-t-2xl'>
       {/* <DarkModeButton/> */}
       <i className='fas fa-copyright' /> {`${copyrightDate}`}
       <span>

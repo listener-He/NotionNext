@@ -627,6 +627,66 @@ const Style = () => {
       .dark #theme-hexo .reading-progress-dot {
         background: #0b0f14;
       }
+      
+      /* 作者信息卡片美化 */
+      #theme-hexo .author-info-card {
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(10px);
+      }
+      
+      .dark #theme-hexo .author-info-card {
+        background: transparent;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+      }
+      
+      #theme-hexo .author-name-gradient {
+        background: linear-gradient(45deg, #6366f1, #8b5cf6, #ec4899);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        background-size: 200% 200%;
+        animation: gradientPulse 3s ease infinite;
+      }
+      
+      .dark #theme-hexo .author-name-gradient {
+        background: linear-gradient(45deg, #c7d2fe, #ddd6fe, #fbcfe8);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      
+      #theme-hexo .author-bio-gradient {
+        background: linear-gradient(45deg, #4b5563, #6b7280, #9ca3af);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        font-weight: 500;
+        background-size: 200% 200%;
+        animation: gradientPulse 4s ease infinite;
+      }
+      
+      .dark #theme-hexo .author-bio-gradient {
+        background: linear-gradient(45deg, #94a3b8, #cbd5e1, #e2e8f0);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      
+      @keyframes gradientPulse {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
     `}</style>
   )
 }

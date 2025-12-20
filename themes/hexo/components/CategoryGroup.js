@@ -16,7 +16,7 @@ const CategoryGroup = ({ currentCategory, categories }) => {
             className={(selected
               ? 'hover:text-white dark:hover:text-white bg-primary text-white '
               : 'dark:text-gray-400 text-gray-600 hover:text-white dark:hover:text-white hover:bg-primary hover:text-white') +
-              ' text-sm w-full items-center duration-300 ease-standard px-sm cursor-pointer py-xs font-light rounded-md'}>
+              ' text-sm w-full items-center duration-300 ease-standard px-sm cursor-pointer py-xs font-light rounded-md bg-transparent'}>
 
             <div> <i className={`mr-2 fas ${selected ? 'fa-folder-open' : 'fa-folder'}`} />{category.name}({category.count})</div>
 

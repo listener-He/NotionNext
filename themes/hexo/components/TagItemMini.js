@@ -21,7 +21,7 @@ const TagItemMini = ({ tag, selected = false }) => {
       className={`cursor-pointer inline-block rounded-md duration-300 ease-standard
         mr-2 mb-2 py-xs px-sm text-xs whitespace-nowrap 
         ${selected ? 'text-white dark:text-white hover:opacity-90' : `${isDarkMode ? 'text-white' : 'text-gray-900'} hover:opacity-95`}
-        shadow-sm hover:shadow-md`}
+        shadow-sm hover:shadow-md glass-layer-soft`}
       style={style}>
 
       <div className='font-medium'>{selected && <i className='mr-1 fa-tag'/>} {tag.name + (tag.count ? `(${tag.count})` : '')} </div>

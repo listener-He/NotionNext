@@ -40,7 +40,7 @@ export default function ArticleRecommend({ recommendPosts, siteInfo }) {
               title={post.title}
               href={post?.href}
               passHref
-              className='group block relative overflow-hidden rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-800 h-32'>
+              className='group block relative overflow-hidden rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700 glass-layer-soft h-32'>
               <div className='h-full w-full relative group'>
                 <LazyImage
                   src={headerImage}

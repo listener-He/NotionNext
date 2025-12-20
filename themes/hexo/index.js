@@ -125,7 +125,7 @@ const LayoutBase = props => {
         {/* 主区块 */}
         <main
           id='wrapper'
-          className={`${homeBannerEnable ? '' : 'pt-16'} w-full py-8 md:px-8 lg:px-24 min-h-screen relative bg-gradient-to-b from-transparent via-gray-50/60 to-transparent dark:via-gray-900/40`}>
+          className={`${homeBannerEnable ? '' : 'pt-16'} w-full py-8 md:px-8 lg:px-24 min-h-screen relative bg-gradient-to-b from-transparent via-gray-50/10 to-transparent dark:via-gray-900/10`}>
           <div
             id='container-inner'
             className={
@@ -351,7 +351,7 @@ const LayoutSlug = props => {
             <div className='pt-4 border-dashed'></div>
 
             {/* 评论互动 */}
-            <div className='duration-200 overflow-x-auto glass-layer-soft px-3'>
+            <div className='duration-200 overflow-x-auto glass-layer-soft px-3 rounded-xl'>
                <Comment frontMatter={post} />
             </div>
           </div>

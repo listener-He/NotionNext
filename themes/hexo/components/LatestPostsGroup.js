@@ -21,7 +21,7 @@ const LatestPostsGroup = ({ latestPosts, siteInfo }) => {
 
   return (
     <>
-      <div className='mb-sm px-sm flex flex-nowrap justify-between'>
+      <div className='mb-sm px-sm flex flex-nowrap justify-between bg-transparent'>
         <div>
           <i className='mr-2 fas fas fa-history' />
           {locale.COMMON.LATEST_POSTS}
@@ -39,7 +39,7 @@ const LatestPostsGroup = ({ latestPosts, siteInfo }) => {
             title={post.title}
             href={post?.href}
             passHref
-            className={'my-sm flex duration-300 ease-standard'}>
+            className={'my-sm flex duration-300 ease-standard bg-transparent'}>
             <div className='w-20 h-14 overflow-hidden relative rounded-md'>
               <LazyImage
                 alt={post?.title}
@@ -51,9 +51,9 @@ const LatestPostsGroup = ({ latestPosts, siteInfo }) => {
               className={
                 (selected ? ' text-indigo-400 ' : 'dark:text-gray-400 ') +
                 ' text-sm overflow-x-hidden hover:text-primary px-sm duration-300 ease-standard w-full rounded ' +
-                ' hover:text-primary cursor-pointer items-center flex'
+                ' hover:text-primary cursor-pointer items-center flex bg-transparent'
               }>
-              <div>
+              <div className='bg-transparent'>
                 <div className='line-clamp-2 menu-link'>{post.title}</div>
                 <div className='text-gray-500'>{post.lastEditedDay}</div>
               </div>
