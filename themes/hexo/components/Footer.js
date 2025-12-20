@@ -64,7 +64,7 @@ const Footer = ({ title }) => {
         <a href="https://www.blogsclub.org/blog/523.html" target="_blank"
            className="transition-transform hover:scale-105">
           <LazyImage src="https://www.blogsclub.org/badge/blog.hehouhui.cn"
-                     height={60} width={130}/>
+                     height={60} width={100}/>
         </a>
         <a href="https://blogs.quest" target="_blank" title="空间穿梭-随机访问BlogsClub成员博客"
            className="transition-transform hover:scale-105">
