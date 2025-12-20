@@ -14,25 +14,26 @@ const Footer = ({ title }) => {
   return (
     <footer style={{zIndex: 0}} className='relative z-10 flex-shrink-0 justify-center text-center m-auto w-full leading-6 text-gray-700 dark:text-gray-300 text-sm p-6 glass-layer-strong rounded-t-2xl'>
       <div className="max-w-screen-xl mx-auto">
-        <div className="flex flex-col md:flex-row justify-center items-center gap-2 md:gap-4">
-          <div className="flex items-center">
+        <div className="flex flex-col md:flex-row justify-center items-center text-xs">
+          <div className="flex flex-col md:flex-row items-center">
+            <span>Copyright&nbsp;</span>
             <i className='fas fa-copyright' />
             <span className="ml-1">{`${copyrightDate}`}</span>
-          </div>
-
-          <div className="flex items-center">
             <i className='mx-1 animate-pulse fas fa-heart' />
             <a
               href={siteConfig('LINK')}
               className='underline font-medium hover:text-gray-900 dark:hover:text-gray-100 transition-colors'>
               {siteConfig('AUTHOR')}
             </a>
+            <span className="ml-1">All rights reserved.</span>
           </div>
         </div>
 
-        <div className="flex flex-col md:flex-row justify-center items-center gap-2 md:gap-4 mt-2">
-          <BeiAnSite />
-          <BeiAnGongAn />
+        <div className="flex flex-col md:flex-row justify-center items-center gap-1 mt-2 text-xs">
+          <div className="flex flex-col md:flex-row items-center">
+            <BeiAnSite />
+            <BeiAnGongAn />
+          </div>
           <div className='hidden busuanzi_container_site_pv flex items-center'>
             <i className='fas fa-eye' />
             <span className='px-1 busuanzi_value_site_pv'> </span>
@@ -44,12 +45,12 @@ const Footer = ({ title }) => {
         </div>
 
         {(title || siteConfig('BIO')) && (
-          <h1 className='text-xs pt-4 text-gray-500 dark:text-gray-400'>
+          <h1 className='text-xs pt-1 text-gray-500 dark:text-gray-400'>
             {title} {siteConfig('BIO') && <>|</>} {siteConfig('BIO')}
           </h1>
         )}
 
-        <div className="pt-4">
+        <div className="pt-1">
           <PoweredBy className='justify-center' />
         </div>
       </div>
