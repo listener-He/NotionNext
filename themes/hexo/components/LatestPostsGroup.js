@@ -54,7 +54,7 @@ const LatestPostsGroup = ({ latestPosts, siteInfo }) => {
                 ' hover:text-primary cursor-pointer items-center flex bg-transparent'
               }>
               <div className='bg-transparent'>
-                <div className='line-clamp-2 menu-link'>{post.title}</div>
+                <div className='line-clamp-2 post-title'>{post.title}</div>
                 <div className='text-gray-500'>{post.lastEditedDay}</div>
               </div>
             </div>

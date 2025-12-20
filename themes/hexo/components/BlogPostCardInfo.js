@@ -60,7 +60,7 @@ export const BlogPostCardInfo = ({
               <SmartLink
                 href={`/category/${post.category}`}
                 passHref
-                className='cursor-pointer font-light text-sm menu-link hover:text-indigo-700 dark:hover:text-indigo-400 transform bg-transparent'>
+                className='cursor-pointer font-light text-sm post-title hover:text-indigo-700 dark:hover:text-indigo-400 transform bg-transparent'>
                 <i className='mr-1 far fa-folder text-xs' />
                 {post.category}
               </SmartLink>

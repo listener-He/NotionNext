@@ -555,6 +555,11 @@ const Style = () => {
             font-size: 0.8rem;
         }
 
+        #theme-hexo .post-title:hover {
+            background-size: 100% 2px;
+            color: var(--theme-color);
+        }
+
         /* Mermaid 容器 - 移除卡片，仅增强可见度 */
         #theme-hexo .article-content .mermaid {
             display: block;
