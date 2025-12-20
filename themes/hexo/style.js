@@ -281,15 +281,12 @@ const Style = () => {
             gap: 1rem !important;
         }
 
-        /* 响应式优化：移动端展示单列 */
+        /* 响应式优化：移动端展示单列及适配 */
         @media (max-width: 640px) {
             #theme-hexo .grid-cols-2.md\\:grid-cols-3 {
                 grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
             }
-        }
-
-        /* 适配移动端 */
-        @media (max-width: 640px) {
+            
             #theme-hexo .article-adjacent-container i {
                 font-size: 0.75rem;
             }
@@ -349,11 +346,6 @@ const Style = () => {
         [data-aos] {
             will-change: transform, opacity;
             transform: translateZ(0);
-        }
-
-        // 减少动画持续时间以提高响应速度
-        #theme-hexo .menu-link {
-            transition: background-size 100ms ease-in-out;
         }
 
         // 优化文章卡片悬停效果
@@ -721,6 +713,11 @@ const Style = () => {
             background-size: 200% 200%;
             animation: gradientPulse 3s ease infinite;
         }
+        
+        /* 白天模式下的作者名字使用纯色 */
+        .author-name-gradient {
+            color: #374151;
+        }
 
         .dark #theme-hexo .author-name-gradient {
             background: linear-gradient(45deg, #c7d2fe, #ddd6fe, #fbcfe8);
@@ -737,6 +734,11 @@ const Style = () => {
             font-weight: 500;
             background-size: 200% 200%;
             animation: gradientPulse 4s ease infinite;
+        }
+        
+        /* 白天模式下的作者简介使用纯色 */
+        .author-bio-gradient {
+            color: #6b7280;
         }
 
         .dark #theme-hexo .author-bio-gradient {
