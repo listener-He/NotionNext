@@ -63,8 +63,10 @@ const BlogPostCard = ({ index, post, showSummary, siteInfo }) => {
   const containerRef = useRef(null)
   const [visible, setVisible] = useState(false)
   useEffect(() => {
+    // 更全面地检测是否为移动端设备
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 980
+
     // 在移动端始终设为可见，避免图片不渲染的问题
-    const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
     if (isMobile) {
       setVisible(true)
       return
@@ -122,7 +124,7 @@ const BlogPostCard = ({ index, post, showSummary, siteInfo }) => {
             <SmartLink href={post?.href} className='bg-transparent'>
               <>
                 <LazyImage
-                  priority={index === 1}
+                  priority={index === 1 || typeof window !== 'undefined' && window.innerWidth < 768} // 移动端也优先加载第一张图片
                   alt={post?.title}
                   src={post?.pageCoverThumbnail}
                   className={`absolute inset-0 h-full w-full object-cover object-center ${!shouldUseAdvancedEffects ? '' : 'group-hover:scale-[1.02] duration-300 ease-standard'}`}
