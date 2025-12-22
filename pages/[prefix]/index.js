@@ -180,10 +180,7 @@ export async function getStaticProps({ params: { prefix }, locale }) {
     const lastEditedTimestamp = new Date(props.post.lastEditedDate).getTime()
     revalidate = calculatePostCacheTime(BLOG.NEXT_REVALIDATE_SECOND, lastEditedTimestamp)
   }
-  // 如果是单页面
-  if (props?.page) {
-    revalidate = BLOG.NEXT_REVALIDATE_SECOND * 8
-  }
+
 
   return {
     props,
