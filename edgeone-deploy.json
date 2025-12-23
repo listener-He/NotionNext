@@ -1,0 +1,206 @@
+{
+  "name": "notion-next",
+  "version": "1.0.0",
+  "description": "NotionNext blog deployed on Tencent Cloud EdgeOne",
+  "build": {
+    "command": "cross-env EXPORT=true yarn build",
+    "outputDir": "out",
+    "rootDir": "."
+  },
+  "runtime": {
+    "type": "static",
+    "version": "latest"
+  },
+  "edgeRules": [
+    {
+      "name": "rss-redirects",
+      "priority": 100,
+      "conditions": [
+        {
+          "type": "path",
+          "operator": "match",
+          "value": "/rss/feed.xml"
+        }
+      ],
+      "actions": [
+        {
+          "type": "rewrite",
+          "parameters": {
+            "path": "/api/rss"
+          }
+        }
+      ]
+    },
+    {
+      "name": "rss-atom-redirect",
+      "priority": 100,
+      "conditions": [
+        {
+          "type": "path",
+          "operator": "match",
+          "value": "/rss/atom.xml"
+        }
+      ],
+      "actions": [
+        {
+          "type": "rewrite",
+          "parameters": {
+            "path": "/api/rss?format=atom"
+          }
+        }
+      ]
+    },
+    {
+      "name": "rss-json-redirect",
+      "priority": 100,
+      "conditions": [
+        {
+          "type": "path",
+          "operator": "match",
+          "value": "/rss/feed.json"
+        }
+      ],
+      "actions": [
+        {
+          "type": "rewrite",
+          "parameters": {
+            "path": "/api/rss?format=json"
+          }
+        }
+      ]
+    },
+    {
+      "name": "feed-redirect",
+      "priority": 90,
+      "conditions": [
+        {
+          "type": "path",
+          "operator": "match",
+          "value": "/feed"
+        }
+      ],
+      "actions": [
+        {
+          "type": "redirect",
+          "parameters": {
+            "url": "/rss/feed.xml",
+            "code": 301
+          }
+        }
+      ]
+    },
+    {
+      "name": "static-assets-cache",
+      "priority": 80,
+      "conditions": [
+        {
+          "type": "path",
+          "operator": "match",
+          "value": "/_next/static/**/*"
+        }
+      ],
+      "actions": [
+        {
+          "type": "cache",
+          "parameters": {
+            "ttl": 31536000,
+            "edgeCacheOnly": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "image-assets-cache",
+      "priority": 80,
+      "conditions": [
+        {
+          "type": "path",
+          "operator": "match",
+          "value": "/**/*.(png|jpg|jpeg|gif|ico|svg|webp|avif)$"
+        }
+      ],
+      "actions": [
+        {
+          "type": "cache",
+          "parameters": {
+            "ttl": 31536000,
+            "edgeCacheOnly": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "js-css-cache",
+      "priority": 80,
+      "conditions": [
+        {
+          "type": "path",
+          "operator": "match",
+          "value": "/**/*.(js|css)$"
+        }
+      ],
+      "actions": [
+        {
+          "type": "cache",
+          "parameters": {
+            "ttl": 31536000,
+            "edgeCacheOnly": true
+          }
+        }
+      ]
+    }
+  ],
+  "headers": [
+    {
+      "paths": ["/(.*)"],
+      "headers": [
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Strict-Transport-Security",
+          "value": "max-age=31536000; includeSubDomains; preload"
+        }
+      ]
+    },
+    {
+      "paths": ["/api/rss"],
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "s-maxage=3600, stale-while-revalidate"
+        },
+        {
+          "key": "Content-Encoding",
+          "value": "gzip"
+        },
+        {
+          "key": "Vary",
+          "value": "Accept-Encoding"
+        }
+      ]
+    }
+  ],
+  "environment": {
+    "EXPORT": "true",
+    "NEXT_PUBLIC_TITLE": "YOUR_SITE_TITLE",
+    "NEXT_PUBLIC_DESCRIPTION": "YOUR_SITE_DESCRIPTION",
+    "NEXT_PUBLIC_AUTHOR": "YOUR_AUTHOR_NAME",
+    "NEXT_PUBLIC_LINK": "YOUR_SITE_URL"
+  },
+  "routes": {
+    "public": {
+      "include": ["out/**/*"],
+      "exclude": []
+    }
+  }
+}

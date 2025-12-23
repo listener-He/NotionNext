@@ -1,0 +1,107 @@
+{
+  "function": {
+    "entry": "./.next/standalone/server.js",
+    "runtime": "nodejs22",
+    "memory": 1024,
+    "timeout": 30
+  },
+  "build": {
+    "command": "cross-env NEXT_BUILD_STANDALONE=true npm run build",
+    "output": ".next/standalone"
+  },
+  "assets": {
+    "directory": "."
+  },
+  "routes": [
+    {
+      "src": "/rss/feed.xml",
+      "dest": "/api/rss"
+    },
+    {
+      "src": "/rss/atom.xml",
+      "dest": "/api/rss?format=atom"
+    },
+    {
+      "src": "/rss/feed.json",
+      "dest": "/api/rss?format=json"
+    },
+    {
+      "src": "/feed",
+      "dest": "/rss/feed.xml"
+    },
+    {
+      "src": "/rss",
+      "dest": "/rss/feed.xml"
+    },
+    {
+      "src": "/atom",
+      "dest": "/rss/atom.xml"
+    },
+    {
+      "src": "/api/(.*)",
+      "dest": "./.next/standalone/server.js"
+    },
+    {
+      "src": "/_next/static/(.*)",
+      "dest": "./.next/standalone/.next/static/$1"
+    },
+    {
+      "src": "/(.+)",
+      "dest": "./.next/standalone/public/$1",
+      "required": false
+    },
+    {
+      "src": "/(.*)",
+      "dest": "./.next/standalone/server.js"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Strict-Transport-Security",
+          "value": "max-age=31536000; includeSubDomains; preload"
+        }
+      ]
+    },
+    {
+      "source": "/api/rss",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "s-maxage=3600, stale-while-revalidate"
+        },
+        {
+          "key": "Content-Encoding",
+          "value": "gzip"
+        },
+        {
+          "key": "Vary",
+          "value": "Accept-Encoding"
+        }
+      ]
+    },
+    {
+      "source": "/_next/static/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    }
+  ]
+}

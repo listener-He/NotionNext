@@ -36,6 +36,7 @@ import LinksPage from './components/LinksPage'
 import { getDevicePerformance } from '@/components/PerformanceDetector'
 import PerformanceDetector from '@/components/PerformanceDetector'
 import Comment from '@/components/Comment'
+import ArticleInfo from './components/ArticleInfo'
 
 // 使用 useMemo 优化动态导入
 const AlgoliaSearchModal = dynamic(
@@ -332,6 +333,11 @@ const LayoutSlug = props => {
               itemScope
               itemType='https://schema.org/Movie'
               className='subpixel-antialiased overflow-y-hidden'>
+              {/* 文章信息 - 包含标题、分类、标签、日期、阅读量等 */}
+              <section className='px-5 justify-center mx-auto max-w-2xl lg:max-w-full'>
+                <ArticleInfo post={post} />
+              </section>
+
               {/* Notion文章主体 */}
               <section className='px-5 justify-center mx-auto max-w-2xl lg:max-w-full'>
                 {post && <NotionPage post={post} />}

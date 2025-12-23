@@ -117,6 +117,49 @@ vercel --prod
 }
 ```
 
+## 腾讯云EdgeOne部署
+
+### 静态导出部署
+
+适用于腾讯云EdgeOne Pages等静态托管服务。
+
+1. **项目配置**
+   
+   确保 `next.config.js` 中包含以下配置：
+   ```js
+   const nextConfig = {
+     output: 'export',  // 启用静态导出
+     images: {
+       unoptimized: true  // 静态导出时需要禁用图片优化
+     },
+     trailingSlash: true  // 添加尾部斜杠，提高兼容性
+   }
+   ```
+
+2. **构建静态文件**
+   ```bash
+   # 构建静态文件
+   npm run export
+   ```
+
+3. **EdgeOne控制台配置**
+   - 访问 [腾讯云EdgeOne控制台](https://console.cloud.tencent.com/edgeone)
+   - 选择"边缘网页 (Pages)"
+   - 连接GitHub/Gitee仓库
+   - 配置构建命令：`cross-env EXPORT=true yarn build`
+   - 配置输出目录：`out`
+   - 添加环境变量：`EXPORT=true`
+
+### 配置文件
+
+项目根目录下的 `edgeone-deploy.json` 文件包含了针对EdgeOne的优化配置，包括：
+- 构建命令和输出目录配置
+- RSS重定向规则
+- 静态资源缓存策略
+- 安全HTTP头配置
+
+详细配置说明请参考项目根目录下的 `EDGEONE_DEPLOY.md` 文件。
+
 ## Netlify 部署
 
 ### 自动部署
