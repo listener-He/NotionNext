@@ -45,9 +45,9 @@ const Footer = ({ title }) => {
         </div>
 
         {(title || siteConfig('BIO')) && (
-          <h1 className='text-xs pt-1 text-gray-500 dark:text-gray-400'>
+          <p className='text-xs pt-1 text-gray-500 dark:text-gray-400'>
             {title} {siteConfig('BIO') && <>|</>} {siteConfig('BIO')}
-          </h1>
+          </p>
         )}
 
         <div className="pt-1">

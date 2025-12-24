@@ -15,14 +15,26 @@ export function AnalyticsCard (props) {
       </div>
       <div className='hidden busuanzi_container_page_pv ml-2'>
         <div className='flex justify-between'>
-          <div>今日访问量:</div>
-          <div className='busuanzi_today_pv' />
+          <div>总访问:</div>
+          <div className='busuanzi_value_site_pv' />
         </div>
       </div>
       <div className='hidden busuanzi_container_site_uv ml-2'>
         <div className='flex justify-between'>
-          <div>今日访客数:</div>
-          <div className='busuanzi_today_uv' />
+          <div>总访客:</div>
+          <div className='busuanzi_value_site_uv' />
+        </div>
+      </div>
+      <div className='hidden busuanzi_container_page_pv ml-2'>
+        <div className='flex justify-between'>
+          <div>今日访问:</div>
+          <div className='busuanzi_value_today_pv' />
+        </div>
+      </div>
+      <div className='hidden busuanzi_container_site_uv ml-2'>
+        <div className='flex justify-between'>
+          <div>今日访客:</div>
+          <div className='busuanzi_value_today_uv' />
         </div>
       </div>
     </div>
