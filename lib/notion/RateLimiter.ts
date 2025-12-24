@@ -61,12 +61,18 @@ export class RateLimiter {
   public enqueue<T>(key: string, requestFunc: () => Promise<T>): Promise<T> {
     if (this.inflight.has(key)) {
       return new Promise((resolve, reject) => {
+        const startTime = Date.now();
+        const timeout = 30000; // 30秒超时
         const interval = setInterval(() => {
           if (!this.inflight.has(key)) {
-            clearInterval(interval)
-            this.enqueue(key, requestFunc).then(resolve).catch(reject)
+            clearInterval(interval);
+            this.enqueue(key, requestFunc).then(resolve).catch(reject);
+          } else if (Date.now() - startTime > timeout) {
+            // 超时清理并返回错误
+            clearInterval(interval);
+            reject(new Error(`Request with key ${key} timed out after ${timeout}ms`));
           }
-        }, 50)
+        }, 50);
       })
     }
 

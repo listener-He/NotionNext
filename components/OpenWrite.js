@@ -30,48 +30,6 @@ const OpenWrite = () => {
   // 登录信息
   const { isLoaded, isSignedIn } = useGlobal()
 
-  const loadOpenWrite = async () => {
-    try {
-      await loadExternalResource(
-        'https://readmore.openwrite.cn/js/readmore-2.0.js',
-        'js'
-      )
-      const BTWPlugin = window?.BTWPlugin
-
-      if (BTWPlugin) {
-        const btw = new BTWPlugin()
-        window.btw = btw
-        btw.init({
-          qrcode,
-          id,
-          name,
-          btnText,
-          keyword,
-          blogId,
-          cookieAge
-        })
-
-        // btw初始化后，开始监听read-more-wrap何时消失
-        const intervalId = setInterval(() => {
-          const readMoreWrapElement = document.getElementById('read-more-wrap')
-          const articleWrapElement = document.getElementById('article-wrapper')
-
-          if (!readMoreWrapElement && articleWrapElement) {
-            toggleTocItems(false) // 恢复目录项的点击
-            // 自动调整文章区域的高度
-            articleWrapElement.style.height = 'auto'
-            // 停止定时器
-            clearInterval(intervalId)
-          }
-        }, 1000) // 每秒检查一次
-
-        // Return cleanup function to clear the interval if the component unmounts
-        return () => clearInterval(intervalId)
-      }
-    } catch (error) {
-      console.error('OpenWrite 加载异常', error)
-    }
-  }
   useEffect(() => {
     const isInYellowList = isPathInList(router.asPath, yellowList)
     const isInWhiteList = isPathInList(router.asPath, whiteList)
@@ -109,7 +67,60 @@ const OpenWrite = () => {
         loadOpenWrite()
       }
     }
-  }, [isLoaded, router])
+    
+    // 清理函数
+    return () => {
+      // 确保清理所有可能存在的定时器
+      if (window.openWriteIntervalId) {
+        clearInterval(window.openWriteIntervalId)
+        window.openWriteIntervalId = null
+      }
+    }
+  }, [isLoaded, router, isSignedIn])
+
+  const loadOpenWrite = async () => {
+    try {
+      await loadExternalResource(
+        'https://readmore.openwrite.cn/js/readmore-2.0.js',
+        'js'
+      )
+      const BTWPlugin = window?.BTWPlugin
+
+      if (BTWPlugin) {
+        const btw = new BTWPlugin()
+        window.btw = btw
+        btw.init({
+          qrcode,
+          id,
+          name,
+          btnText,
+          keyword,
+          blogId,
+          cookieAge
+        })
+
+        // btw初始化后，开始监听read-more-wrap何时消失
+        // 将intervalId存储在window对象上，以便在组件卸载时清理
+        window.openWriteIntervalId = setInterval(() => {
+          const readMoreWrapElement = document.getElementById('read-more-wrap')
+          const articleWrapElement = document.getElementById('article-wrapper')
+
+          if (!readMoreWrapElement && articleWrapElement) {
+            toggleTocItems(false) // 恢复目录项的点击
+            // 自动调整文章区域的高度
+            articleWrapElement.style.height = 'auto'
+            // 停止定时器
+            if (window.openWriteIntervalId) {
+              clearInterval(window.openWriteIntervalId)
+              window.openWriteIntervalId = null
+            }
+          }
+        }, 1000) // 每秒检查一次
+      }
+    } catch (error) {
+      console.error('OpenWrite 加载异常', error)
+    }
+  }
 
   // 启动一个监听器，当页面上存在#read-more-wrap对象时，所有的 a .catalog-item 对象都禁止点击
 
