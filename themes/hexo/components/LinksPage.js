@@ -315,7 +315,7 @@ const LinksPage = ({ post }) => {
             </p>
           </div>
         ) : (
-          <div className='grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8'>
+          <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-6'>
             {links.map((link, index) => (
               <Link
                 key={link.id || index}
@@ -331,7 +331,7 @@ const LinksPage = ({ post }) => {
                    <div className='absolute inset-0 bg-gradient-to-br from-blue-50/50 via-purple-50/30 to-pink-50/50 dark:from-blue-900/20 dark:via-purple-900/10 dark:to-pink-900/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500' />
 
                    {/* 卡片内容 - 左右布局 */}
-                   <div className='relative flex items-stretch min-h-[96px]'>
+                   <div className='relative flex items-stretch min-h-[47px]'>
                      {/* 右侧内容区域背景层 - 完整覆盖 */}
                      <div className='absolute inset-0 rounded-2xl overflow-hidden'
                           style={{
@@ -347,9 +347,9 @@ const LinksPage = ({ post }) => {
                      </div>
 
                      {/* 左侧图片区域 - 3.5份宽度，左直线右圆弧 */}
-                     <div className='flex-shrink-0 w-[35%] relative z-10 overflow-hidden'
+                     <div className='flex-shrink-0 w-[25%] relative z-10 overflow-hidden'
                           style={{
-                            clipPath: 'polygon(0 0, calc(100% - 20px) 0, 100% 50%, calc(100% - 20px) 100%, 0 100%)'
+                            clipPath: 'polygon(0 0, calc(100% - 12px) 0, 100% 50%, calc(100% - 12px) 100%, 0 100%)'
                           }}>
                        {/* 图片优先级：封面图 > 头像 > 默认渐变 */}
                        {link.backgroundImage ? (
@@ -376,40 +376,39 @@ const LinksPage = ({ post }) => {
                      </div>
 
                      {/* 右侧内容区域 - 6.5份宽度 */}
-                     <div className='flex-1 relative z-10 p-4 flex flex-col justify-center min-w-0'>
-                       <div className='relative z-10'>
-                       {/* 站点名称 */}
-                       <h3 className='text-lg font-bold text-gray-900 dark:text-white mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300 line-clamp-1'>
-                         {link.name}
-                       </h3>
-
-                       {/* 描述 */}
-                       <p className='text-gray-600 dark:text-gray-400 text-xs leading-relaxed line-clamp-1 group-hover:text-gray-700 dark:group-hover:text-gray-300 transition-colors duration-300 mb-3'>
-                         {link.summary || link.description}
-                       </p>
+                     <div className='flex-1 relative z-10 p-0.3 flex flex-col justify-between min-w-0 h-full'>
+                       <div className='flex flex-col flex-1'>
+                         {/* 站点名称 */}
+                         <p className='text-[10px] font-bold text-gray-900 dark:text-white mb-0.167 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300 line-clamp-1'>
+                           {link.name}
+                         </p>
+                         {/* 描述 */}
+                         <p className='text-gray-300 dark:text-gray-100 text-[6px] leading-tight line-clamp-1 group-hover:text-gray-400 dark:group-hover:text-gray-200 transition-colors duration-300 mt-0.167'>
+                           {link.summary || link.description}
+                         </p>
+                       </div>
 
                        {/* 标签区域 - 单行显示 */}
                        {link.tags && link.tags.length > 0 && (
-                         <div className='flex items-center gap-1.5 overflow-hidden'>
+                         <div className='flex items-center gap-1 overflow-hidden'>
                            {link.tags.slice(0, 6).map((tag, tagIndex) => {
                              const colorClass = getTagColor(tag);
                              return (
                                <span
                                  key={tagIndex}
-                                 className={`px-2 py-0.5 text-xs font-medium rounded-md shadow-sm flex-shrink-0 ${colorClass}`}
+                                 className={`px-0.5 py-0.25 text-[6px] font-medium rounded-md shadow-sm flex-shrink-0 ${colorClass}`}
                                >
                                  {tag}
                                </span>
                              );
                            })}
                            {link.tags.length > 6 && (
-                             <span className='px-2 py-0.5 text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 rounded-md shadow-sm flex-shrink-0'>
+                             <span className='px-0.5 py-0.25 text-[6px] font-medium bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 rounded-md shadow-sm flex-shrink-0'>
                                +{link.tags.length - 6}
                              </span>
                            )}
                          </div>
                        )}
-                       </div>
                      </div>
                    </div>
               </Link>
@@ -575,6 +574,10 @@ const LinksPage = ({ post }) => {
         ::-webkit-scrollbar-thumb:hover {
           background: rgba(156, 163, 175, 0.8);
         }
+        
+
+        
+
       `}</style>
     </div>
   )
