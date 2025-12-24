@@ -114,30 +114,63 @@ function renderStarrySky() {
     draw() {
       if (this.opacity <= 0) return;
 
-      ctx.beginPath();
-
       if (this.isComet) {
-        // 优化：流星尾巴使用渐变绘制，性能远好于循环画30个矩形
-        const tailLength = 60;
-        const gradient = ctx.createLinearGradient(
-          this.x, this.y,
-          this.x - this.dx * tailLength, this.y - this.dy * tailLength
-        );
-        gradient.addColorStop(0, `rgba(${CONFIG.colors.comet}, ${this.opacity})`);
-        gradient.addColorStop(1, `rgba(${CONFIG.colors.comet}, 0)`);
-
-        ctx.fillStyle = gradient;
-        // 绘制流星头和尾巴
-        ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-        ctx.moveTo(this.x, this.y);
-        ctx.lineTo(this.x - this.dx * tailLength * 0.5, this.y - this.dy * tailLength * 0.5);
-        ctx.lineWidth = this.r * 2;
-        ctx.strokeStyle = gradient;
-        ctx.stroke();
+        // 高性能流星绘制：使用预计算和最少的绘制操作
+        const angle = Math.atan2(this.dy, this.dx);
+        const cosA = Math.cos(angle);
+        const sinA = Math.sin(angle);
+        const r = this.r;
+        
+        // 预先计算坐标以减少重复计算
+        const headX = this.x;
+        const headY = this.y;
+        const tailLen = 80;
+        const tailWid = r * 2;
+        
+        // 流星头部 - 亮点
+        ctx.fillStyle = `rgba(${CONFIG.colors.comet}, ${Math.min(1, this.opacity * 1.5)})`;
+        ctx.beginPath();
+        ctx.arc(headX, headY, r * 1.2, 0, Math.PI * 2);
+        ctx.fill();
+        
+        // 计算流星锥形的顶点
+        const x1 = headX - 0.3 * tailLen * cosA - 0.5 * tailWid * sinA;
+        const y1 = headY - 0.3 * tailLen * sinA + 0.5 * tailWid * cosA;
+        const x2 = headX - 0.8 * tailLen * cosA;
+        const y2 = headY - 0.8 * tailLen * sinA;
+        const x3 = headX - 0.3 * tailLen * cosA + 0.5 * tailWid * sinA;
+        const y3 = headY - 0.3 * tailLen * sinA - 0.5 * tailWid * cosA;
+        
+        // 绘制流星主体（锥形）
+        ctx.fillStyle = `rgba(${CONFIG.colors.comet}, ${this.opacity * 0.5})`;
+        ctx.beginPath();
+        ctx.moveTo(headX, headY);
+        ctx.lineTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.lineTo(x3, y3);
+        ctx.closePath();
+        ctx.fill();
+        
+        // 绘制拖尾效果
+        const trailX1 = x2 - 0.3 * tailLen * cosA - 0.3 * tailWid * sinA;
+        const trailY1 = y2 - 0.3 * tailLen * sinA + 0.3 * tailWid * cosA;
+        const trailX2 = x2 - 0.8 * tailLen * cosA;
+        const trailY2 = y2 - 0.8 * tailLen * sinA;
+        const trailX3 = x2 - 0.3 * tailLen * cosA + 0.3 * tailWid * sinA;
+        const trailY3 = y2 - 0.3 * tailLen * sinA - 0.3 * tailWid * cosA;
+        
+        ctx.fillStyle = `rgba(${CONFIG.colors.comet}, ${this.opacity * 0.2})`;
+        ctx.beginPath();
+        ctx.moveTo(x2, y2);
+        ctx.lineTo(trailX1, trailY1);
+        ctx.lineTo(trailX2, trailY2);
+        ctx.lineTo(trailX3, trailY3);
+        ctx.closePath();
+        ctx.fill();
       } else {
-        // 普通星星/巨星
-        const color = this.isGiant ? CONFIG.colors.giant : CONFIG.colors.star;
-        ctx.fillStyle = `rgba(${color}, ${this.opacity})`;
+        // 普通星星/巨星 - 保持高性能实现
+        ctx.fillStyle = `rgba(${this.isGiant ? CONFIG.colors.giant : CONFIG.colors.star}, ${this.opacity})`;
+        ctx.beginPath();
         ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
         ctx.fill();
       }
@@ -191,9 +224,28 @@ function renderStarrySky() {
 
     ctx.clearRect(0, 0, width, height);
 
+    // 批量绘制：先绘制所有普通星星，再绘制巨星，最后绘制流星（减少状态切换）
     for (let i = 0; i < stars.length; i++) {
-      stars[i].update();
-      stars[i].draw();
+      const star = stars[i];
+      if (!star.isGiant && !star.isComet) {
+        star.draw();
+      }
+    }
+    
+    // 绘制巨星
+    for (let i = 0; i < stars.length; i++) {
+      const star = stars[i];
+      if (star.isGiant && !star.isComet) {
+        star.draw();
+      }
+    }
+    
+    // 最后绘制流星（避免频繁的状态切换）
+    for (let i = 0; i < stars.length; i++) {
+      const star = stars[i];
+      if (star.isComet) {
+        star.draw();
+      }
     }
 
     animationFrameId = requestAnimationFrame(animate);
