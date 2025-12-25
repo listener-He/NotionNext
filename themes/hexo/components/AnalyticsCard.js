@@ -25,18 +25,6 @@ export function AnalyticsCard (props) {
           <div className='busuanzi_value_site_uv' />
         </div>
       </div>
-      <div className='hidden busuanzi_container_page_pv ml-2'>
-        <div className='flex justify-between'>
-          <div>今日访问:</div>
-          <div className='busuanzi_value_today_pv' />
-        </div>
-      </div>
-      <div className='hidden busuanzi_container_site_uv ml-2'>
-        <div className='flex justify-between'>
-          <div>今日访客:</div>
-          <div className='busuanzi_value_today_uv' />
-        </div>
-      </div>
     </div>
   </Card>
 }
