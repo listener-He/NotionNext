@@ -82,7 +82,9 @@ const Slug = props => {
     }
   }, [router, lock])
 
+
   props = { ...props, lock, validPassword }
+
   const theme = siteConfig('THEME', BLOG.THEME, props.NOTION_CONFIG)
   return (
     <>

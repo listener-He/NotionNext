@@ -3,6 +3,8 @@ import LazyImage from '@/components/LazyImage'
 import { getTextContent } from 'notion-utils'
 import { siteConfig } from '@/lib/config'
 import Comment from '@/components/Comment'
+import useNotification from '@/components/Notification'
+import { useEffect, useState } from 'react'
 
 // 全局标签颜色映射，确保相同标签使用相同颜色
 const tagColorMap = new Map()
@@ -231,6 +233,12 @@ const extractLinksFromNotionPage = (post) => {
  * @returns {JSX.Element}
  */
 const LinksPage = ({ post }) => {
+  // 使用客户端状态来避免服务端和客户端渲染不一致
+  const [isClient, setIsClient] = useState(false)
+
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
 
   // 直接计算链接数据，避免状态管理导致的水合错误
   const links = post ? extractLinksFromNotionPage(post) : []
@@ -238,6 +246,7 @@ const LinksPage = ({ post }) => {
   const siteLink = siteConfig('LINK') || 'https://www.hehouhui.cn'
   const siteDescription = siteConfig('BIO') || '请提供一句简洁的介绍'
   const siteAvatar = 'https://www.hehouhui.cn/images/avatar.jpeg'
+  const { showNotification, Notification } = useNotification()
 
   // 生成友链信息的不同格式
   const generateFriendLinksData = (format) => {
@@ -279,18 +288,24 @@ const LinksPage = ({ post }) => {
 
   // 复制功能
   const copyToClipboard = async (format) => {
-    try {
-      const data = generateFriendLinksData(format)
-      await navigator.clipboard.writeText(data)
-      alert(`${format.toUpperCase()} 格式已复制到剪贴板！`)
-    } catch (err) {
-      console.error('复制失败:', err)
-      alert('复制失败，请手动复制')
+    if (typeof navigator !== 'undefined' && navigator.clipboard) {
+      try {
+        const data = generateFriendLinksData(format)
+        await navigator.clipboard.writeText(data)
+        // 确保在客户端环境才调用通知
+        showNotification(`${format.toUpperCase()} 已复制到剪贴板！`)
+        return false
+      } catch (err) {
+        console.error('复制失败:', err)
+        // 确保在客户端环境才调用通知
+        showNotification('复制失败，请手动复制')
+        return false
+      }
     }
   }
 
   return (
-    <div className='min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50/30 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900' id='article-wrapper'>
+    <div className='min-h-screen bg-gradient-to-br from-slate-50/100 via-white to-blue-50/30 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900' id='article-wrapper'>
       <div className='max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 xl:px-8'>
         {/* 页面标题 */}
         <div className='text-center py-8 sm:py-12 lg:py-16 mb-8 sm:mb-12'>
@@ -327,9 +342,10 @@ const LinksPage = ({ post }) => {
                 target='_blank'
                 rel='noopener noreferrer'
                 className='group block relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:scale-[1.05] border border-gray-100 dark:border-gray-700 hover:border-blue-200 dark:hover:border-blue-600 glass-layer-soft'
-                style={{
+                // 修复Hydration错误：移除服务端和客户端不一致的style
+                style={isClient ? {
                   animation: `fadeInUp 0.6s ease-out ${index * 0.08}s both`
-                }}
+                } : undefined}
               >
                    {/* 背景装饰层 */}
                    <div className='absolute inset-0 bg-gradient-to-br from-blue-50/50 via-purple-50/30 to-pink-50/50 dark:from-blue-900/20 dark:via-purple-900/10 dark:to-pink-900/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500' />
@@ -491,7 +507,12 @@ const LinksPage = ({ post }) => {
                 <div className='flex items-center text-gray-700 dark:text-gray-300'>
                   <span className='text-base'>复制以上信息：</span>
                   <div className='ml-2 relative top-1'>
-                    <button className='text-gray-600 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 transition-colors duration-300'>
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault(); // 阻止默认事件，避免影响页面跳转
+                        copyToClipboard('text');
+                      }}
+                      className='text-gray-600 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 transition-colors duration-300'>
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                         <path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" />
                         <path d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z" />
@@ -502,22 +523,22 @@ const LinksPage = ({ post }) => {
                     <div className='absolute left-0 mt-2 w-48 origin-top-left bg-white dark:bg-gray-800 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-10'>
                       <div className='py-1'>
                         <button
-                          onClick={() => copyToClipboard('text')}
+                          onClick={(e) => copyToClipboard('text')}
                           className='block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'>
                           文本
                         </button>
                         <button
-                          onClick={() => copyToClipboard('json')}
+                          onClick={(e) => copyToClipboard('json')}
                           className='block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'>
                           JSON
                         </button>
                         <button
-                          onClick={() => copyToClipboard('markdown')}
+                          onClick={(e) => copyToClipboard('markdown')}
                           className='block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'>
                           Markdown
                         </button>
                         <button
-                          onClick={() => copyToClipboard('yaml')}
+                          onClick={(e) => copyToClipboard('yaml')}
                           className='block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'>
                           Yaml
                         </button>
@@ -540,7 +561,8 @@ const LinksPage = ({ post }) => {
           <Comment frontMatter={post} />
         </div>
       </div>
-
+      {/* 确保Notification组件渲染 */}
+      <Notification />
       {/* CSS动画定义 */}
       <style jsx>{`
         @keyframes fadeInUp {
