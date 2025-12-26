@@ -270,6 +270,7 @@ const LayoutSearch = props => {
   )
 }
 
+
 /**
  * 文章详情
  * @param {*} props
@@ -279,11 +280,7 @@ const LayoutSlug = props => {
   const { post, lock, validPassword } = props
   const router = useRouter()
   const waiting404 = siteConfig('POST_WAITING_TIME_FOR_404') * 1000
-  const [isClient, setIsClient] = useState(false);
 
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
 
   // 检查是否为友情链接页面 - 从路由和post数据中判断
   const isLinksPage = router.asPath === '/links' || router.asPath.startsWith('/links?') ||

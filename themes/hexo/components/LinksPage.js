@@ -4,7 +4,6 @@ import { getTextContent } from 'notion-utils'
 import { siteConfig } from '@/lib/config'
 import Comment from '@/components/Comment'
 
-
 // 全局标签颜色映射，确保相同标签使用相同颜色
 const tagColorMap = new Map()
 const tagColors = [
@@ -128,11 +127,15 @@ const extractLinksFromNotionPage = (post) => {
                         link.description = textContent
                       } else if (fieldName.includes('url') || fieldName.includes('link') || fieldName.includes('链接') || fieldName.includes('地址') || fieldName.includes('网址')) {
                         link.url = textContent
+                      } else if (fieldName.includes("rss")) {
+                        link.rss = textContent
                       }
                       break
                     case 'url':
                       if (fieldName.includes('url') || fieldName.includes('link') || fieldName.includes('链接') || fieldName.includes('地址') || fieldName.includes('网址')) {
                         link.url = getTextContent(propertyValue)
+                      } else if (fieldName.includes("rss")) {
+                        link.rss = getTextContent(propertyValue)
                       }
                       break
                   }
@@ -228,6 +231,7 @@ const extractLinksFromNotionPage = (post) => {
  * @returns {JSX.Element}
  */
 const LinksPage = ({ post }) => {
+
   // 直接计算链接数据，避免状态管理导致的水合错误
   const links = post ? extractLinksFromNotionPage(post) : []
   const siteTitle = siteConfig('TITLE') || siteConfig('AUTHOR') || 'Honesty'
@@ -347,7 +351,7 @@ const LinksPage = ({ post }) => {
                      </div>
 
                      {/* 左侧图片区域 - 3.5份宽度，左直线右圆弧 */}
-                     <div className='flex-shrink-0 w-[25%] relative z-10 overflow-hidden'
+                     <div className='flex-shrink-0 w-[30%] relative z-10 overflow-hidden'
                           style={{
                             clipPath: 'polygon(0 0, calc(100% - 12px) 0, 100% 50%, calc(100% - 12px) 100%, 0 100%)'
                           }}>
@@ -357,18 +361,12 @@ const LinksPage = ({ post }) => {
                            src={link.backgroundImage}
                            alt={link.name}
                            className='absolute inset-0 w-full h-full object-cover'
-                           onError={(e) => {
-                             e.target.src = '/avatar.png'
-                           }}
                          />
                        ) : link.avatar ? (
                          <LazyImage
                            src={link.avatar}
                            alt={link.name}
                            className='absolute inset-0 w-full h-full object-cover'
-                           onError={(e) => {
-                             e.target.src = '/avatar.png'
-                           }}
                          />
                        ) : (
                          <div className='absolute inset-0 bg-gradient-to-br from-blue-400 via-purple-500 to-pink-500' />
@@ -383,14 +381,14 @@ const LinksPage = ({ post }) => {
                            {link.name}
                          </p>
                          {/* 描述 */}
-                         <p className='text-gray-300 dark:text-gray-100 text-[6px] leading-tight line-clamp-1 group-hover:text-gray-400 dark:group-hover:text-gray-200 transition-colors duration-300 mt-0.167'>
+                         <p className='text-gray-700 dark:text-gray-200 ml-1 text-[6px] leading-tight line-clamp-1 group-hover:text-gray-800 dark:group-hover:text-gray-100 transition-colors duration-300 mt-0.167'>
                            {link.summary || link.description}
                          </p>
                        </div>
 
                        {/* 标签区域 - 单行显示 */}
                        {link.tags && link.tags.length > 0 && (
-                         <div className='flex items-center gap-1 overflow-hidden'>
+                         <div className='flex items-center ml-1 gap-1 overflow-hidden pt-1 pb-1'>
                            {link.tags.slice(0, 6).map((tag, tagIndex) => {
                              const colorClass = getTagColor(tag);
                              return (
@@ -403,7 +401,7 @@ const LinksPage = ({ post }) => {
                              );
                            })}
                            {link.tags.length > 6 && (
-                             <span className='px-0.5 py-0.25 text-[6px] font-medium bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 rounded-md shadow-sm flex-shrink-0'>
+                             <span className='px-0.5 py-0.25 text-[6px] font-medium bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-md shadow-sm flex-shrink-0'>
                                +{link.tags.length - 6}
                              </span>
                            )}
@@ -432,19 +430,19 @@ const LinksPage = ({ post }) => {
               <ul className='space-y-3'>
                 <li className='flex items-start'>
                   <span className='text-blue-500 mr-2 mt-1'>•</span>
-                  <span className='text-gray-700 dark:text-gray-300 text-base leading-relaxed'>网站内容符合中国大陆法律法规</span>
+                  <span className='text-gray-700 dark:text-gray-300 text-xs leading-relaxed'>网站内容符合中国大陆法律法规</span>
                 </li>
                 <li className='flex items-start'>
                   <span className='text-blue-500 mr-2 mt-1'>•</span>
-                  <span className='text-gray-700 dark:text-gray-300 text-base leading-relaxed'>原创内容占比较高，有自己的独特见解</span>
+                  <span className='text-gray-700 dark:text-gray-300 text-xs leading-relaxed'>原创内容占比较高，有自己的独特见解</span>
                 </li>
                 <li className='flex items-start'>
                   <span className='text-blue-500 mr-2 mt-1'>•</span>
-                  <span className='text-gray-700 dark:text-gray-300 text-base leading-relaxed'>网站稳定运行，有一定的更新频率</span>
+                  <span className='text-gray-700 dark:text-gray-300 text-xs leading-relaxed'>网站稳定运行，有一定的更新频率</span>
                 </li>
                 <li className='flex items-start'>
                   <span className='text-blue-500 mr-2 mt-1'>•</span>
-                  <span className='text-gray-700 dark:text-gray-300 text-base leading-relaxed'>网站设计美观，内容质量较高</span>
+                  <span className='text-gray-700 dark:text-gray-300 text-xs leading-relaxed'>网站设计美观，内容质量较高</span>
                 </li>
               </ul>
             </div>
@@ -461,29 +459,29 @@ const LinksPage = ({ post }) => {
                 <li className='flex items-start'>
                   <span className='text-blue-500 mr-2 mt-1'>•</span>
                   <div>
-                    <span className='text-gray-700 dark:text-gray-300 text-base'>站点名称：</span>
-                    <span className='text-gray-900 dark:text-white text-base font-medium'>{siteTitle}</span>
+                    <span className='text-gray-700 dark:text-gray-300 text-xs'>站点名称：</span>
+                    <span className='text-gray-900 dark:text-white text-xs font-medium'>{siteTitle}</span>
                   </div>
                 </li>
                 <li className='flex items-start'>
                   <span className='text-blue-500 mr-2 mt-1'>•</span>
                   <div>
-                    <span className='text-gray-700 dark:text-gray-300 text-base'>站点链接：</span>
-                    <span className='text-gray-900 dark:text-white text-base font-medium'>{siteLink}</span>
+                    <span className='text-gray-700 dark:text-gray-300 text-xs'>站点链接：</span>
+                    <span className='text-gray-900 dark:text-white text-xs font-medium'>{siteLink}</span>
                   </div>
                 </li>
                 <li className='flex items-start'>
                   <span className='text-blue-500 mr-2 mt-1'>•</span>
                   <div>
-                    <span className='text-gray-700 dark:text-gray-300 text-base'>简介：</span>
-                    <span className='text-gray-900 dark:text-white text-base font-medium'>{siteDescription}</span>
+                    <span className='text-gray-700 dark:text-gray-300 text-xs'>简介：</span>
+                    <span className='text-gray-900 dark:text-white text-xs font-medium'>{siteDescription}</span>
                   </div>
                 </li>
                 <li className='flex items-start'>
                   <span className='text-blue-500 mr-2 mt-1'>•</span>
                   <div className='break-all'>
-                    <span className='text-gray-700 dark:text-gray-300 text-base'>头像地址：</span>
-                    <span className='text-gray-900 dark:text-white text-base font-medium'>{siteAvatar}</span>
+                    <span className='text-gray-700 dark:text-gray-300 text-xs'>头像地址：</span>
+                    <span className='text-gray-900 dark:text-white text-xs font-medium'>{siteAvatar}</span>
                   </div>
                 </li>
               </ul>
