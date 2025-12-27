@@ -22,7 +22,12 @@ import { useEffect, useState } from 'react'
  */
 const PerformanceDetector = () => {
   useEffect(() => {
-    detectAndStorePerformance()
+    // 确保只在客户端执行
+    if (typeof window !== 'undefined') {
+      detectAndStorePerformance().catch(e => {
+        console.warn('Failed to detect device performance:', e)
+      })
+    }
   }, [])
 
   return null
@@ -38,9 +43,7 @@ function getStoredPerformance() {
   try {
     const stored = localStorage.getItem('device_performance')
     if (!stored) {
-      const performanceInfo = calculateDevicePerformance()
-      storePerformance(performanceInfo)
-      return performanceInfo
+      return null;
     }
 
     const data = JSON.parse(stored)
@@ -49,12 +52,10 @@ function getStoredPerformance() {
     // 检查数据是否过期（7天有效期）
     if (now - data.timestamp > 168 * 60 * 60 * 1000) {
       localStorage.removeItem('device_performance')
+      return null;
     } else {
       return data;
     }
-    const performanceInfo = calculateDevicePerformance()
-    storePerformance(performanceInfo)
-    return performanceInfo
   } catch (e) {
     console.warn('Failed to parse stored performance data:', e)
     return null
