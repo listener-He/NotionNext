@@ -37,13 +37,17 @@ function getStoredPerformance() {
 
   try {
     const stored = localStorage.getItem('device_performance')
-    if (!stored) return null
+    if (!stored) {
+      const performanceInfo = calculateDevicePerformance()
+      storePerformance(performanceInfo)
+      return performanceInfo
+    }
 
     const data = JSON.parse(stored)
     const now = Date.now()
 
-    // 检查数据是否过期（1天有效期）
-    if (now - data.timestamp > 24 * 60 * 60 * 1000) {
+    // 检查数据是否过期（7天有效期）
+    if (now - data.timestamp > 168 * 60 * 60 * 1000) {
       localStorage.removeItem('device_performance')
     } else {
       return data;
@@ -144,7 +148,7 @@ async function calculateDevicePerformance() {
   }
 
   return {
-    performanceLevel,
+    performanceLevel: performanceLevel,
     score: totalScore,
     details: {
       cpu: { cores, score: cpuScore },

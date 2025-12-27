@@ -40,6 +40,8 @@ export async function getStaticProps({ params: { category }, locale }) {
   props.posts = props.posts.map(leanListPost)
 
   delete props.allPages
+  delete props.allNavPages
+  delete props.tagOptions
 
   props = { ...props, category }
 

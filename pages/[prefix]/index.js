@@ -183,6 +183,9 @@ export async function getStaticProps({ params: { prefix }, locale }) {
     revalidate = calculatePostCacheTime(BLOG.NEXT_REVALIDATE_SECOND, lastEditedTimestamp)
   }
 
+  delete props.allPages
+  delete props.allNavPages
+  delete props.tagOptions
 
   return {
     props,

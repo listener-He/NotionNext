@@ -53,7 +53,7 @@ export async function getStaticProps({ params: { page }, locale }) {
   // 处理预览 - 性能优化：使用配置化的预览限制
   if (siteConfig('POST_LIST_PREVIEW', false, props?.NOTION_CONFIG)) {
     const previewConfig = getPreviewConfig('page')
-    
+
     // 限制预览内容的加载数量，避免数据过大
     const maxPreviewPosts = Math.min(props.posts.length, previewConfig.maxPosts)
     for (let i = 0; i < maxPreviewPosts; i++) {
@@ -71,6 +71,7 @@ export async function getStaticProps({ params: { page }, locale }) {
   delete props.allPages
   delete props.latestPosts // 分页页面通常不需要最新文章数据
   delete props.allNavPages // 分页页面通常不需要导航页面数据
+  delete props.tagOptions
   return {
     props,
     revalidate: process.env.EXPORT

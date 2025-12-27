@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from 'react'
  * 音乐播放器
  * @returns
  */
-const Player = () => {
+const Player = (props) => {
   const [player, setPlayer] = useState()
   const ref = useRef(null)
   const lrcType = JSON.parse(siteConfig('MUSIC_PLAYER_LRC_TYPE'))
@@ -24,8 +24,12 @@ const Player = () => {
     'https://cdnjs.cloudflare.com/ajax/libs/meting/2.0.1/Meting.min.js'
   )
 
+  const musicId = props?.post?.musicId && props?.post?.musicId !== '' ? props.post.musicId : '';
+  if(musicId !== '') {
+    console.log('检测到页面配置musicId, 开启音乐播放器 >>> ', musicId)
+  }
   const initMusicPlayer = async () => {
-    if (!musicPlayerEnable) {
+    if (!musicPlayerEnable && musicId === '') {
       return
     }
     try {
@@ -78,7 +82,7 @@ const Player = () => {
           autoplay={autoPlay}
           order={siteConfig('MUSIC_PLAYER_ORDER')}
           server={siteConfig('MUSIC_PLAYER_METING_SERVER')}
-          id={siteConfig('MUSIC_PLAYER_METING_ID')}
+          id={ musicId !== '' ? musicId : siteConfig('MUSIC_PLAYER_METING_ID')}
         />
       ) : (
         <div ref={ref} data-player={player} />
