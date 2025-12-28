@@ -72,7 +72,10 @@ const BLOG = {
     'Hi，我是一个程序员, Hi，我是一个打工人,Hi，我是一个干饭人,欢迎来到我的博客🎉',
 
   // uuid重定向至 slug
-  UUID_REDIRECT: process.env.UUID_REDIRECT || false
+  UUID_REDIRECT: process.env.UUID_REDIRECT || false,
+
+  // 添加懒加载配置
+  LAZY_LOAD_CONTENT: process.env.NEXT_PUBLIC_LAZY_LOAD_CONTENT || false, // 是否在构建时懒加载文章内容，可显著减少构建大小
 }
 
 module.exports = BLOG

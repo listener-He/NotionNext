@@ -1,5 +1,6 @@
 import replaceSearchResult from '@/components/Mark'
 import NotionPage from '@/components/NotionPage'
+import LazyNotionPage from '@/components/LazyNotionPage'
 import ShareBar from '@/components/ShareBar'
 import { siteConfig } from '@/lib/config'
 import { useGlobal } from '@/lib/global'
@@ -37,6 +38,7 @@ import { getDevicePerformance } from '@/components/PerformanceDetector'
 import PerformanceDetector from '@/components/PerformanceDetector'
 import Comment from '@/components/Comment'
 import ArticleInfo from './components/ArticleInfo'
+import BLOG from '@/blog.config'
 
 // 使用 useMemo 优化动态导入
 const AlgoliaSearchModal = dynamic(
@@ -337,7 +339,11 @@ const LayoutSlug = props => {
 
               {/* Notion文章主体 */}
               <section className='px-5 justify-center mx-auto max-w-2xl lg:max-w-full'>
-                {post && <NotionPage post={post} />}
+                {post && (
+                  BLOG.LAZY_LOAD_CONTENT ?
+                  <LazyNotionPage post={post} /> :
+                  <NotionPage post={post} />
+                )}
               </section>
 
               {/* 分享 - 延迟渲染 */}
