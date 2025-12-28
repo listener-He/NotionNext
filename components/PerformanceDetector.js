@@ -50,7 +50,7 @@ function getStoredPerformance() {
     const now = Date.now()
 
     // 检查数据是否过期（7天有效期）
-    if (now - data.timestamp > 168 * 60 * 60 * 1000) {
+    if (!data || !data.performanceLevel || now - data.timestamp > 168 * 60 * 60 * 1000) {
       localStorage.removeItem('device_performance')
       return null;
     } else {
