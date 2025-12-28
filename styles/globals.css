@@ -289,7 +289,7 @@ img {
 
 
 .lazy-image-placeholder{
-  background: 
+  background:
       linear-gradient(90deg,#0001 33%,#0005 50%,#0001 66%)
       #f2f2f2;
   background-size:300% 100%;
@@ -297,7 +297,7 @@ img {
   object-fit: cover;
   object-position: center;
   }
-  
+
   @keyframes l1 {
   0% {background-position: right}
 }
@@ -322,6 +322,15 @@ img {
   --text-primary: #1f2937;
   --text-secondary: #4b5563;
 }
+html.dark {
+  --brand-start: #0b1220;
+  --brand-end: #121826;
+  --brand-accent: #0e7490;
+  --surface: rgba(17, 24, 39, 0.3);
+  --surface-border: rgba(31, 41, 55, 0.3);
+  --text-primary: #e5e7eb;
+  --text-secondary: #cbd5e1;
+}
 .dark {
   --brand-start: #0b1220;
   --brand-end: #121826;
@@ -332,23 +341,23 @@ img {
   --text-secondary: #cbd5e1;
 }
 .gradient-brand {
-  background-image: linear-gradient(135deg, 
-    #fafbff 0%, 
-    #f0f8ff 6.25%, 
-    #e6f4ff 12.5%, 
-    #e0f2fe 18.75%, 
-    #ebf8ff 25%, 
-    #edf6ff 31.25%, 
-    #f0f9ff 37.5%, 
-    #f3fbff 43.75%, 
-    #f5faff 50%, 
-    #f8fcff 56.25%, 
-    #fbfdff 62.5%, 
-    #fdfdff 68.75%, 
-    #ffffff 75%, 
-    #ffffff 81.25%, 
-    #ffffff 87.5%, 
-    #ffffff 93.75%, 
+  background-image: linear-gradient(135deg,
+    #fafbff 0%,
+    #f0f8ff 6.25%,
+    #e6f4ff 12.5%,
+    #e0f2fe 18.75%,
+    #ebf8ff 25%,
+    #edf6ff 31.25%,
+    #f0f9ff 37.5%,
+    #f3fbff 43.75%,
+    #f5faff 50%,
+    #f8fcff 56.25%,
+    #fbfdff 62.5%,
+    #fdfdff 68.75%,
+    #ffffff 75%,
+    #ffffff 81.25%,
+    #ffffff 87.5%,
+    #ffffff 93.75%,
     #ffffff 100%);
 }
 .gradient-accent {
