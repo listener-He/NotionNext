@@ -1,4 +1,5 @@
 import { siteConfig } from '@/lib/config'
+import { getCDNResourceSync } from '@/lib/utils/cdn'
 import ExternalScript from './ExternalScript'
 
 /**
@@ -9,7 +10,7 @@ import ExternalScript from './ExternalScript'
 export default function WebWhiz() {
   const props = {
     id: '__webwhizSdk__',
-    src: 'https://www.unpkg.com/webwhiz@1.0.0/dist/sdk.js',
+    src: getCDNResourceSync('https://www.unpkg.com/webwhiz@1.0.0/dist/sdk.js'),
     baseUrl: siteConfig('WEB_WHIZ_BASE_URL'),
     chatbotId: siteConfig('WEB_WHIZ_CHAT_BOT_ID')
   }

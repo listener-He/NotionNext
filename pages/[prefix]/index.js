@@ -107,7 +107,11 @@ export async function getStaticPaths() {
   }
 
   const from = 'slug-paths'
-  const { allPages } = await getGlobalData({ from })
+  // 优化：只获取路径生成需要的数据类型
+  const { allPages } = await getGlobalData({ 
+    from,
+    dataTypes: ['allPages'] 
+  })
   // 添加空值检查
   const paths = allPages
     ?.filter(row => checkSlugHasNoSlash(row))
@@ -121,7 +125,12 @@ export async function getStaticPaths() {
 export async function getStaticProps({ params: { prefix }, locale }) {
   let fullSlug = prefix
   const from = `slug-props-${fullSlug}`
-  const props = await getGlobalData({ from, locale })
+  // 优化：只获取文章页需要的数据类型
+  const props = await getGlobalData({ 
+    from, 
+    locale,
+    dataTypes: ['allPages', 'NOTION_CONFIG', 'siteInfo'] 
+  })
   if (siteConfig('PSEUDO_STATIC', false, props.NOTION_CONFIG)) {
     if (!fullSlug.endsWith('.html')) {
       fullSlug += '.html'

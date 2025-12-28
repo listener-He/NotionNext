@@ -1,4 +1,5 @@
 import { loadExternalResource } from '@/lib/utils'
+import { getCDNResourceSync } from '@/lib/utils/cdn'
 import { useEffect, useRef } from 'react'
 
 const VConsole = () => {
@@ -8,7 +9,7 @@ const VConsole = () => {
 
   const loadVConsole = async () => {
     try {
-      const url = await loadExternalResource('https://cdn.bootcss.com/vConsole/3.3.4/vconsole.min.js', 'js')
+      const url = await loadExternalResource(getCDNResourceSync('https://cdn.jsdelivr.net/npm/vconsole@3.3.4/dist/vconsole.min.js'), 'js')
       if (!url) {
         return
       }

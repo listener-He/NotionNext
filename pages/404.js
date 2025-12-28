@@ -16,7 +16,12 @@ const NoFound = props => {
 export async function getStaticProps(req) {
   const { locale } = req
 
-  const props = (await getGlobalData({ from: '404', locale })) || {}
+  // 优化：只获取404页面需要的数据类型
+  const props = (await getGlobalData({ 
+    from: '404', 
+    locale,
+    dataTypes: ['siteInfo', 'NOTION_CONFIG'] 
+  })) || {}
   return {
         props,
         revalidate: process.env.EXPORT

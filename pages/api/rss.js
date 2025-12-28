@@ -56,8 +56,11 @@ export default async function handler(req, res) {
       async () => {
         console.log(`[RSS API] 🔄 生成新的RSS内容: ${format || 'rss2'}`)
 
-        // 获取站点数据
-        const props = await getGlobalData({ from: 'rss-api' })
+        // 优化：只获取RSS需要的数据类型
+        const props = await getGlobalData({ 
+          from: 'rss-api',
+          dataTypes: ['allPages', 'siteInfo', 'NOTION_CONFIG'] 
+        })
 
         if (!props || !props.latestPosts) {
           throw new Error('Failed to fetch site data')

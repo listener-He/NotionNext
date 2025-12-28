@@ -4,13 +4,13 @@ import SmartLink from '@/components/SmartLink'
 import CONFIG from '../config'
 
 const MenuGroupCard = props => {
-  const { postCount, categoryOptions, tagOptions } = props
+  const { postCount, categoryOptions, tagOptions, tagCount } = props
   const { locale } = useGlobal()
   const archiveSlot = <div className='text-center'>{postCount}</div>
   const categorySlot = (
     <div className='text-center'>{categoryOptions?.length}</div>
   )
-  const tagSlot = <div className='text-center'>{tagOptions?.length}</div>
+  const tagSlot = <div className='text-center'>{tagCount ? tagCount : tagOptions?.length}</div>
 
   const links = [
     {

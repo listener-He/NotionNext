@@ -19,7 +19,12 @@ export async function getStaticProps(req) {
   const { locale } = req
 
   const from = 'tag-index-props'
-  const props = await getGlobalData({ from, locale })
+  // 优化：只获取标签首页需要的数据类型
+  const props = await getGlobalData({ 
+    from, 
+    locale,
+    dataTypes: ['siteInfo', 'tagOptions', 'NOTION_CONFIG', 'latestPosts'] 
+  })
   delete props.allPages
   delete props.allNavPages
   return {

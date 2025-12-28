@@ -26,7 +26,12 @@ const Index = props => {
 export async function getStaticProps(req) {
   const { locale } = req
   const from = 'index'
-  const props = await getGlobalData({ from, locale })
+  // 优化：只获取首页需要的数据类型
+  const props = await getGlobalData({ 
+    from, 
+    locale,
+    dataTypes: ['allPages', 'siteInfo', 'tagOptions', 'categoryOptions', 'NOTION_CONFIG', 'latestPosts'] 
+  })
   const POST_PREVIEW_LINES = siteConfig(
     'POST_PREVIEW_LINES',
     12,

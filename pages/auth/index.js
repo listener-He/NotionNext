@@ -27,7 +27,11 @@ const UI = props => {
  */
 export const getServerSideProps = async ctx => {
   const from = `auth`
-  const props = await getGlobalData({ from })
+  // 优化：只获取认证页面需要的数据类型
+  const props = await getGlobalData({ 
+    from,
+    dataTypes: ['siteInfo', 'NOTION_CONFIG'] 
+  })
   delete props.allPages
   const code = ctx.query.code
 

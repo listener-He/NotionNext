@@ -43,7 +43,8 @@ export default function SideRight(props) {
     showTag,
     rightAreaSlot,
     notice,
-    className
+    className,
+    tagCount
   } = props
 
   const { locale } = useGlobal()

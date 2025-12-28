@@ -18,7 +18,12 @@ export async function getStaticProps({ locale }) {
   const prefix = 'dashboard'
   let fullSlug = 'dashboard'
   const from = `slug-props-${fullSlug}`
-  const props = await getGlobalData({ from, locale })
+  // 优化：只获取仪表板页面需要的数据类型
+  const props = await getGlobalData({ 
+    from, 
+    locale,
+    dataTypes: ['allPages', 'NOTION_CONFIG', 'siteInfo'] 
+  })
   if (siteConfig('PSEUDO_STATIC', false, props.NOTION_CONFIG)) {
     if (!fullSlug.endsWith('.html')) {
       fullSlug += '.html'

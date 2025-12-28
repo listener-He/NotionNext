@@ -1,5 +1,6 @@
 import { siteConfig } from '@/lib/config'
 import { loadExternalResource } from '@/lib/utils'
+import { getCDNResourceSync } from '@/lib/utils/cdn'
 import { useEffect, useRef, useState } from 'react'
 
 /**
@@ -17,12 +18,9 @@ const Player = (props) => {
   const audio = siteConfig('MUSIC_PLAYER_AUDIO_LIST')
 
   const musicPlayerEnable = siteConfig('MUSIC_PLAYER')
-  const musicPlayerCDN = siteConfig('MUSIC_PLAYER_CDN_URL')
+  const musicPlayerCDN = getCDNResourceSync(siteConfig('MUSIC_PLAYER_CDN_URL'))
   const musicMetingEnable = siteConfig('MUSIC_PLAYER_METING')
-  const musicMetingCDNUrl = siteConfig(
-    'MUSIC_PLAYER_METING_CDN_URL',
-    'https://cdnjs.cloudflare.com/ajax/libs/meting/2.0.1/Meting.min.js'
-  )
+  const musicMetingCDNUrl = getCDNResourceSync('https://cdnjs.cloudflare.com/ajax/libs/meting/2.0.1/Meting.min.js')
 
   const musicId = props?.post?.musicId && props?.post?.musicId !== '' ? props.post.musicId : '';
   if(musicId !== '') {
@@ -68,7 +66,7 @@ const Player = (props) => {
       <link
         rel='stylesheet'
         type='text/css'
-        href='https://cdn.jsdelivr.net/npm/aplayer@1.10.0/dist/APlayer.min.css'
+        href={getCDNResourceSync('https://cdn.jsdelivr.net/npm/aplayer@1.10.0/dist/APlayer.min.css')}
       />
       {meting ? (
         <meting-js

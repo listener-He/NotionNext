@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react'
 import { loadExternalResource } from '@/lib/utils'
+import { getCDNResourceSync } from '@/lib/utils/cdn'
 import { useRouter } from 'next/router'
 import { siteConfig } from '@/lib/config'
 const Ackee = () => {
@@ -56,7 +57,7 @@ export default Ackee
  * @param {?Object} options - Ackee options.
  */
 const handleAckee = async function (pathname, environment, options = {}) {
-  await loadExternalResource(siteConfig('ANALYTICS_ACKEE_TRACKER'), 'js')
+  await loadExternalResource(getCDNResourceSync(siteConfig('ANALYTICS_ACKEE_TRACKER')), 'js')
   const ackeeTracker = window.ackeeTracker
 
   const instance = ackeeTracker?.create(environment.server, options)

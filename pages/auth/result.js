@@ -9,7 +9,11 @@ import Slug from '../[prefix]'
  */
 export const getStaticProps = async () => {
   const from = `auth`
-  const props = await getGlobalData({ from })
+  // 优化：只获取认证结果页面需要的数据类型
+  const props = await getGlobalData({ 
+    from,
+    dataTypes: ['siteInfo', 'NOTION_CONFIG'] 
+  })
 
   delete props.allPages
   return {

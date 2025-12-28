@@ -14,7 +14,7 @@ export default function PoweredBy(props) {
         NotionNext {siteConfig('VERSION')}
       </a>
       &nbsp;
-      <span className='mr-1 text-gray-500 dark:text-gray-400'>vercel netlify</span>
+      <span className='mr-1 text-gray-500 dark:text-gray-400'>Vercel & Netlify</span>
     </div>
   )
 }

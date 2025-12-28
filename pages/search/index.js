@@ -40,9 +40,11 @@ const Search = props => {
  * 浏览器前端搜索
  */
 export async function getStaticProps({ locale }) {
+  // 优化：只获取搜索页需要的数据类型
   const props = await getGlobalData({
     from: 'search-props',
-    locale
+    locale,
+    dataTypes: ['allPages', 'tagOptions']
   })
   const { allPages } = props
   props.posts = allPages?.filter(

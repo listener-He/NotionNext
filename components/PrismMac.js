@@ -11,6 +11,7 @@ import 'prismjs/plugins/line-numbers/prism-line-numbers.css'
 
 // mermaid图
 import { loadExternalResource } from '@/lib/utils'
+import { getCDNResourceSync } from '@/lib/utils/cdn'
 import { useRouter } from 'next/navigation'
 import { useGlobal } from '@/lib/global'
 import { siteConfig } from '@/lib/config'
@@ -182,7 +183,7 @@ const renderMermaid = (mermaidCDN, isDarkMode) => {
             }
           }
           if (needLoad) {
-            loadExternalResource(mermaidCDN, 'js')
+            loadExternalResource(getCDNResourceSync(mermaidCDN), 'js')
               .then(() => {
                 setTimeout(() => {
                   const mermaid = window.mermaid

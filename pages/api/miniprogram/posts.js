@@ -33,9 +33,10 @@ export default async function handler(req, res) {
     const pageNum = Math.max(1, parseInt(page) || 1)
     const pageSizeNum = Math.min(50, Math.max(1, parseInt(pageSize) || 10))
 
-    // 直接获取全局数据，复用现有缓存机制
+    // 优化：只获取小程序文章API需要的数据类型
     const globalData = await getGlobalData({
-      from: 'miniprogram-posts'
+      from: 'miniprogram-posts',
+      dataTypes: ['allPages']
     })
 
     if (!globalData || !globalData.allPages) {

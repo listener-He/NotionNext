@@ -1,6 +1,8 @@
+import { siteConfig } from '@/lib/config'
 import { loadExternalResource } from '@/lib/utils'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
+import { getCDNResourceSync } from '@/lib/utils/cdn'
 
 /**
  * 加载进度条
@@ -12,13 +14,19 @@ export default function LoadingProgress() {
   // 加载进度条
   useEffect(() => {
     // 根据是否启用中国大陆优化选择不同的 CDN
-    const nprogressJsUrl = siteConfig('CHINA_OPTIMIZATION_ENABLED') 
-      ? siteConfig('NPROGRESS_JS_MIRROR') || 'https://cdn.bootcdn.net/ajax/libs/nprogress/0.2.0/nprogress.min.js'
-      : 'https://cdnjs.snrat.com/ajax/libs/nprogress/0.2.0/nprogress.min.js'
-      
-    const nprogressCssUrl = siteConfig('CHINA_OPTIMIZATION_ENABLED')
-      ? siteConfig('NPROGRESS_CSS_MIRROR') || 'https://cdn.bootcdn.net/ajax/libs/nprogress/0.2.0/nprogress.min.css'
-      : 'https://cdnjs.snrat.com/ajax/libs/nprogress/0.2.0/nprogress.min.css'
+    const nprogressJsUrl = getCDNResourceSync(
+      siteConfig('NPROGRESS_JS_MIRROR') || 
+      (siteConfig('CHINA_OPTIMIZATION_ENABLED') 
+        ? 'https://cdn.bootcdn.net/ajax/libs/nprogress/0.2.0/nprogress.min.js'
+        : 'https://cdnjs.snrat.com/ajax/libs/nprogress/0.2.0/nprogress.min.js')
+    )
+    
+    const nprogressCssUrl = getCDNResourceSync(
+      siteConfig('NPROGRESS_CSS_MIRROR') || 
+      (siteConfig('CHINA_OPTIMIZATION_ENABLED')
+        ? 'https://cdn.bootcdn.net/ajax/libs/nprogress/0.2.0/nprogress.min.css'
+        : 'https://cdnjs.snrat.com/ajax/libs/nprogress/0.2.0/nprogress.min.css')
+    )
 
     loadExternalResource(nprogressJsUrl, 'js').then(() => {
       if (window.NProgress) {

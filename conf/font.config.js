@@ -10,12 +10,15 @@ module.exports = {
   // 字体CSS 例如 https://npm.elemecdn.com/lxgw-wenkai-webfont@1.6.0/style.css
   FONT_URL: [
     // 'https://npm.elemecdn.com/lxgw-wenkai-webfont@1.6.0/style.css',
+    process.env.NEXT_PUBLIC_FONT_URL_1 || 
     (process.env.NEXT_PUBLIC_CHINA_OPTIMIZATION_ENABLED === 'true'
       ? 'https://fonts.loli.net/css?family=Bitter:300,400,700&display=swap'
       : 'https://fonts.googleapis.com/css?family=Bitter:300,400,700&display=swap'),
+    process.env.NEXT_PUBLIC_FONT_URL_2 ||
     (process.env.NEXT_PUBLIC_CHINA_OPTIMIZATION_ENABLED === 'true'
       ? 'https://fonts.loli.net/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap'
       : 'https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap'),
+    process.env.NEXT_PUBLIC_FONT_URL_3 ||
     (process.env.NEXT_PUBLIC_CHINA_OPTIMIZATION_ENABLED === 'true'
       ? 'https://fonts.loli.net/css2?family=Noto+Serif+SC:wght@300;400;500;700&display=swap'
       : 'https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500;700&display=swap')

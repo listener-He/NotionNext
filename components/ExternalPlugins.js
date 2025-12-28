@@ -1,6 +1,7 @@
 import { siteConfig } from '@/lib/config'
 import { convertInnerUrl } from '@/lib/notion/convertInnerUrl'
 import { isBrowser, loadExternalResource } from '@/lib/utils'
+import { getCDNResourceSync } from '@/lib/utils/cdn'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
@@ -274,7 +275,7 @@ const ExternalPlugin = props => {
         const timer = setTimeout(() => {
           const script = document.createElement('script');
           script.type = 'text/javascript';
-          script.src = 'https://cdn.wwads.cn/js/makemoney.js';
+          script.src = getCDNResourceSync('https://cdn.wwads.cn/js/makemoney.js');
           document.body.appendChild(script);
         }, 6000)
         timers.push(timer)
@@ -285,7 +286,7 @@ const ExternalPlugin = props => {
         const timer = setTimeout(() => {
           const script = document.createElement('script');
           script.async = true;
-          script.src = `//code.tidio.co/${COMMENT_TIDIO_ID}.js`;
+          script.src = getCDNResourceSync(`//code.tidio.co/${COMMENT_TIDIO_ID}.js`);
           document.body.appendChild(script);
         }, 6000)
         timers.push(timer)
@@ -295,7 +296,7 @@ const ExternalPlugin = props => {
       if (COMMENT_GITTER_ROOM) {
         const timer = setTimeout(() => {
           const script1 = document.createElement('script');
-          script1.src = 'https://sidecar.gitter.im/dist/sidecar.v1.js';
+          script1.src = getCDNResourceSync('https://sidecar.gitter.im/dist/sidecar.v1.js');
           script1.async = true;
           script1.defer = true;
           document.body.appendChild(script1);
@@ -327,7 +328,7 @@ const ExternalPlugin = props => {
       // 延迟2秒加载站长统计
       if (ANALYTICS_CNZZ_ID) {
         const timer = setTimeout(() => {
-          document.write(unescape("%3Cspan style='display:none' id='cnzz_stat_icon_" + ANALYTICS_CNZZ_ID + "'%3E%3C/span%3E%3Cscript src='https://s9.cnzz.com/z_stat.php%3Fid%3D" + ANALYTICS_CNZZ_ID + "' type='text/javascript'%3E%3C/script%3E"));
+          document.write(unescape("%3Cspan style='display:none' id='cnzz_stat_icon_" + ANALYTICS_CNZZ_ID + "'%3E%3C/span%3E%3Cscript src='https://s9.cnzz.com/z_stat.php?id=" + ANALYTICS_CNZZ_ID + "' type='text/javascript'%3E%3C/script%3E"));
         }, 2000)
         timers.push(timer)
       }
@@ -351,7 +352,7 @@ const ExternalPlugin = props => {
           const script1 = document.createElement('script');
           script1.async = true;
           script1.defer = true;
-          script1.src = `https://www.googletagmanager.com/gtag/js?id=${ANALYTICS_GOOGLE_ID}`;
+          script1.src = getCDNResourceSync(`https://www.googletagmanager.com/gtag/js?id=${ANALYTICS_GOOGLE_ID}`);
           document.body.appendChild(script1);
 
           const innerTimer = setTimeout(() => {
@@ -565,7 +566,7 @@ const ExternalPlugin = props => {
           </Head>
           <ExternalScript
             type='text/javascript'
-            src='https://cdn.wwads.cn/js/makemoney.js'
+            src={getCDNResourceSync('https://cdn.wwads.cn/js/makemoney.js')}
           />
         </>
       )}
@@ -575,14 +576,14 @@ const ExternalPlugin = props => {
       {COMMENT_ARTALK_SERVER && <script defer src={COMMENT_ARTALK_JS} />}
 
       {COMMENT_TIDIO_ID && (
-        <script async src={`//code.tidio.co/${COMMENT_TIDIO_ID}.js`} />
+        <script async src={getCDNResourceSync(`//code.tidio.co/${COMMENT_TIDIO_ID}.js`)} />
       )}
 
       {/* gitter聊天室 */}
       {COMMENT_GITTER_ROOM && (
         <>
           <script
-            src='https://sidecar.gitter.im/dist/sidecar.v1.js'
+            src={getCDNResourceSync('https://sidecar.gitter.im/dist/sidecar.v1.js')}
             async
             defer
           />
@@ -626,7 +627,7 @@ const ExternalPlugin = props => {
           defer
           dangerouslySetInnerHTML={{
             __html: `
-          document.write(unescape("%3Cspan style='display:none' id='cnzz_stat_icon_${ANALYTICS_CNZZ_ID}'%3E%3C/span%3E%3Cscript src='https://s9.cnzz.com/z_stat.php%3Fid%3D${ANALYTICS_CNZZ_ID}' type='text/javascript'%3E%3C/script%3E"));
+          document.write(unescape("%3Cspan style='display:none' id='cnzz_stat_icon_${ANALYTICS_CNZZ_ID}'%3E%3C/span%3E%3Cscript src='https://s9.cnzz.com/z_stat.php?id=${ANALYTICS_CNZZ_ID}' type='text/javascript'%3E%3C/script%3E"));
           `
           }}
         />
@@ -643,7 +644,7 @@ const ExternalPlugin = props => {
           <script
             async
             defer
-            src={`https://www.googletagmanager.com/gtag/js?id=${ANALYTICS_GOOGLE_ID}`}
+            src={getCDNResourceSync(`https://www.googletagmanager.com/gtag/js?id=${ANALYTICS_GOOGLE_ID}`)}
           />
           <script
             async

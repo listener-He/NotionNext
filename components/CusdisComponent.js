@@ -2,6 +2,7 @@ import { useGlobal } from '@/lib/global'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 import { loadExternalResource } from '@/lib/utils'
+import { getCDNResourceSync } from '@/lib/utils/cdn'
 import { siteConfig } from '@/lib/config'
 
 const CusdisComponent = ({ frontMatter }) => {
@@ -17,8 +18,8 @@ const CusdisComponent = ({ frontMatter }) => {
   }, [isDarkMode, lang])
 
   const loadCusdis = async () => {
-    await loadExternalResource(langCDN, 'js')
-    await loadExternalResource(src, 'js')
+    await loadExternalResource(getCDNResourceSync(langCDN), 'js')
+    await loadExternalResource(getCDNResourceSync(src), 'js')
 
     window?.CUSDIS?.initial()
   }

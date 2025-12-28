@@ -32,7 +32,8 @@ export default async function handler(req, res) {
     let globalData = null
     try {
       globalData = await getGlobalData({
-        from: 'miniprogram-post-detail'
+        from: 'miniprogram-post-detail',
+        dataTypes: ['allPages', 'siteInfo', 'tagOptions', 'categoryOptions', 'latestPosts']
       })
 
       if (!globalData || !globalData.allPages) {

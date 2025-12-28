@@ -1,5 +1,6 @@
 import { siteConfig } from '@/lib/config'
 import { loadExternalResource } from '@/lib/utils'
+import { getCDNResourceSync } from '@/lib/utils/cdn'
 import { useEffect, useRef, useState } from 'react'
 
 /**
@@ -20,13 +21,13 @@ const PageMusicPlayer = ({ musicId }) => {
 
     const loadLibraries = async () => {
       try {
-        await loadExternalResource('https://cdn.jsdelivr.net/npm/aplayer@1.10.0/dist/APlayer.min.css', 'css')
-        await loadExternalResource('https://cdn.jsdelivr.net/npm/aplayer@1.10.0/dist/APlayer.min.js', 'js')
-        const musicMetingCDNUrl = siteConfig(
-          'MUSIC_PLAYER_METING_CDN_URL',
-          'https://cdnjs.cloudflare.com/ajax/libs/meting/2.0.1/Meting.min.js'
-        )
-        await loadExternalResource(musicMetingCDNUrl, 'js')
+        const aplayerCssUrl = getCDNResourceSync('https://cdn.jsdelivr.net/npm/aplayer@1.10.0/dist/APlayer.min.css')
+        const aplayerJsUrl = getCDNResourceSync('https://cdn.jsdelivr.net/npm/aplayer@1.10.0/dist/APlayer.min.js')
+        const metingJsUrl = getCDNResourceSync('https://cdnjs.cloudflare.com/ajax/libs/meting/2.0.1/Meting.min.js')
+        
+        await loadExternalResource(aplayerCssUrl, 'css')
+        await loadExternalResource(aplayerJsUrl, 'js')
+        await loadExternalResource(metingJsUrl, 'js')
         setLibrariesLoaded(true)
       } catch (error) {
         console.error('页面音乐播放器库加载异常', error)

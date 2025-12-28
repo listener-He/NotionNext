@@ -1,5 +1,6 @@
 import { siteConfig } from '@/lib/config'
 import { loadExternalResource } from '@/lib/utils'
+import { getCDNResourceSync } from '@/lib/utils/cdn'
 import { useEffect } from 'react'
 
 /**
@@ -19,7 +20,7 @@ const Artalk = ({ siteInfo }) => {
   }, [])
 
   const initArtalk = async () => {
-    await loadExternalResource(artalkCss, 'css')
+    await loadExternalResource(getCDNResourceSync(artalkCss), 'css')
     const artalk = window?.Artalk?.init({
       server: artalkServer,
       el: '#artalk',

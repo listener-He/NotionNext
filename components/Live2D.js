@@ -2,6 +2,7 @@
 import { siteConfig } from '@/lib/config'
 import { useGlobal } from '@/lib/global'
 import { isMobile, loadExternalResource } from '@/lib/utils'
+import { getCDNResourceSync } from '@/lib/utils/cdn'
 import { useEffect, useState, useCallback, useRef } from 'react'
 import { getDevicePerformance } from '@/components/PerformanceDetector'
 
@@ -74,7 +75,7 @@ export default function Live2D() {
       const loadTimer = setTimeout(() => {
         Promise.all([
           loadExternalResource(
-            'https://cdn.jsdmirror.com/gh/stevenjoezhang/live2d-widget@latest/live2d.min.js',
+            getCDNResourceSync('https://cdn.jsdelivr.net/gh/stevenjoezhang/live2d-widget@latest/live2d.min.js'),
             'js'
           )
         ]).then(e => {

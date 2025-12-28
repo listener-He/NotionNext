@@ -16,7 +16,12 @@ export default function Category(props) {
 }
 
 export async function getStaticProps({ locale }) {
-  const props = await getGlobalData({ from: 'category-index-props', locale })
+  // 优化：只获取分类首页需要的数据类型
+  const props = await getGlobalData({ 
+    from: 'category-index-props', 
+    locale,
+    dataTypes: ['siteInfo', 'categoryOptions', 'NOTION_CONFIG', 'latestPosts'] 
+  })
   delete props.allPages
   delete props.allNavPages
   delete props.tagOptions

@@ -13,9 +13,10 @@ export default async function handler(req, res) {
   }
 
   try {
-    // 直接获取全局数据，复用现有缓存机制
+    // 优化：只获取小程序站点信息API需要的数据类型
     const globalData = await getGlobalData({
-      from: 'miniprogram-site-info'
+      from: 'miniprogram-site-info',
+      dataTypes: ['allPages', 'siteInfo', 'categoryOptions', 'tagOptions', 'latestPosts', 'NOTION_CONFIG']
     })
 
     if (!globalData) {
@@ -60,7 +61,7 @@ export default async function handler(req, res) {
 
     // 获取分类和标签数量
     const categoryCount = globalData.categoryOptions?.length || 0
-    const tagCount = globalData.tagOptions?.length || 0
+    const tagCount = globalData.tagCount ? globalData.tagCount : (globalData.tagOptions?.length || 0)
 
     // 构建返回数据
     const siteData = {

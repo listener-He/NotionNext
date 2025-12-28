@@ -11,9 +11,10 @@ export default async function handler(req, res) {
   }
 
   try {
-    // 直接获取全局数据，复用现有缓存机制
+    // 优化：只获取小程序标签API需要的数据类型
     const globalData = await getGlobalData({
-      from: 'miniprogram-tags'
+      from: 'miniprogram-tags',
+      dataTypes: ['allPages', 'tagOptions']
     })
 
     if (!globalData) {

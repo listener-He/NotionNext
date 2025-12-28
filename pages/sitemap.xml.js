@@ -16,7 +16,8 @@ export const getServerSideProps = async ctx => {
     // 第一个id站点默认语言
     const siteData = await getGlobalData({
       pageId: id,
-      from: 'sitemap.xml'
+      from: 'sitemap.xml',
+      dataTypes: ['allPages', 'siteInfo', 'NOTION_CONFIG']
     })
     const link = siteConfig(
       'LINK',

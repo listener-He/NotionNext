@@ -17,7 +17,11 @@ export default function Category(props) {
 
 export async function getStaticProps({ params: { category, page } }) {
   const from = 'category-page-props'
-  let props = await getGlobalData({ from })
+  // 优化：只获取分类分页页面需要的数据类型
+  let props = await getGlobalData({ 
+    from,
+    dataTypes: ['allPages', 'NOTION_CONFIG', 'siteInfo'] 
+  })
 
   // 过滤状态类型
   props.posts = props.allPages
@@ -57,7 +61,11 @@ export async function getStaticProps({ params: { category, page } }) {
 
 export async function getStaticPaths() {
   const from = 'category-page-paths'
-  const { categoryOptions, allPages } = await getGlobalData({ from })
+  // 优化：只获取分类分页路径生成需要的数据类型
+  const { categoryOptions, allPages } = await getGlobalData({ 
+    from,
+    dataTypes: ['allPages', 'categoryOptions'] 
+  })
 
   const paths = []
 

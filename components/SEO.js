@@ -1,6 +1,7 @@
 import { siteConfig } from '@/lib/config'
 import { useGlobal } from '@/lib/global'
 import { loadExternalResource } from '@/lib/utils'
+import { getCDNResourceSync } from '@/lib/utils/cdn'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
@@ -23,10 +24,8 @@ const SEO = props => {
 
   useEffect(() => {
     // 使用WebFontLoader字体加载
-    loadExternalResource(
-      'https://cdnjs.cloudflare.com/ajax/libs/webfont/1.6.28/webfontloader.js',
-      'js'
-    ).then(url => {
+    const webFontLoaderUrl = getCDNResourceSync('https://cdnjs.cloudflare.com/ajax/libs/webfont/1.6.28/webfontloader.js')
+    loadExternalResource(webFontLoaderUrl, 'js').then(url => {
       const WebFont = window?.WebFont
       if (WebFont) {
         // console.log('LoadWebFont', webFontUrl)
@@ -220,10 +219,10 @@ const SEO = props => {
       />
 
       {/* DNS预取和预连接 */}
-      <link rel='dns-prefetch' href='//fonts.googleapis.com' />
+      <link rel='dns-prefetch' href={getCDNResourceSync('//fonts.googleapis.com', 'google-fonts')} />
       <link rel='dns-prefetch' href='//www.google-analytics.com' />
       <link rel='dns-prefetch' href='//www.googletagmanager.com' />
-      <link rel='preconnect' href='https://fonts.gstatic.com' crossOrigin='anonymous' />
+      <link rel='preconnect' href={getCDNResourceSync('https://fonts.gstatic.com', 'google-fonts')} crossOrigin='anonymous' />
 
       {/* 预加载关键资源 */}
       {/* 注释掉不存在的字体预加载，避免控制台警告 */}

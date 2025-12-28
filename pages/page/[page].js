@@ -16,7 +16,12 @@ const Page = props => {
 
 export async function getStaticPaths({ locale }) {
   const from = 'page-paths'
-  const { postCount, NOTION_CONFIG } = await getGlobalData({ from, locale })
+  // 优化：只获取分页路径生成需要的数据类型
+  const { postCount, NOTION_CONFIG } = await getGlobalData({ 
+    from, 
+    locale,
+    dataTypes: ['allPages', 'NOTION_CONFIG'] 
+  })
   const totalPages = Math.ceil(
     postCount / siteConfig('POSTS_PER_PAGE', null, NOTION_CONFIG)
   )
@@ -31,7 +36,12 @@ export async function getStaticPaths({ locale }) {
 
 export async function getStaticProps({ params: { page }, locale }) {
   const from = `page-${page}`
-  const props = await getGlobalData({ from, locale })
+  // 优化：只获取分页页面需要的数据类型
+  const props = await getGlobalData({ 
+    from, 
+    locale,
+    dataTypes: ['allPages', 'NOTION_CONFIG', 'siteInfo'] 
+  })
   const { allPages } = props
   const POST_PREVIEW_LINES = siteConfig(
     'POST_PREVIEW_LINES',
