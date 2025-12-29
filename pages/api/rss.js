@@ -57,9 +57,9 @@ export default async function handler(req, res) {
         console.log(`[RSS API] 🔄 生成新的RSS内容: ${format || 'rss2'}`)
 
         // 优化：只获取RSS需要的数据类型
-        const props = await getGlobalData({ 
+        const props = await getGlobalData({
           from: 'rss-api',
-          dataTypes: ['allPages', 'siteInfo', 'NOTION_CONFIG'] 
+          dataTypes: ['allPages', 'siteInfo', 'NOTION_CONFIG', 'latestPosts']
         })
 
         if (!props || !props.latestPosts) {
