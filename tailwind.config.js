@@ -3,10 +3,21 @@ const { fontFamilies } = require('./lib/font')
 
 module.exports = {
   content: [
-    './pages/**/*.js',
-    './components/**/*.js',
-    './layouts/**/*.js',
-    './themes/**/*.js'
+    './pages/**/*.{js,ts,jsx,tsx}',
+    './components/**/*.{js,ts,jsx,tsx}',
+    './layouts/**/*.{js,ts,jsx,tsx}',
+    './themes/**/*.{js,ts,jsx,tsx}',
+    './lib/**/*.{js,ts,jsx,tsx}'
+  ],
+  safelist: [
+    'text-blue-700',
+    'dark:text-gray-300',
+    'border-gray-200',
+    'dark:border-gray-600',
+    'bg-day-gradient',
+    'bg-night-gradient',
+    'tag-badge-day',
+    'tag-badge-night'
   ],
   darkMode: BLOG.APPEARANCE === 'class' ? 'media' : 'class', // or 'media' or 'class'
   theme: {

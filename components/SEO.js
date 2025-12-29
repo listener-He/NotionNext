@@ -1,10 +1,8 @@
 import { siteConfig } from '@/lib/config'
 import { useGlobal } from '@/lib/global'
-import { loadExternalResource } from '@/lib/utils'
 import { getCDNResourceSync } from '@/lib/utils/cdn'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import { useEffect } from 'react'
 
 /**
  * 页面的Head头，有用于SEO
@@ -20,24 +18,7 @@ const SEO = props => {
   let image
   const router = useRouter()
   const meta = getSEOMeta(props, router, useGlobal()?.locale)
-  const webFontUrl = siteConfig('FONT_URL')
-
-  useEffect(() => {
-    // 使用WebFontLoader字体加载
-    const webFontLoaderUrl = getCDNResourceSync('https://cdnjs.cloudflare.com/ajax/libs/webfont/1.6.28/webfontloader.js')
-    loadExternalResource(webFontLoaderUrl, 'js').then(url => {
-      const WebFont = window?.WebFont
-      if (WebFont) {
-        // console.log('LoadWebFont', webFontUrl)
-        WebFont.load({
-          custom: {
-            // families: ['"LXGW WenKai"'],
-            urls: webFontUrl
-          }
-        })
-      }
-    })
-  }, [])
+  // 字体由 next/font 管理，移除客户端 WebFontLoader 以避免 CLS
 
   // SEO关键词
   const KEYWORDS = siteConfig('KEYWORDS')
@@ -49,6 +30,10 @@ const SEO = props => {
     url = `${url}/${meta.slug}`
     image = meta.image || '/bg_image.jpg'
   }
+  const imageAbsolute =
+    image?.startsWith('http')
+      ? image
+      : `${LINK}${image?.startsWith('/') ? image : `/${image}`}`
   const TITLE = siteConfig('TITLE')
   const title = meta?.title || TITLE
   const description = meta?.description || `${siteInfo?.description}`
@@ -105,6 +90,7 @@ const SEO = props => {
   const AUTHOR = siteConfig('AUTHOR')
   return (
     <Head>
+      <link rel='canonical' href={url} />
       <link rel='icon' href={favicon} />
       <title>{title}</title>
       <meta name='theme-color' content={BACKGROUND_DARK} />
@@ -156,7 +142,8 @@ const SEO = props => {
       <meta property='og:title' content={title} />
       <meta property='og:description' content={description?.substring(0, 200)} />
       <meta property='og:url' content={url} />
-      <meta property='og:image' content={image} />
+      <meta property='og:image' content={imageAbsolute} />
+      <meta property='og:image:secure_url' content={imageAbsolute} />
       <meta property='og:image:width' content='1200' />
       <meta property='og:image:height' content='630' />
       <meta property='og:image:alt' content={title} />
@@ -169,7 +156,7 @@ const SEO = props => {
       <meta name='twitter:creator' content={AUTHOR} />
       <meta name='twitter:title' content={title} />
       <meta name='twitter:description' content={description?.substring(0, 200)} />
-      <meta name='twitter:image' content={image} />
+      <meta name='twitter:image' content={imageAbsolute} />
       <meta name='twitter:image:alt' content={title} />
 
       {/* 微信分享优化 */}
@@ -217,6 +204,24 @@ const SEO = props => {
           __html: JSON.stringify(generateStructuredData(meta, siteInfo, url, image, AUTHOR))
         }}
       />
+      {/* 列表分页的 prev/next 指示 */}
+      {(() => {
+        const asPath = router?.asPath || ''
+        const match = asPath.match(/(.*)\/page\/(\d+)/)
+        const current = Number(router?.query?.page || match?.[2] || 0)
+        if (current && current > 0) {
+          const base = match?.[1] || asPath.replace(/\/page\/\d+$/, '')
+          const prevHref = current > 1 ? `${LINK}${base}/page/${current - 1}` : null
+          const nextHref = `${LINK}${base}/page/${current + 1}`
+          return (
+            <>
+              {prevHref && <link rel='prev' href={prevHref} />}
+              <link rel='next' href={nextHref} />
+            </>
+          )
+        }
+        return null
+      })()}
 
       {/* DNS预取和预连接 */}
       <link rel='dns-prefetch' href={getCDNResourceSync('//fonts.googleapis.com', 'google-fonts')} />

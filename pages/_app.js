@@ -20,11 +20,17 @@ import SEO from '@/components/SEO'
 import DarkModeAutoSwitch from '@/components/DarkModeAutoSwitch'
 import { zhCN } from '@clerk/localizations'
 import dynamic from 'next/dynamic'
+import { Bitter } from 'next/font/google'
 // import { ClerkProvider } from '@clerk/nextjs'
 const ClerkProvider = dynamic(() =>
   import('@clerk/nextjs').then(m => m.ClerkProvider)
 )
 
+const bitter = Bitter({
+  subsets: ['latin'],
+  weight: ['300', '400', '700'],
+  display: 'swap'
+})
 /**
  * App挂载DOM 入口文件
  * @param {*} param0
@@ -54,14 +60,16 @@ const MyApp = ({ Component, pageProps }) => {
 
   const enableClerk = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
   const content = (
-    <GlobalContextProvider {...pageProps}>
-      <DarkModeAutoSwitch />
-      <GLayout {...pageProps}>
-        <SEO {...pageProps} />
-        <Component {...pageProps} />
-      </GLayout>
-      <ExternalPlugins {...pageProps} />
-    </GlobalContextProvider>
+    <div className={bitter.className}>
+      <GlobalContextProvider {...pageProps}>
+        <DarkModeAutoSwitch />
+        <GLayout {...pageProps}>
+          <SEO {...pageProps} />
+          <Component {...pageProps} />
+        </GLayout>
+        <ExternalPlugins {...pageProps} />
+      </GlobalContextProvider>
+    </div>
   )
   return (
     <>

@@ -6,10 +6,9 @@ import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 import { GlobalStyle } from './GlobalStyle'
-import { initGoogleAdsense } from './GoogleAdsense'
 
 import Head from 'next/head'
-import ExternalScript from './ExternalScript'
+import Script from 'next/script'
 import WebWhiz from './Webwhiz'
 import { useGlobal } from '@/lib/global'
 import IconFont from './IconFont'
@@ -166,246 +165,13 @@ const ExternalPlugin = props => {
 
   const router = useRouter()
   useEffect(() => {
-    // 创建一个数组来存储所有定时器ID，用于清理
-    const timers = []
-
-    // 创建一个函数来根据设备性能决定加载策略
-    const getLoadDelay = () => {
-      if (typeof window !== 'undefined' && window.matchMedia) {
-        // 检查是否用户偏好减少动画
-        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-          return 0 // 立即加载，避免动画效果
-        }
-        // 检查是否是移动设备
-        if (window.innerWidth < 768) {
-          return 3000 // 移动设备延迟更长时间
-        }
-      }
-      return 1000 // 桌面设备延迟1秒
-    }
-
-    // 延迟加载非关键资源，提高首屏渲染速度
-    const delayNonCriticalResources = () => {
-      // 延迟1秒加载谷歌广告
-      if (ADSENSE_GOOGLE_ID) {
-        const timer = setTimeout(() => {
-          initGoogleAdsense(ADSENSE_GOOGLE_ID)
-        }, 1000)
-        timers.push(timer)
-      }
-
-      // 延迟2秒加载51.LA统计
-      if (ANALYTICS_51LA_ID && ANALYTICS_51LA_CK) {
-        const timer = setTimeout(() => {
-          const LA = window.LA
-          if (LA) {
-            LA.init({
-              id: `${ANALYTICS_51LA_ID}`,
-              ck: `${ANALYTICS_51LA_CK}`,
-              hashMode: true,
-              autoTrack: true
-            })
-          }
-        }, 2000)
-        timers.push(timer)
-      }
-
-      // 延迟5秒加载ChatBase
-      if (CHATBASE_ID) {
-        const timer = setTimeout(() => {
-          window.chatbaseConfig = {
-            chatbotId: CHATBASE_ID,
-          }
-        }, 5000)
-        timers.push(timer)
-      }
-
-      // 延迟2秒加载Clarity
-      if (CLARITY_ID) {
-        const timer = setTimeout(() => {
-          (function(c, l, a, r, i, t, y) {
-            c[a] = c[a] || function() {
-              (c[a].q = c[a].q || []).push(arguments);
-            };
-            t = l.createElement(r);
-            t.async = 1;
-            t.src = "https://www.clarity.ms/tag/" + i;
-            y = l.getElementsByTagName(r)[0];
-            if (y && y.parentNode) {
-              y.parentNode.insertBefore(t, y);
-            } else {
-              l.head.appendChild(t);
-            }
-          })(window, document, "clarity", "script", CLARITY_ID);
-        }, 2000)
-        timers.push(timer)
-      }
-
-      // 延迟5秒加载DaoVoice
-      if (COMMENT_DAO_VOICE_ID) {
-        const timer = setTimeout(() => {
-          (function(i, s, o, g, r, a, m) {
-            i["DaoVoiceObject"] = r;
-            i[r] = i[r] || function() {
-              (i[r].q = i[r].q || []).push(arguments);
-            };
-            i[r].l = 1 * new Date();
-            a = s.createElement(o);
-            m = s.getElementsByTagName(o)[0];
-            a.async = 1;
-            a.src = g;
-            a.charset = "utf-8";
-            if (m && m.parentNode) {
-              m.parentNode.insertBefore(a, m);
-            } else {
-              s.head.appendChild(a);
-            }
-          })(window, document, "script", ('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/daf1a94b.js", "daovoice")
-
-          daovoice('init', {
-            app_id: COMMENT_DAO_VOICE_ID
-          });
-          daovoice('update');
-        }, 5000)
-        timers.push(timer)
-      }
-
-      // 延迟6秒加载WWADS
-      if (AD_WWADS_ID) {
-        const timer = setTimeout(() => {
-          const script = document.createElement('script');
-          script.type = 'text/javascript';
-          script.src = getCDNResourceSync('https://cdn.wwads.cn/js/makemoney.js');
-          document.body.appendChild(script);
-        }, 6000)
-        timers.push(timer)
-      }
-
-      // 延迟6秒加载Tidio
-      if (COMMENT_TIDIO_ID) {
-        const timer = setTimeout(() => {
-          const script = document.createElement('script');
-          script.async = true;
-          script.src = getCDNResourceSync(`//code.tidio.co/${COMMENT_TIDIO_ID}.js`);
-          document.body.appendChild(script);
-        }, 6000)
-        timers.push(timer)
-      }
-
-      // 延迟5.5秒加载Gitter
-      if (COMMENT_GITTER_ROOM) {
-        const timer = setTimeout(() => {
-          const script1 = document.createElement('script');
-          script1.src = getCDNResourceSync('https://sidecar.gitter.im/dist/sidecar.v1.js');
-          script1.async = true;
-          script1.defer = true;
-          document.body.appendChild(script1);
-
-          const innerTimer = setTimeout(() => {
-            ((window.gitter = {}).chat = {}).options = {
-              room: COMMENT_GITTER_ROOM
-            };
-          }, 1000);
-          timers.push(innerTimer)
-        }, 5.5000)
-        timers.push(timer)
-      }
-
-      // 延迟2秒加载百度统计
-      if (ANALYTICS_BAIDU_ID) {
-        const timer = setTimeout(() => {
-          var _hmt = _hmt || [];
-          (function() {
-            var hm = document.createElement("script");
-            hm.src = "https://hm.baidu.com/hm.js?" + ANALYTICS_BAIDU_ID;
-            var s = document.getElementsByTagName("script")[0];
-            s.parentNode.insertBefore(hm, s);
-          })();
-        }, 2000)
-        timers.push(timer)
-      }
-
-      // 延迟2秒加载站长统计
-      if (ANALYTICS_CNZZ_ID) {
-        const timer = setTimeout(() => {
-          document.write(unescape("%3Cspan style='display:none' id='cnzz_stat_icon_" + ANALYTICS_CNZZ_ID + "'%3E%3C/span%3E%3Cscript src='https://s9.cnzz.com/z_stat.php?id=" + ANALYTICS_CNZZ_ID + "' type='text/javascript'%3E%3C/script%3E"));
-        }, 2000)
-        timers.push(timer)
-      }
-
-      // 延迟2秒加载Umami统计
-      if (UMAMI_ID) {
-        const timer = setTimeout(() => {
-          const script = document.createElement('script');
-          script.async = true;
-          script.defer = true;
-          script.src = UMAMI_HOST;
-          script.setAttribute('data-website-id', UMAMI_ID);
-          document.body.appendChild(script);
-        }, 2000)
-        timers.push(timer)
-      }
-
-      // 延迟2秒加载谷歌统计
-      if (ANALYTICS_GOOGLE_ID) {
-        const timer = setTimeout(() => {
-          const script1 = document.createElement('script');
-          script1.async = true;
-          script1.defer = true;
-          script1.src = getCDNResourceSync(`https://www.googletagmanager.com/gtag/js?id=${ANALYTICS_GOOGLE_ID}`);
-          document.body.appendChild(script1);
-
-          const innerTimer = setTimeout(() => {
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', ANALYTICS_GOOGLE_ID, {
-              page_path: window.location.pathname,
-            });
-          }, 1000);
-          timers.push(innerTimer)
-        }, 2000)
-        timers.push(timer)
-      }
-
-      // 延迟2秒加载Matomo统计
-      if (MATOMO_HOST_URL && MATOMO_SITE_ID) {
-        const timer = setTimeout(() => {
-          var _paq = window._paq = window._paq || [];
-          _paq.push(['trackPageView']);
-          _paq.push(['enableLinkTracking']);
-          (function() {
-            var u="//" + MATOMO_HOST_URL + "/";
-            _paq.push(['setTrackerUrl', u+'matomo.php']);
-            _paq.push(['setSiteId', MATOMO_SITE_ID]);
-            var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-            g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
-          })();
-        }, 2000)
-        timers.push(timer)
-      }
-    };
-
-    // 根据设备性能决定延迟时间
-    const delay = getLoadDelay()
-    const mainTimer = setTimeout(delayNonCriticalResources, delay);
-    timers.push(mainTimer)
-
-    const urlTimer = setTimeout(() => {
-      // 映射url（关键功能，不延迟）
+    // 映射url（关键功能，不延迟）
+    const timer = setTimeout(() => {
       convertInnerUrl({ allPages: props?.allNavPages, lang: lang })
     }, 500)
-    timers.push(urlTimer)
-
-    // 清理函数：清除所有定时器
-    return () => {
-      timers.forEach(timer => {
-        if (timer) {
-          clearTimeout(timer)
-        }
-      })
-    }
-  }, [router, props?.allNavPages, lang, ADSENSE_GOOGLE_ID, ANALYTICS_51LA_ID, ANALYTICS_51LA_CK, CHATBASE_ID, CLARITY_ID, COMMENT_DAO_VOICE_ID, AD_WWADS_ID, COMMENT_TIDIO_ID, COMMENT_GITTER_ROOM, ANALYTICS_BAIDU_ID, ANALYTICS_CNZZ_ID, UMAMI_ID, ANALYTICS_GOOGLE_ID, MATOMO_HOST_URL, MATOMO_SITE_ID])
+    
+    return () => clearTimeout(timer)
+  }, [router, props?.allNavPages, lang])
 
   useEffect(() => {
     // 执行注入脚本
@@ -453,101 +219,107 @@ const ExternalPlugin = props => {
       {ANALYTICS_51LA_ID && ANALYTICS_51LA_CK && <LA51 />}
       {COZE_BOT_ID && <Coze />}
 
+      {/* 谷歌广告 */}
+      {ADSENSE_GOOGLE_ID && (
+        <Script
+          strategy='lazyOnload'
+          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_GOOGLE_ID}`}
+          crossOrigin='anonymous'
+        />
+      )}
+
+      {/* 51.LA 统计 */}
       {ANALYTICS_51LA_ID && ANALYTICS_51LA_CK && (
         <>
-          <script id='LA_COLLECT' src='//sdk.51.la/js-sdk-pro.min.js' defer />
-          {/* <script async dangerouslySetInnerHTML={{
-              __html: `
-                    LA.init({id:"${ANALYTICS_51LA_ID}",ck:"${ANALYTICS_51LA_CK}",hashMode:true,autoTrack:true})
-                    `
-            }} /> */}
+          <Script
+            id='LA_COLLECT'
+            src='//sdk.51.la/js-sdk-pro.min.js'
+            strategy='lazyOnload'
+          />
+          <Script id='la-init' strategy='lazyOnload'>
+            {`
+              try {
+                LA.init({id:"${ANALYTICS_51LA_ID}",ck:"${ANALYTICS_51LA_CK}",hashMode:true,autoTrack:true})
+              } catch (e) {
+                console.warn('51.la init failed', e)
+              }
+            `}
+          </Script>
         </>
       )}
 
+      {/* Chatbase */}
       {CHATBASE_ID && (
         <>
-          <script
-            id={CHATBASE_ID}
+          <Script
+            id='chatbase-init'
+            strategy='lazyOnload'
+          >
+            {`
+              window.chatbaseConfig = {
+                chatbotId: "${CHATBASE_ID}",
+              }
+            `}
+          </Script>
+          <Script
+            id='chatbase-embed'
             src='https://www.chatbase.co/embed.min.js'
-            defer
-          />
-          <script
-            async
-            dangerouslySetInnerHTML={{
-              __html: `
-                    window.chatbaseConfig = {
-                        chatbotId: "${CHATBASE_ID}",
-                        }
-                    `
-            }}
+            strategy='lazyOnload'
           />
         </>
       )}
 
+      {/* Clarity */}
       {CLARITY_ID && (
-        <>
-          <script
-            async
-            dangerouslySetInnerHTML={{
-              __html: `
-                (function(c, l, a, r, i, t, y) {
-                  c[a] = c[a] || function() {
-                    (c[a].q = c[a].q || []).push(arguments);
-                  };
-                  t = l.createElement(r);
-                  t.async = 1;
-                  t.src = "https://www.clarity.ms/tag/" + i;
-                  y = l.getElementsByTagName(r)[0];
-                  if (y && y.parentNode) {
-                    y.parentNode.insertBefore(t, y);
-                  } else {
-                    l.head.appendChild(t);
-                  }
-                })(window, document, "clarity", "script", "${CLARITY_ID}");
-                `
-            }}
-          />
-        </>
+        <Script id='clarity-init' strategy='lazyOnload'>
+          {`
+            (function(c, l, a, r, i, t, y) {
+              c[a] = c[a] || function() {
+                (c[a].q = c[a].q || []).push(arguments);
+              };
+              t = l.createElement(r);
+              t.async = 1;
+              t.src = "https://www.clarity.ms/tag/" + i;
+              y = l.getElementsByTagName(r)[0];
+              if (y && y.parentNode) {
+                y.parentNode.insertBefore(t, y);
+              } else {
+                l.head.appendChild(t);
+              }
+            })(window, document, "clarity", "script", "${CLARITY_ID}");
+          `}
+        </Script>
       )}
 
+      {/* DaoVoice */}
       {COMMENT_DAO_VOICE_ID && (
         <>
-          {/* DaoVoice 反馈 */}
-          <script
-            async
-            dangerouslySetInnerHTML={{
-              __html: `
-                (function(i, s, o, g, r, a, m) {
-                  i["DaoVoiceObject"] = r;
-                  i[r] = i[r] || function() {
-                    (i[r].q = i[r].q || []).push(arguments);
-                  };
-                  i[r].l = 1 * new Date();
-                  a = s.createElement(o);
-                  m = s.getElementsByTagName(o)[0];
-                  a.async = 1;
-                  a.src = g;
-                  a.charset = "utf-8";
-                  if (m && m.parentNode) {
-                    m.parentNode.insertBefore(a, m);
-                  } else {
-                    s.head.appendChild(a);
-                  }
-                })(window, document, "script", ('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/daf1a94b.js", "daovoice")
-                `
-            }}
-          />
-          <script
-            async
-            dangerouslySetInnerHTML={{
-              __html: `
-             daovoice('init', {
+          <Script id='daovoice-init' strategy='lazyOnload'>
+            {`
+              (function(i, s, o, g, r, a, m) {
+                i["DaoVoiceObject"] = r;
+                i[r] = i[r] || function() {
+                  (i[r].q = i[r].q || []).push(arguments);
+                };
+                i[r].l = 1 * new Date();
+                a = s.createElement(o);
+                m = s.getElementsByTagName(o)[0];
+                a.async = 1;
+                a.src = g;
+                a.charset = "utf-8";
+                if (m && m.parentNode) {
+                  m.parentNode.insertBefore(a, m);
+                } else {
+                  s.head.appendChild(a);
+                }
+              })(window, document, "script", ('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/daf1a94b.js", "daovoice")
+              
+              daovoice('init', {
                 app_id: "${COMMENT_DAO_VOICE_ID}"
               });
               daovoice('update');
-              `
-            }}
-          />
+            `}
+          </Script>
         </>
       )}
 
@@ -558,131 +330,124 @@ const ExternalPlugin = props => {
         </Head>
       )}
 
+      {/* WWADS */}
       {AD_WWADS_ID && (
         <>
           <Head>
-            {/* 提前连接到广告服务器 */}
             <link rel='preconnect' href='https://cdn.wwads.cn' />
           </Head>
-          <ExternalScript
-            type='text/javascript'
+          <Script
             src={getCDNResourceSync('https://cdn.wwads.cn/js/makemoney.js')}
+            strategy='lazyOnload'
           />
         </>
       )}
 
-      {/* {COMMENT_TWIKOO_ENV_ID && <script defer src={COMMENT_TWIKOO_CDN_URL} />} */}
-
-      {COMMENT_ARTALK_SERVER && <script defer src={COMMENT_ARTALK_JS} />}
-
-      {COMMENT_TIDIO_ID && (
-        <script async src={getCDNResourceSync(`//code.tidio.co/${COMMENT_TIDIO_ID}.js`)} />
+      {/* Artalk */}
+      {COMMENT_ARTALK_SERVER && (
+        <Script src={COMMENT_ARTALK_JS} strategy='lazyOnload' />
       )}
 
-      {/* gitter聊天室 */}
+      {/* Tidio */}
+      {COMMENT_TIDIO_ID && (
+        <Script
+          src={getCDNResourceSync(`//code.tidio.co/${COMMENT_TIDIO_ID}.js`)}
+          strategy='lazyOnload'
+        />
+      )}
+
+      {/* Gitter */}
       {COMMENT_GITTER_ROOM && (
         <>
-          <script
+          <Script
             src={getCDNResourceSync('https://sidecar.gitter.im/dist/sidecar.v1.js')}
-            async
-            defer
+            strategy='lazyOnload'
           />
-          <script
-            async
-            defer
-            dangerouslySetInnerHTML={{
-              __html: `
-            ((window.gitter = {}).chat = {}).options = {
-              room: '${COMMENT_GITTER_ROOM}'
-            };
-            `
-            }}
-          />
+          <Script id='gitter-init' strategy='lazyOnload'>
+            {`
+              ((window.gitter = {}).chat = {}).options = {
+                room: '${COMMENT_GITTER_ROOM}'
+              };
+            `}
+          </Script>
         </>
       )}
 
       {/* 百度统计 */}
       {ANALYTICS_BAIDU_ID && (
-        <script
-          async
-          defer
-          dangerouslySetInnerHTML={{
-            __html: `
-          var _hmt = _hmt || [];
-          (function() {
-            var hm = document.createElement("script");
-            hm.src = "https://hm.baidu.com/hm.js?${ANALYTICS_BAIDU_ID}";
-            var s = document.getElementsByTagName("script")[0]; 
-            s.parentNode.insertBefore(hm, s);
-          })();
-          `
-          }}
-        />
+        <Script id='baidu-analytics' strategy='lazyOnload'>
+          {`
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?${ANALYTICS_BAIDU_ID}";
+              var s = document.getElementsByTagName("script")[0]; 
+              s.parentNode.insertBefore(hm, s);
+            })();
+          `}
+        </Script>
       )}
 
-      {/* 站长统计 */}
+      {/* 站长统计 - 转换为 Script 组件，避免 document.write */}
       {ANALYTICS_CNZZ_ID && (
-        <script
-          async
-          defer
-          dangerouslySetInnerHTML={{
-            __html: `
-          document.write(unescape("%3Cspan style='display:none' id='cnzz_stat_icon_${ANALYTICS_CNZZ_ID}'%3E%3C/span%3E%3Cscript src='https://s9.cnzz.com/z_stat.php?id=${ANALYTICS_CNZZ_ID}' type='text/javascript'%3E%3C/script%3E"));
-          `
-          }}
-        />
+        <Script id='cnzz-analytics' strategy='lazyOnload'>
+          {`
+            var cnzz_s_tag = document.createElement('script');
+            cnzz_s_tag.type = 'text/javascript';
+            cnzz_s_tag.async = true;
+            cnzz_s_tag.charset = 'utf-8';
+            cnzz_s_tag.src = 'https://s9.cnzz.com/z_stat.php?id=${ANALYTICS_CNZZ_ID}&async=1';
+            var root_s = document.getElementsByTagName('script')[0];
+            root_s.parentNode.insertBefore(cnzz_s_tag, root_s);
+          `}
+        </Script>
       )}
 
       {/* UMAMI 统计 */}
       {UMAMI_ID && (
-        <script async defer src={UMAMI_HOST} data-website-id={UMAMI_ID}></script>
+        <Script
+          src={UMAMI_HOST}
+          data-website-id={UMAMI_ID}
+          strategy='lazyOnload'
+        />
       )}
 
       {/* 谷歌统计 */}
       {ANALYTICS_GOOGLE_ID && (
         <>
-          <script
-            async
-            defer
+          <Script
             src={getCDNResourceSync(`https://www.googletagmanager.com/gtag/js?id=${ANALYTICS_GOOGLE_ID}`)}
+            strategy='afterInteractive'
           />
-          <script
-            async
-            defer
-            dangerouslySetInnerHTML={{
-              __html: `
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
-                gtag('js', new Date());
-                gtag('config', '${ANALYTICS_GOOGLE_ID}', {
-                  page_path: window.location.pathname,
-                });
-              `
-            }}
-          />
+          <Script id='ga-init' strategy='afterInteractive'>
+            {`
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', '${ANALYTICS_GOOGLE_ID}', {
+                page_path: window.location.pathname,
+              });
+            `}
+          </Script>
         </>
       )}
 
       {/* Matomo 统计 */}
       {MATOMO_HOST_URL && MATOMO_SITE_ID && (
-        <script
-          async
-          defer
-          dangerouslySetInnerHTML={{
-            __html: `
-              var _paq = window._paq = window._paq || [];
-              _paq.push(['trackPageView']);
-              _paq.push(['enableLinkTracking']);
-              (function() {
-                var u="//${MATOMO_HOST_URL}/";
-                _paq.push(['setTrackerUrl', u+'matomo.php']);
-                _paq.push(['setSiteId', '${MATOMO_SITE_ID}']);
-                var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-                g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
-              })();
-            `
-          }}
-        />
+        <Script id='matomo-analytics' strategy='lazyOnload'>
+          {`
+            var _paq = window._paq = window._paq || [];
+            _paq.push(['trackPageView']);
+            _paq.push(['enableLinkTracking']);
+            (function() {
+              var u="//${MATOMO_HOST_URL}/";
+              _paq.push(['setTrackerUrl', u+'matomo.php']);
+              _paq.push(['setSiteId', '${MATOMO_SITE_ID}']);
+              var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+              g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+            })();
+          `}
+        </Script>
       )}
     </>
   )
