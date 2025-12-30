@@ -162,7 +162,7 @@ function createSakura() {
   img.onload = function () {
     startSakura()
   }
-  function stopp() {
+  function stop() {
     if (staticx) {
       var child = document.getElementById(id)
       if (child && child.parentNode && child.parentNode.contains(child)) {
@@ -182,7 +182,6 @@ function destroySakura() {
   if (sakura && sakura.parentNode && sakura.parentNode.contains(sakura)) {
     sakura.parentNode.removeChild(sakura)
   }
-  stop()
 }
 
 window.createSakura = createSakura
