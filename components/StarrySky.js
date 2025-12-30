@@ -66,7 +66,7 @@ const StarrySky = () => {
       // 重置加载标志
       scriptLoaded = false;
     };
-  }, [isLowEndDevice]);
+  }, [isHighEndDevice]);
 
   return (
     <></>
