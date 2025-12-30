@@ -2,7 +2,7 @@ import BLOG, { LAYOUT_MAPPINGS } from '@/blog.config'
 import * as ThemeComponents from '@theme-components'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
-import { getQueryParam, getQueryVariable, isBrowser } from '../lib/utils'
+import { getQueryParam, getQueryVariable, isBrowser } from '@/lib/utils'
 
 export const THEMES = (() => {
   try {
@@ -126,9 +126,8 @@ export const useLayoutByTheme = ({ layoutName, theme }) => {
  * @returns
  */
 const getLayoutNameByPath = path => {
-  const layoutName = LAYOUT_MAPPINGS[path] || 'LayoutSlug'
   //   console.log('path-layout',path,layoutName)
-  return layoutName
+  return LAYOUT_MAPPINGS[path] || 'LayoutSlug'
 }
 
 /**
@@ -155,7 +154,7 @@ const fixThemeDOM = () => {
 
 /**
  * 初始化主题 , 优先级 query > cookies > systemPrefer
- * @param isDarkMode
+ * @param defaultDarkMode 站点强制深色模式
  * @param updateDarkMode 更改主题ChangeState函数
  * @description 读取cookie中存的用户主题
  */

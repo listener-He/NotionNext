@@ -1,3 +1,7 @@
+import { useEffect, useState } from 'react'
+import Loading from '@/components/Loading'
+import NotionPage from '@/components/NotionPage'
+
 /**
  * 懒加载的Notion页面组件
  * 在客户端动态加载文章内容，减少SSG构建大小
@@ -77,3 +81,4 @@ const LazyNotionPage = ({ post, className }) => {
 
   return <div>没有内容可显示</div>
 }
+export default LazyNotionPage

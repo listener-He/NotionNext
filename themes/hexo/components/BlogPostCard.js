@@ -8,7 +8,7 @@ import { useEffect, useRef, useState } from 'react'
 
 
 const BlogPostCard = ({ index, post, showSummary, siteInfo }) => {
-  const HEXO_POST_LIST_COVER = siteConfig('HEXO_POST_LIST_COVER', null, CONFIG)
+  const HEXO_POST_LIST_COVER = siteConfig('HEXO_POST_LIST_COVER', true, CONFIG)
   const HEXO_POST_LIST_IMG_CROSSOVER = siteConfig('HEXO_POST_LIST_IMG_CROSSOVER', null, CONFIG)
   const HEXO_POST_LIST_COVER_HOVER_ENLARGE = siteConfig('HEXO_POST_LIST_COVER_HOVER_ENLARGE', null, CONFIG)
   const HEXO_POST_LIST_COVER_DEFAULT = siteConfig('HEXO_POST_LIST_COVER_DEFAULT', null, CONFIG)
@@ -28,7 +28,7 @@ const BlogPostCard = ({ index, post, showSummary, siteInfo }) => {
 
   // 为确保服务端和客户端渲染一致，我们只在客户端渲染时启用AOS动画
   const [isClient, setIsClient] = useState(false)
-  
+
   useEffect(() => {
     setIsClient(true)
   }, [])
