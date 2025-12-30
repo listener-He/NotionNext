@@ -169,7 +169,7 @@ const ExternalPlugin = props => {
     const timer = setTimeout(() => {
       convertInnerUrl({ allPages: props?.allNavPages, lang: lang })
     }, 500)
-    
+
     return () => clearTimeout(timer)
   }, [router, props?.allNavPages, lang])
 
@@ -236,15 +236,6 @@ const ExternalPlugin = props => {
             src='//sdk.51.la/js-sdk-pro.min.js'
             strategy='lazyOnload'
           />
-          <Script id='la-init' strategy='lazyOnload'>
-            {`
-              try {
-                LA.init({id:"${ANALYTICS_51LA_ID}",ck:"${ANALYTICS_51LA_CK}",hashMode:true,autoTrack:true})
-              } catch (e) {
-                console.warn('51.la init failed', e)
-              }
-            `}
-          </Script>
         </>
       )}
 
@@ -419,16 +410,6 @@ const ExternalPlugin = props => {
             src={getCDNResourceSync(`https://www.googletagmanager.com/gtag/js?id=${ANALYTICS_GOOGLE_ID}`)}
             strategy='afterInteractive'
           />
-          <Script id='ga-init' strategy='afterInteractive'>
-            {`
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', '${ANALYTICS_GOOGLE_ID}', {
-                page_path: window.location.pathname,
-              });
-            `}
-          </Script>
         </>
       )}
 
