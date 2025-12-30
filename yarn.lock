@@ -841,6 +841,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@netlify/plugin-nextjs@npm:^5.15.3":
+  version: 5.15.3
+  resolution: "@netlify/plugin-nextjs@npm:5.15.3"
+  checksum: 10c0/06b45aeb2cfa64b6aba6f8ea10d59d8996e1e8a263e945cbfb748ed8c7a1846726c6abf28b731c2d44b79cd1e515b4979228295b5e7ded93a139a438d5dae966
+  languageName: node
+  linkType: hard
+
 "@next/bundle-analyzer@npm:^15.0.0":
   version: 15.5.9
   resolution: "@next/bundle-analyzer@npm:15.5.9"
@@ -4841,6 +4848,7 @@ __metadata:
     "@clerk/localizations": "npm:^3.17.1"
     "@clerk/nextjs": "npm:^5.7.5"
     "@headlessui/react": "npm:^1.7.19"
+    "@netlify/plugin-nextjs": "npm:^5.15.3"
     "@next/bundle-analyzer": "npm:^15.0.0"
     "@testing-library/dom": "npm:^10.4.1"
     "@testing-library/jest-dom": "npm:^6.1.4"
