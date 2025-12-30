@@ -17,10 +17,10 @@ const Tag = props => {
 export async function getStaticProps({ params: { tag }, locale }) {
   const from = 'tag-props'
   // 优化：只获取标签页需要的数据类型
-  const props = await getGlobalData({ 
-    from, 
+  const props = await getGlobalData({
+    from,
     locale,
-    dataTypes: ['allPages'] // 标签页只需要文章数据
+    dataTypes: ['allPages', 'latestPosts'] // 标签页只需要文章数据
   })
 
   // 过滤状态
@@ -75,9 +75,9 @@ function getTagNames(tags) {
 export async function getStaticPaths() {
   const from = 'tag-static-path'
   // 优化：只获取标签相关的数据
-  const { tagOptions } = await getGlobalData({ 
+  const { tagOptions } = await getGlobalData({
     from,
-    dataTypes: ['tagOptions'] 
+    dataTypes: ['tagOptions']
   })
   const tagNames = getTagNames(tagOptions)
 

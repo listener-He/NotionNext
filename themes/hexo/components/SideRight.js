@@ -86,7 +86,7 @@ export default function SideRight(props) {
             <TagGroups tags={tags} currentTag={currentTag} />
           </Card>
         )}
-        {siteConfig('HEXO_WIDGET_LATEST_POSTS', null, CONFIG) &&
+        {siteConfig('HEXO_WIDGET_LATEST_POSTS', true, CONFIG) &&
           latestPosts &&
           latestPosts.length > 0 && (
             <Card>

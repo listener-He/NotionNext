@@ -44,7 +44,7 @@ export async function getStaticProps({ locale }) {
   const props = await getGlobalData({
     from: 'search-props',
     locale,
-    dataTypes: ['allPages', 'tagOptions']
+    dataTypes: ['allPages', 'tagOptions', 'latestPosts']
   })
   const { allPages } = props
   props.posts = allPages?.filter(

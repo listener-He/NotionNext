@@ -65,7 +65,7 @@ export async function getStaticProps({
   const props = await getGlobalData({
     from,
     locale,
-    dataTypes: ['allPages', 'NOTION_CONFIG', 'siteInfo']
+    dataTypes: ['allPages', 'NOTION_CONFIG', 'siteInfo', 'latestPosts']
   })
 
   // 在列表内查找文章
