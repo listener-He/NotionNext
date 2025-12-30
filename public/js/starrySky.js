@@ -120,19 +120,19 @@ function renderStarrySky() {
         const cosA = Math.cos(angle);
         const sinA = Math.sin(angle);
         const r = this.r;
-        
+
         // 预先计算坐标以减少重复计算
         const headX = this.x;
         const headY = this.y;
         const tailLen = 60; // 缩短流星轨迹
         const tailWid = r * 1.5; // 缩小流星宽度
-        
+
         // 流星头部 - 亮点
         ctx.fillStyle = `rgba(${CONFIG.colors.comet}, ${Math.min(1, this.opacity * 1.5)})`;
         ctx.beginPath();
         ctx.arc(headX, headY, r * 1.2, 0, Math.PI * 2);
         ctx.fill();
-        
+
         // 计算流星锥形的顶点
         const x1 = headX - 0.3 * tailLen * cosA - 0.5 * tailWid * sinA;
         const y1 = headY - 0.3 * tailLen * sinA + 0.5 * tailWid * cosA;
@@ -140,7 +140,7 @@ function renderStarrySky() {
         const y2 = headY - 0.8 * tailLen * sinA;
         const x3 = headX - 0.3 * tailLen * cosA + 0.5 * tailWid * sinA;
         const y3 = headY - 0.3 * tailLen * sinA - 0.5 * tailWid * cosA;
-        
+
         // 绘制流星主体（锥形）
         ctx.fillStyle = `rgba(${CONFIG.colors.comet}, ${this.opacity * 0.5})`;
         ctx.beginPath();
@@ -150,7 +150,7 @@ function renderStarrySky() {
         ctx.lineTo(x3, y3);
         ctx.closePath();
         ctx.fill();
-        
+
         // 绘制拖尾效果
         const trailX1 = x2 - 0.3 * tailLen * cosA - 0.3 * tailWid * sinA;
         const trailY1 = y2 - 0.3 * tailLen * sinA + 0.3 * tailWid * cosA;
@@ -158,7 +158,7 @@ function renderStarrySky() {
         const trailY2 = y2 - 0.8 * tailLen * sinA;
         const trailX3 = x2 - 0.3 * tailLen * cosA + 0.3 * tailWid * sinA;
         const trailY3 = y2 - 0.3 * tailLen * sinA - 0.3 * tailWid * cosA;
-        
+
         ctx.fillStyle = `rgba(${CONFIG.colors.comet}, ${this.opacity * 0.15})`; // 降低拖尾透明度
         ctx.beginPath();
         ctx.moveTo(x2, y2);
@@ -231,7 +231,7 @@ function renderStarrySky() {
         star.draw();
       }
     }
-    
+
     // 绘制巨星
     for (let i = 0; i < stars.length; i++) {
       const star = stars[i];
@@ -239,7 +239,7 @@ function renderStarrySky() {
         star.draw();
       }
     }
-    
+
     // 最后绘制流星（避免频繁的状态切换）
     for (let i = 0; i < stars.length; i++) {
       const star = stars[i];
@@ -298,12 +298,11 @@ function renderStarrySky() {
     });
   });
   observer.observe(htmlRoot, { attributes: true });
-  
+
   // 确保在组件卸载时断开MutationObserver连接
   window.addEventListener('beforeunload', () => {
     observer.disconnect();
   });
 }
-
 // 挂载到 window
 window.renderStarrySky = renderStarrySky;

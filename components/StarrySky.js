@@ -1,13 +1,14 @@
 import { useEffect } from 'react'
 import { loadExternalResource } from '@/lib/utils'
 import { getDevicePerformance } from '@/components/PerformanceDetector'
+import { useGlobal } from '@/lib/global'
 
 const StarrySky = () => {
-  const { isLowEndDevice, performanceLevel } = getDevicePerformance();
-
+  const { isLowEndDevice} = getDevicePerformance();
+  const { isDarkMode } = useGlobal()
   useEffect(() => {
     // 在低端设备或性能较差的设备上禁用星空动画
-    if (isLowEndDevice || performanceLevel === 'low') {
+    if (isLowEndDevice || !isDarkMode) {
       return;
     }
 
@@ -18,14 +19,21 @@ const StarrySky = () => {
       if (scriptLoaded) return; // 防止重复加载
 
       try {
-        await loadExternalResource('/js/starrySky.js', 'js');
-        scriptLoaded = true;
-
-        if (window.renderStarrySky) {
-          // 确保在加载时检查设备性能
-          if (!isLowEndDevice && performanceLevel !== 'low') {
-            window.renderStarrySky();
-          }
+        // 加载原有的星空背景
+        if (isLowEndDevice && isDarkMode && typeof window !== 'undefined') {
+          loadExternalResource('/js/starrySky.js', 'js').then(() => {
+            if (window.renderStarrySky) {
+              window.renderStarrySky()
+            }
+          })
+        }
+        // 优化：仅在非低端性能设备上加载增强版星空背景
+        if (!isLowEndDevice && isDarkMode && typeof window !== 'undefined') {
+          loadExternalResource('/js/enhancedStarrySky.js', 'js').then(() => {
+            if (window.createEnhancedStarrySky) {
+              window.createEnhancedStarrySky()
+            }
+          })
         }
       } catch (error) {
         console.error('Failed to load starry sky:', error);
@@ -34,26 +42,30 @@ const StarrySky = () => {
 
     if ('requestIdleCallback' in window) {
       window.requestIdleCallback(() => {
-        loadStarrySky();
+        loadStarrySky().then(() => {
+          scriptLoaded = true;
+        });
       }, { timeout: 2000 });
     } else {
       // 兼容不支持 requestIdleCallback 的浏览器
       setTimeout(() => {
-        loadStarrySky();
+        loadStarrySky().then(() => {
+          scriptLoaded = true;
+        });
       }, 100);
     }
 
     // 清理函数
     return () => {
       // 如果存在全局销毁函数，则调用它
-      if (window.destroyStarrySky && typeof window.destroyStarrySky === 'function') {
-        window.destroyStarrySky();
+      if (window.destroyEnhancedStarrySky && typeof window.destroyEnhancedStarrySky === 'function') {
+        window.destroyEnhancedStarrySky();
       }
 
       // 重置加载标志
       scriptLoaded = false;
     };
-  }, [isLowEndDevice, performanceLevel]);
+  }, [isLowEndDevice]);
 
   return (
     <></>
