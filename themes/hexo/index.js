@@ -39,9 +39,6 @@ import PerformanceDetector from '@/components/PerformanceDetector'
 import Comment from '@/components/Comment'
 import ArticleInfo from './components/ArticleInfo'
 import BLOG from '@/blog.config'
-import DashboardHeader from '@/components/ui/dashboard/DashboardHeader'
-import DashboardBody from '@/components/ui/dashboard/DashboardBody'
-import { SignUp } from '@clerk/nextjs'
 
 // 使用 useMemo 优化动态导入
 const AlgoliaSearchModal = dynamic(
@@ -474,85 +471,85 @@ const LayoutTagIndex = props => {
   )
 }
 
-/**
- * 登录页面
- * @param {*} props
- * @returns
- */
-const LayoutSignIn = props => {
-  const { post } = props
-  const enableClerk = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
-
-  return (
-    <>
-      <div className='grow mt-20'>
-        {/* clerk预置表单 */}
-        {enableClerk && (
-          <div className='flex justify-center py-6'>
-            <SignIn />
-          </div>
-        )}
-        <div id='article-wrapper'>
-          <NotionPage post={post} />
-        </div>
-      </div>
-    </>
-  )
-}
-
-/**
- * 注册页面
- * @param {*} props
- * @returns
- */
-const LayoutSignUp = props => {
-  const { post } = props
-  const enableClerk = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
-
-  return (
-    <>
-      <div className='grow mt-20'>
-        {/* clerk预置表单 */}
-        {enableClerk && (
-          <div className='flex justify-center py-6'>
-            <SignUp />
-          </div>
-        )}
-        <div id='article-wrapper'>
-          <NotionPage post={post} />
-        </div>
-      </div>
-    </>
-  )
-}
-
-/**
- * 仪表盘
- * @param {*} props
- * @returns
- */
-const LayoutDashboard = props => {
-  const { post } = props
-
-  return (
-    <>
-      <div className='container grow'>
-        <div className='flex flex-wrap justify-center -mx-4'>
-          <div id='container-inner' className='w-full p-4'>
-            {post && (
-              <div id='article-wrapper' className='mx-auto'>
-                <NotionPage {...props} />
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-      {/* 仪表盘 */}
-      <DashboardHeader />
-      <DashboardBody />
-    </>
-  )
-}
+// /**
+//  * 登录页面
+//  * @param {*} props
+//  * @returns
+//  */
+// const LayoutSignIn = props => {
+//   const { post } = props
+//   const enableClerk = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
+//
+//   return (
+//     <>
+//       <div className='grow mt-20'>
+//         {/* clerk预置表单 */}
+//         {enableClerk && (
+//           <div className='flex justify-center py-6'>
+//             <SignIn />
+//           </div>
+//         )}
+//         <div id='article-wrapper'>
+//           <NotionPage post={post} />
+//         </div>
+//       </div>
+//     </>
+//   )
+// }
+//
+// /**
+//  * 注册页面
+//  * @param {*} props
+//  * @returns
+//  */
+// const LayoutSignUp = props => {
+//   const { post } = props
+//   const enableClerk = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
+//
+//   return (
+//     <>
+//       <div className='grow mt-20'>
+//         {/* clerk预置表单 */}
+//         {enableClerk && (
+//           <div className='flex justify-center py-6'>
+//             <SignUp />
+//           </div>
+//         )}
+//         <div id='article-wrapper'>
+//           <NotionPage post={post} />
+//         </div>
+//       </div>
+//     </>
+//   )
+// }
+//
+// /**
+//  * 仪表盘
+//  * @param {*} props
+//  * @returns
+//  */
+// const LayoutDashboard = props => {
+//   const { post } = props
+//
+//   return (
+//     <>
+//       <div className='container grow'>
+//         <div className='flex flex-wrap justify-center -mx-4'>
+//           <div id='container-inner' className='w-full p-4'>
+//             {post && (
+//               <div id='article-wrapper' className='mx-auto'>
+//                 <NotionPage {...props} />
+//               </div>
+//             )}
+//           </div>
+//         </div>
+//       </div>
+//       {/* 仪表盘 */}
+//       <DashboardHeader />
+//       <DashboardBody />
+//     </>
+//   )
+// }
 
 export {
   Layout404,
@@ -564,8 +561,8 @@ export {
   LayoutSearch,
   LayoutSlug,
   LayoutTagIndex,
-  LayoutSignIn,
-  LayoutSignUp,
-  LayoutDashboard,
+  // LayoutSignIn,
+  // LayoutSignUp,
+  // LayoutDashboard,
   CONFIG as THEME_CONFIG
 }
