@@ -162,49 +162,18 @@ function createEnhancedStarrySky() {
       const depthOpacity = this.opacity * (0.4 + this.depth * 0.6);
       ctx.globalAlpha = Math.max(0, Math.min(1, depthOpacity));
 
-      // 仅对较近的且需要模糊的星星应用滤镜，减少性能损耗
-      if (this.blur > 0.5) ctx.filter = `blur(${this.blur}px)`;
-
-      // 绘制光晕
-      const haloSize = Math.max(0.1, this.size * (2 + this.depth * 2));
-      // 简单绘制，减少 Gradient 创建开销（可选优化：缓存 Gradient，但这里颜色多变暂不缓存）
-      const gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, haloSize);
-      // 计算核心亮度：深度越深（越近），核心越亮
-      const coreIntensity = Math.min(1, 0.5 + this.depth * 0.5);
-
-      // 使用预计算的 RGB 字符串拼接 RGBA
-      // 中心颜色：应用 coreIntensity
-      gradient.addColorStop(0, `rgba(${this.colorRgb}, ${coreIntensity})`);
-      // 中间过渡：亮度减半
-      gradient.addColorStop(0.4, `rgba(${this.colorRgb}, ${coreIntensity * 0.5})`);
-      // 边缘透明
-      gradient.addColorStop(1, 'transparent');
-
-      ctx.fillStyle = gradient;
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, haloSize, 0, PI_2);
-      ctx.fill();
-
+      // 移除滤镜效果以提高性能
+      
+      // 简化绘制：直接使用圆形代替径向渐变
+      const coreSize = Math.max(0.1, this.size * (0.8 + this.depth * 0.4));
+      
       // 绘制核心
-      ctx.globalAlpha = Math.max(0, Math.min(1, depthOpacity * 1.2));
       ctx.fillStyle = this.colorHex;
       ctx.beginPath();
-      ctx.arc(this.x, this.y, Math.max(0.1, this.size * (0.8 + this.depth * 0.4)), 0, PI_2);
+      ctx.arc(this.x, this.y, coreSize, 0, PI_2);
       ctx.fill();
 
-      // 十字光芒
-      if (this.depth > 0.8 && this.opacity > 0.7) {
-        ctx.globalAlpha = Math.max(0, Math.min(1, depthOpacity * 0.8));
-        ctx.strokeStyle = `rgba(${this.colorRgb}, 0.8)`; // 使用 RGB 确保兼容性
-        ctx.lineWidth = 0.5;
-        const rayLength = this.size * 4;
-        ctx.beginPath();
-        ctx.moveTo(this.x - rayLength, this.y);
-        ctx.lineTo(this.x + rayLength, this.y);
-        ctx.moveTo(this.x, this.y - rayLength);
-        ctx.lineTo(this.x, this.y + rayLength);
-        ctx.stroke();
-      }
+      // 移除十字光芒效果以提高性能
 
       ctx.restore();
     }
@@ -256,33 +225,29 @@ function createEnhancedStarrySky() {
       if (!this.isValid()) return;
 
       ctx.save();
-      if (this.blur > 0.5) ctx.filter = `blur(${this.blur}px)`;
-
+      
+      // 简化流星绘制，移除滤镜和径向渐变
       const depthOpacity = this.opacity * (0.5 + this.depth * 0.5);
 
-      // 绘制轨迹
+      // 绘制轨迹 - 简化为直线
       const trailLength = this.trail.length;
-      for (let i = 0; i < trailLength; i++) {
-        const point = this.trail[i];
-        const progress = i / trailLength;
-        const trailOpacity = progress * depthOpacity * 0.6;
-        const trailSize = Math.max(0.1, this.size * progress * (0.8 + this.depth * 0.4));
-
-        ctx.globalAlpha = Math.max(0, Math.min(1, trailOpacity));
-        ctx.fillStyle = this.color;
+      if (trailLength > 1) {
+        ctx.globalAlpha = Math.max(0, Math.min(1, depthOpacity * 0.6));
+        ctx.strokeStyle = this.color;
+        ctx.lineWidth = 1;
         ctx.beginPath();
-        ctx.arc(point.x, point.y, trailSize, 0, PI_2);
-        ctx.fill();
+        ctx.moveTo(this.trail[0].x, this.trail[0].y);
+        for (let i = 1; i < trailLength; i++) {
+          ctx.lineTo(this.trail[i].x, this.trail[i].y);
+        }
+        ctx.stroke();
       }
 
-      // 头部
+      // 头部 - 简化为普通圆形
       ctx.globalAlpha = Math.max(0, Math.min(1, depthOpacity));
       const headSize = Math.max(0.1, this.size * (1.5 + this.depth));
-      const gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, headSize);
-      gradient.addColorStop(0, this.color);
-      gradient.addColorStop(1, 'transparent');
-
-      ctx.fillStyle = gradient;
+      
+      ctx.fillStyle = this.color;
       ctx.beginPath();
       ctx.arc(this.x, this.y, headSize, 0, PI_2);
       ctx.fill();
@@ -327,22 +292,17 @@ function createEnhancedStarrySky() {
       if (!this.isValid()) return;
 
       ctx.save();
-      if (this.blur > 1) ctx.filter = `blur(${this.blur}px)`;
-
-      // 优化：查表
+      
+      // 移除滤镜效果以提高性能
+      
+      // 简化星云绘制，使用普通圆形代替径向渐变
       const pulseOpacity = this.opacity + getFastSin(this.pulsePhase) * 0.05;
       const depthOpacity = pulseOpacity * (0.4 + this.depth * 0.6);
       ctx.globalAlpha = Math.max(0, Math.min(1, depthOpacity));
-
-      const gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.radius);
-      // 简化渐变处理，提升兼容性
-      gradient.addColorStop(0, this.color);
-      gradient.addColorStop(0.5, this.color);
-      gradient.addColorStop(1, 'transparent');
-
-      ctx.fillStyle = gradient;
+      
+      ctx.fillStyle = this.color;
       ctx.beginPath();
-      ctx.arc(this.x, this.y, this.radius, 0, PI_2);
+      ctx.arc(this.x, this.y, this.radius * 0.3, 0, PI_2); // 缩小星云大小以提高性能
       ctx.fill();
 
       ctx.restore();
@@ -388,13 +348,15 @@ function createEnhancedStarrySky() {
       if (!this.isValid()) return;
 
       ctx.save();
-      if (this.blur > 0.3) ctx.filter = `blur(${this.blur}px)`;
-
+      
+      // 移除滤镜效果以提高性能
+      
       const pulseOpacity = this.baseOpacity + getFastSin(this.pulsePhase) * 0.1;
       ctx.globalAlpha = Math.max(0, Math.min(1, pulseOpacity * (0.3 + this.depth * 0.7)));
       ctx.fillStyle = config.colors.particles;
       ctx.beginPath();
-      ctx.arc(this.x, this.y, Math.max(0.1, this.size), 0, PI_2);
+      // 简化绘制，减小粒子大小
+      ctx.arc(this.x, this.y, Math.max(0.1, this.size * 0.5), 0, PI_2);
       ctx.fill();
 
       ctx.restore();
@@ -447,7 +409,7 @@ function createEnhancedStarrySky() {
   }
 
   let lastTime = 0;
-  const targetFPS = 30;
+  const targetFPS = 20; // 降低帧率以提高性能
   const frameInterval = 1000 / targetFPS;
 
   // 动画循环

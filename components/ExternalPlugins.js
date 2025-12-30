@@ -132,6 +132,8 @@ const ExternalPlugin = props => {
   const UMAMI_HOST = siteConfig('UMAMI_HOST', null, NOTION_CONFIG)
   const UMAMI_ID = siteConfig('UMAMI_ID', null, NOTION_CONFIG)
 
+  // 引入AOS动画
+  const ENABLE_AOS = siteConfig('ENABLE_AOS', false)
   // 自定义样式css和js引入
   if (isBrowser) {
     // 初始化AOS动画
@@ -215,7 +217,7 @@ const ExternalPlugin = props => {
       {TIANLI_KEY && <TianliGPT />}
       <VConsole />
       {ENABLE_NPROGRSS && <LoadingProgress />}
-      <AosAnimation />
+      {ENABLE_AOS && <AosAnimation />}
       {ANALYTICS_51LA_ID && ANALYTICS_51LA_CK && <LA51 />}
       {COZE_BOT_ID && <Coze />}
 
