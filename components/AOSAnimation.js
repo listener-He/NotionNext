@@ -3,6 +3,7 @@ import { getCDNResourceSync } from '@/lib/utils/cdn'
 import { useEffect } from 'react'
 import { getDevicePerformance } from '@/components/PerformanceDetector'
 import { isMobile, isBrowser } from '@/lib/utils'
+import { useState } from 'react'
 // import AOS from 'aos'
 
 /**
@@ -11,6 +12,7 @@ import { isMobile, isBrowser } from '@/lib/utils'
  * https://michalsnik.github.io/aos/
  */
 export default function AOSAnimation() {
+  const [isClient, setIsClient] = useState(false)
   const { isLowEndDevice, performanceLevel } = getDevicePerformance()
 
   const initAOS = () => {
@@ -31,25 +33,15 @@ export default function AOSAnimation() {
       return
     }
 
-    // 根据设备性能调整动画配置
-    let aosConfig = {
-      duration: 600,
+    // 统一使用相同的动画配置，避免服务端和客户端不一致
+    const aosConfig = {
+      duration: 600, // 统一使用600ms，避免服务端和客户端配置不一致
       once: true,
       offset: 120,
       delay: 0,
       disable: isMobile(),
       throttleDelay: 99,
       debounceDelay: 50
-    }
-
-    // 高性能设备使用更丰富的动画效果
-    if (performanceLevel === 'high') {
-      aosConfig = {
-        ...aosConfig,
-        duration: 800,
-        offset: 150,
-        once: false // 高性能设备允许多次触发动画
-      }
     }
 
     // 使用CDN资源优化工具获取合适的资源地址
@@ -61,8 +53,11 @@ export default function AOSAnimation() {
       loadExternalResource(aosCssUrl, 'css')
     ]).then(() => {
       if (window.AOS) {
-        // 进一步优化AOS配置以提升性能
+        // 初始化AOS
         window.AOS.init(aosConfig)
+        
+        // 在初始化后，可以动态更新配置（如果需要的话）
+        // 但为避免Hydration问题，我们保持初始配置一致
       }
     }).catch(error => {
       console.error('AOS资源加载失败:', error)
@@ -70,6 +65,19 @@ export default function AOSAnimation() {
   }
 
   useEffect(() => {
+    setIsClient(true)
     initAOS()
   }, [])
+
+  // 在客户端渲染时才返回内容，避免SSR/CSR不匹配
+  if (!isClient) {
+    return null
+  }
+
+  // 如果是低端设备或移动设备，不渲染任何内容
+  if (isLowEndDevice || isMobile()) {
+    return null
+  }
+
+  return <></>
 }

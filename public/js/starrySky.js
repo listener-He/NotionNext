@@ -11,7 +11,7 @@ function renderStarrySky() {
 
   // --- 配置参数 ---
   const CONFIG = {
-    amount: 0.15, // 星星密度因子 (相对于屏幕宽度)
+    amount: 0.1, // 降低星星密度因子 (相对于屏幕宽度)，减少性能开销
     colors: {
       star: '226,225,142',   // 普通星星颜色
       giant: '180,184,240',  // 巨型星星颜色
@@ -19,8 +19,8 @@ function renderStarrySky() {
     },
     speed: {
       min: 0.2,
-      max: 1.0,
-      comet: 3.0 // 流星倍速
+      max: 0.8, // 降低最大速度以减少计算开销
+      comet: 2.0 // 降低流星速度
     }
   };
 
@@ -52,13 +52,13 @@ function renderStarrySky() {
       // 随机决定类型：3%概率是巨星，非巨星且非初始化时极低概率是流星
       this.isGiant = Math.random() < 0.03;
       // 流星逻辑：只有在非初始化时产生，且概率较低
-      this.isComet = !this.isGiant && !initial && Math.random() < 0.05;
+      this.isComet = !this.isGiant && !initial && Math.random() < 0.03; // 降低流星概率
 
       this.x = Math.random() * width;
       this.y = Math.random() * height;
 
       // 半径
-      this.r = this.isGiant ? random(1.5, 3) : random(1, 1.8);
+      this.r = this.isGiant ? random(1.5, 2.5) : random(0.8, 1.5); // 减小半径以提升性能
 
       // 速度 (dx, dy)
       const baseSpeed = random(CONFIG.speed.min, CONFIG.speed.max);
@@ -67,16 +67,16 @@ function renderStarrySky() {
 
       // 流星特有属性
       if (this.isComet) {
-        this.dx *= random(CONFIG.speed.comet, CONFIG.speed.comet * 2);
-        this.dy *= random(CONFIG.speed.comet, CONFIG.speed.comet * 2);
-        this.r = random(1.2, 2);
+        this.dx *= random(CONFIG.speed.comet, CONFIG.speed.comet * 1.5); // 降低流星速度范围
+        this.dy *= random(CONFIG.speed.comet, CONFIG.speed.comet * 1.5);
+        this.r = random(1.0, 1.8); // 减小流星半径
         this.x -= 200; // 让流星从更左侧开始，划过更长距离
       }
 
       // 透明度控制
       this.opacity = 0;
-      this.opacityTresh = random(0.3, 0.9); // 目标最大透明度
-      this.fadeSpeed = random(0.003, 0.01);
+      this.opacityTresh = random(0.3, 0.7); // 降低最大透明度
+      this.fadeSpeed = random(0.002, 0.008); // 调整淡入淡出速度
       this.fadingIn = true;
       this.fadingOut = false;
     }
@@ -124,8 +124,8 @@ function renderStarrySky() {
         // 预先计算坐标以减少重复计算
         const headX = this.x;
         const headY = this.y;
-        const tailLen = 80;
-        const tailWid = r * 2;
+        const tailLen = 60; // 缩短流星轨迹
+        const tailWid = r * 1.5; // 缩小流星宽度
         
         // 流星头部 - 亮点
         ctx.fillStyle = `rgba(${CONFIG.colors.comet}, ${Math.min(1, this.opacity * 1.5)})`;
@@ -159,7 +159,7 @@ function renderStarrySky() {
         const trailX3 = x2 - 0.3 * tailLen * cosA + 0.3 * tailWid * sinA;
         const trailY3 = y2 - 0.3 * tailLen * sinA - 0.3 * tailWid * cosA;
         
-        ctx.fillStyle = `rgba(${CONFIG.colors.comet}, ${this.opacity * 0.2})`;
+        ctx.fillStyle = `rgba(${CONFIG.colors.comet}, ${this.opacity * 0.15})`; // 降低拖尾透明度
         ctx.beginPath();
         ctx.moveTo(x2, y2);
         ctx.lineTo(trailX1, trailY1);
@@ -298,6 +298,11 @@ function renderStarrySky() {
     });
   });
   observer.observe(htmlRoot, { attributes: true });
+  
+  // 确保在组件卸载时断开MutationObserver连接
+  window.addEventListener('beforeunload', () => {
+    observer.disconnect();
+  });
 }
 
 // 挂载到 window

@@ -10,7 +10,7 @@ const Sakura = () => {
       return;
     }
     loadExternalResource('/js/sakura.js', 'js').then(url => {
-        window.createSakura && window.createSakura({})
+        window.createSakura && window.createSakura()
     })
     return () => window.destroySakura && window.destroySakura()
   }, [isLowEndDevice])

@@ -26,10 +26,17 @@ const BlogPostCard = ({ index, post, showSummary, siteInfo }) => {
   // 获取设备性能信息
   const { isLowEndDevice, performanceLevel } = getDevicePerformance()
 
-  // 根据设备性能调整AOS动画
-  const enableAOS = !isLowEndDevice
-  const aosDuration = performanceLevel === 'high' ? '800' : '600'
-  const aosDelay = index * (performanceLevel === 'high' ? 50 : 100)
+  // 为确保服务端和客户端渲染一致，我们只在客户端渲染时启用AOS动画
+  const [isClient, setIsClient] = useState(false)
+  
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
+
+  // 根据设备性能调整AOS动画 - 在客户端设置，确保服务端和客户端一致
+  const enableAOS = isClient && !isLowEndDevice
+  const aosDuration = isClient && performanceLevel === 'high' ? '800' : '600'
+  const aosDelay = isClient ? index * (performanceLevel === 'high' ? 50 : 100) : index * 100
 
   // 为低端设备禁用更多效果
   const shouldUseAdvancedEffects = !isLowEndDevice && performanceLevel !== 'low'

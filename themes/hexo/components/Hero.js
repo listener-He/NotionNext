@@ -58,10 +58,19 @@ const Hero = props => {
     const { isLowEndDevice } = getDevicePerformance()
 
     // 加载原有的星空背景
-    if (!isLowEndDevice && isDarkMode && typeof window !== 'undefined') {
+    if (isLowEndDevice && isDarkMode && typeof window !== 'undefined') {
       loadExternalResource('/js/starrySky.js', 'js').then(() => {
         if (window.renderStarrySky) {
           window.renderStarrySky()
+        }
+      })
+    }
+    // 优化：仅在非低端性能设备上加载增强版星空背景
+    if (!isLowEndDevice && isDarkMode && typeof window !== 'undefined') {
+      loadExternalResource('/js/enhancedStarrySky.js', 'js').then(() => {
+        if (window.createEnhancedStarrySky) {
+           window.createEnhancedStarrySky()
+           setEnhancedStarryDestroy(window.destroyEnhancedStarrySky())
         }
       })
     }

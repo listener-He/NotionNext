@@ -2,13 +2,15 @@
 /* eslint-env browser */
 // @ts-nocheck
 /**
- * 增强版星空背景 - 为hexo主题夜间模式首页添加优雅浪漫的动画效果
+ * 增强版星空背景 - 优化版
  * 包含：流星雨、星座连线、闪烁星星、渐变色彩、粒子轨迹等效果
+ * 优化：利用查表法计算三角函数，减少每帧GC对象创建，优化渲染层级逻辑
  */
 function createEnhancedStarrySky() {
-  // 检查是否已存在
-  if (document.getElementById('enhanced-starry-sky')) {
-    return
+  // 检查是否已存在，防止重复创建
+  const existingCanvas = document.getElementById('enhanced-starry-sky')
+  if (existingCanvas) {
+    return window.destroyEnhancedStarrySky // 如果存在则返回销毁函数
   }
 
   const canvas = document.createElement('canvas')
@@ -19,31 +21,33 @@ function createEnhancedStarrySky() {
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 3;
+    z-index: -1; /* 通常背景应设为负层级或底层 */
     pointer-events: none;
     opacity: 0;
     transition: opacity 2s ease-in-out;
   `
-  
-  document.body.appendChild(canvas)
-  
-  const ctx = canvas.getContext('2d')
-  let width, height
-  let stars = []
-  let meteors = []
-  let nebulae = []  // 星云替代星座连线
-  let galaxies = []  // 银河效果
-  let floatingParticles = []  // 漂浮粒子替代上升粒子
-  let animationId
-  
-  // 配置参数 - 优化密度和效果
-  const config = {
-    starCount: 120,  // 增加星星数量以支持多层深度
-    meteorCount: 2,  // 减少流星数量
-    nebulaCount: 3,  // 新增星云效果
 
-    floatingParticleCount: 25,  // 增加漂浮粒子
-    depthLayers: 5,  // 深度层级数量
+  // 插入到 body 最前面作为背景
+  if (document.body.firstChild) {
+    document.body.insertBefore(canvas, document.body.firstChild);
+  } else {
+    document.body.appendChild(canvas);
+  }
+
+  const ctx = canvas.getContext('2d', { alpha: true }) // 明确开启alpha
+  let width, height
+  let meteors = []
+  let staticEntities = [] // 将星星、星云、粒子合并管理的静态数组
+  let animationId
+  let globalTime = 0 // 替代 Date.now() 用于计算平滑动画
+
+  // 配置参数
+  const config = {
+    starCount: 120,
+    meteorCount: 5,
+    nebulaCount: 2,
+    floatingParticleCount: 15,
+    depthLayers: 5,
     colors: {
       stars: ['#ffffff', '#b4c7ff', '#ffffcc', '#ffcc99', '#ff9999'],
       meteors: ['#ffffff', '#87ceeb', '#ffd700'],
@@ -51,506 +55,466 @@ function createEnhancedStarrySky() {
       particles: '#87ceeb'
     }
   }
-  
-  // 星星类 - 增强深度层次和立体感
-  class Star {
-    constructor() {
-      this.reset()
-      this.opacity = Math.random()
-      this.twinkleSpeed = 0.005 + Math.random() * 0.015  // 更慢的闪烁
-      this.depth = Math.random()  // 深度层次 (0-1)
-      this.depthLayer = Math.floor(this.depth * config.depthLayers)  // 离散深度层级
-      this.parallaxFactor = 0.2 + this.depth * 0.8  // 视差因子
-      this.color = this.getStarColor()
-      this.originalX = 0
-      this.originalY = 0
-    }
-    
-    reset() {
-       this.originalX = this.x = Math.random() * width
-       this.originalY = this.y = Math.random() * height
-       
-       // 根据深度层级调整大小和透明度，创造景深效果
-       const depthScale = 0.3 + this.depth * 0.7
-       this.size = Math.max(0.1, (0.3 + Math.random() * 1.8) * depthScale)
-       this.baseOpacity = Math.max(0.05, Math.min(1, (0.15 + Math.random() * 0.7) * depthScale))
-       
-       // 远处的星星更模糊，近处的更清晰
-       this.blur = (1 - this.depth) * 2
-       this.twinklePhase = Math.random() * Math.PI * 2
-       
-       // 确保所有数值都是有限的
-       if (!isFinite(this.x)) this.x = width / 2
-       if (!isFinite(this.y)) this.y = height / 2
-       if (!isFinite(this.size)) this.size = 1
-       if (!isFinite(this.baseOpacity)) this.baseOpacity = 0.5
-     }
-    
-    getStarColor() {
-      const colors = config.colors.stars
-      return colors[Math.floor(Math.random() * colors.length)]
-    }
-    
-    update() {
-      this.twinklePhase += this.twinkleSpeed
-      this.opacity = this.baseOpacity + Math.sin(this.twinklePhase) * 0.3
-      
-      // 添加轻微的视差滚动效果（模拟鼠标移动或页面滚动）
-      const mouseInfluence = 0.001
-      this.x = this.originalX + Math.sin(Date.now() * 0.0001) * this.parallaxFactor * 10
-      this.y = this.originalY + Math.cos(Date.now() * 0.0001) * this.parallaxFactor * 5
-    }
-    
-    draw() {
-      // 数值验证，防止 NaN 或 Infinity
-      if (!isFinite(this.x) || !isFinite(this.y) || !isFinite(this.size) || !isFinite(this.opacity)) {
-        return
-      }
-      
-      ctx.save()
-      
-      // 根据深度调整透明度和模糊效果
-      const depthOpacity = this.opacity * (0.4 + this.depth * 0.6)
-      ctx.globalAlpha = Math.max(0, Math.min(1, depthOpacity))
-      
-      // 添加景深模糊效果（远处的星星更模糊）
-      if (this.blur > 0.5) {
-        ctx.filter = `blur(${this.blur}px)`
-      }
-      
-      // 绘制增强的星星光晕，根据深度调整大小
-      const haloSize = Math.max(0.1, this.size * (2 + this.depth * 2))
-      const gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, haloSize)
-      
-      // 近处的星星光晕更强烈
-      const coreIntensity = 0.3 + this.depth * 0.4
-      gradient.addColorStop(0, this.color.replace(')', `, ${coreIntensity})`))
-      gradient.addColorStop(0.3, this.color.replace(')', `, ${coreIntensity * 0.5})`))
-      gradient.addColorStop(1, 'transparent')
-      
-      ctx.fillStyle = gradient
-      ctx.beginPath()
-      ctx.arc(this.x, this.y, haloSize, 0, Math.PI * 2)
-      ctx.fill()
-      
-      // 绘制星星核心，近处的更亮更大
-      ctx.globalAlpha = Math.max(0, Math.min(1, depthOpacity * 1.2))
-      ctx.fillStyle = this.color
-      ctx.beginPath()
-      ctx.arc(this.x, this.y, Math.max(0.1, this.size * (0.8 + this.depth * 0.4)), 0, Math.PI * 2)
-      ctx.fill()
-      
-      // 为最前景的星星添加十字光芒效果
-      if (this.depth > 0.8 && this.opacity > 0.7) {
-        ctx.globalAlpha = Math.max(0, Math.min(1, depthOpacity * 0.6))
-        ctx.strokeStyle = this.color
-        ctx.lineWidth = 0.5
-        const rayLength = this.size * 4
-        
-        ctx.beginPath()
-        ctx.moveTo(this.x - rayLength, this.y)
-        ctx.lineTo(this.x + rayLength, this.y)
-        ctx.moveTo(this.x, this.y - rayLength)
-        ctx.lineTo(this.x, this.y + rayLength)
-        ctx.stroke()
-      }
-      
-      ctx.restore()
-    }
-  }
-  
-  // 流星类 - 更自然的曲线轨迹和深度效果
-  class Meteor {
-    constructor() {
-      this.depth = Math.random()  // 深度层次
-      this.reset()
-    }
-    
-    reset() {
-      this.x = Math.random() * width * 0.3  // 从左上区域开始
-      this.y = -50
-      this.angle = Math.random() * Math.PI / 3 + Math.PI / 6  // 30-60度角
-      
-      // 根据深度调整速度和大小
-      const depthScale = 0.4 + this.depth * 0.6
-      this.speed = (1.5 + Math.random() * 2) * depthScale  // 近处的流星移动更快
-      this.curve = Math.random() * 0.002 - 0.001  // 轻微的曲线
-      this.size = (0.8 + Math.random() * 1.5) * depthScale
-      this.opacity = 1
-      this.trail = []
-      this.color = config.colors.meteors[Math.floor(Math.random() * config.colors.meteors.length)]
-      this.life = (100 + Math.random() * 200) * (0.8 + this.depth * 0.4)  // 近处的流星生命更长
-      this.maxLife = this.life
-      this.blur = (1 - this.depth) * 1.5  // 远处的流星更模糊
-    }
-    
-    update() {
-      // 使用角度和曲线计算位置
-      this.angle += this.curve
-      this.x += Math.cos(this.angle) * this.speed
-      this.y += Math.sin(this.angle) * this.speed
-      this.life--
-      
-      // 添加轨迹点
-      this.trail.push({ x: this.x, y: this.y, opacity: this.opacity })
-      if (this.trail.length > 20) {
-        this.trail.shift()
-      }
-      
-      // 更新透明度
-      this.opacity = this.life / this.maxLife
-      
-      // 重置条件
-      if (this.life <= 0 || this.x < -100) {
-        this.reset()
-      }
-    }
-    
-    draw() {
-      // 数值验证
-      if (!isFinite(this.x) || !isFinite(this.y) || !isFinite(this.size) || !isFinite(this.opacity)) {
-        return
-      }
-      
-      ctx.save()
-      
-      // 根据深度添加模糊效果
-      if (this.blur > 0.5) {
-        ctx.filter = `blur(${this.blur}px)`
-      }
-      
-      // 根据深度调整整体透明度
-      const depthOpacity = this.opacity * (0.5 + this.depth * 0.5)
-      
-      // 绘制轨迹，近处的轨迹更长更亮
-      const trailLength = Math.floor(20 * (0.7 + this.depth * 0.3))
-      for (let i = 0; i < Math.min(this.trail.length, trailLength); i++) {
-        const point = this.trail[i]
-        if (!isFinite(point.x) || !isFinite(point.y)) continue
-        
-        const trailOpacity = (i / this.trail.length) * depthOpacity * 0.6
-        const trailSize = Math.max(0.1, this.size * (i / this.trail.length) * (0.8 + this.depth * 0.4))
-        
-        ctx.globalAlpha = Math.max(0, Math.min(1, trailOpacity))
-        ctx.fillStyle = this.color
-        ctx.beginPath()
-        ctx.arc(point.x, point.y, trailSize, 0, Math.PI * 2)
-        ctx.fill()
-      }
-      
-      // 绘制流星头部，近处的更大更亮
-      ctx.globalAlpha = Math.max(0, Math.min(1, depthOpacity))
-      const headSize = Math.max(0.1, this.size * (1.5 + this.depth * 1))
-      const gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, headSize)
-      
-      // 近处的流星光晕更强烈
-      const coreIntensity = 0.4 + this.depth * 0.4
-      gradient.addColorStop(0, this.color.replace(')', `, ${coreIntensity})`) || this.color)
-      gradient.addColorStop(0.4, this.color.replace(')', `, ${coreIntensity * 0.3})`) || this.color)
-      gradient.addColorStop(1, 'transparent')
-      
-      ctx.fillStyle = gradient
-      ctx.beginPath()
-      ctx.arc(this.x, this.y, headSize, 0, Math.PI * 2)
-      ctx.fill()
-      
-      ctx.restore()
-    }
-  }
-  
-  // 星云类 - 增加深空感和层次
-  class Nebula {
-    constructor() {
-      this.depth = Math.random()  // 深度层次
-      this.x = Math.random() * width
-      this.y = Math.random() * height
-      
-      // 根据深度调整大小和透明度
-      const depthScale = 0.5 + this.depth * 0.5
-      this.radius = (100 + Math.random() * 150) * depthScale
-      this.opacity = (0.05 + Math.random() * 0.15) * (0.6 + this.depth * 0.4)  // 近处的星云更明显
-      this.color = config.colors.nebulae[Math.floor(Math.random() * config.colors.nebulae.length)]
-      this.pulseSpeed = (0.002 + Math.random() * 0.008) * (0.8 + this.depth * 0.4)
-      this.pulsePhase = Math.random() * Math.PI * 2
-      this.drift = {
-        x: (Math.random() - 0.5) * 0.2 * (0.5 + this.depth * 0.5),
-        y: (Math.random() - 0.5) * 0.2 * (0.5 + this.depth * 0.5)
-      }
-      this.blur = (1 - this.depth) * 3  // 远处的星云更模糊
-    }
-    
-    update() {
-      // 脉动效果
-      this.pulsePhase += this.pulseSpeed
-      
-      // 缓慢漂移
-      this.x += this.drift.x
-      this.y += this.drift.y
-      
-      // 边界检查
-      if (this.x < -this.radius) this.x = width + this.radius
-      if (this.x > width + this.radius) this.x = -this.radius
-      if (this.y < -this.radius) this.y = height + this.radius
-      if (this.y > height + this.radius) this.y = -this.radius
-    }
-    
-    draw() {
-      // 数值验证
-      if (!isFinite(this.x) || !isFinite(this.y) || !isFinite(this.radius) || !isFinite(this.opacity)) {
-        return
-      }
-      
-      ctx.save()
-      
-      // 根据深度添加模糊效果
-      if (this.blur > 1) {
-        ctx.filter = `blur(${this.blur}px)`
-      }
-      
-      const pulseOpacity = this.opacity + Math.sin(this.pulsePhase) * 0.05
-      const depthOpacity = pulseOpacity * (0.4 + this.depth * 0.6)
-      ctx.globalAlpha = Math.max(0, Math.min(1, depthOpacity))
-      
-      // 创建多层径向渐变，增强立体感
-      const safeRadius = Math.max(0.1, this.radius)
-      const gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, safeRadius)
-      
-      // 近处的星云有更复杂的渐变
-      if (this.depth > 0.6) {
-        const alpha1 = Math.max(0, Math.min(1, 0.3 + this.depth * 0.2))
-        const alpha2 = Math.max(0, Math.min(1, 0.15 + this.depth * 0.1))
-        const alpha3 = Math.max(0, Math.min(1, 0.05 + this.depth * 0.05))
-        gradient.addColorStop(0, this.color.replace(/[\d\.]+\)$/, `${alpha1})`))
-        gradient.addColorStop(0.3, this.color.replace(/[\d\.]+\)$/, `${alpha2})`))
-        gradient.addColorStop(0.7, this.color.replace(/[\d\.]+\)$/, `${alpha3})`))
-      } else {
-        gradient.addColorStop(0, this.color)
-        const alpha = Math.max(0, Math.min(1, 0.05 + this.depth * 0.05))
-        gradient.addColorStop(0.5, this.color.replace(/[\d\.]+\)$/, `${alpha})`))
-      }
-      gradient.addColorStop(1, 'transparent')
-      
-      ctx.fillStyle = gradient
-      ctx.beginPath()
-      ctx.arc(this.x, this.y, safeRadius, 0, Math.PI * 2)
-      ctx.fill()
-      
-      ctx.restore()
-    }
-  }
-  
 
-  
-  // 漂浮粒子类 - 营造深空氛围和立体感
-  class FloatingParticle {
+  // --- 优化1：利用预计算三角函数表 ---
+  const sinTable = new Float32Array(360);
+  const cosTable = new Float32Array(360);
+  const PI_2 = Math.PI * 2;
+  const RAD_TO_DEG = 180 / Math.PI;
+
+  for (let i = 0; i < 360; i++) {
+    const rad = (i * Math.PI) / 180;
+    sinTable[i] = Math.sin(rad);
+    cosTable[i] = Math.cos(rad);
+  }
+
+  // 查表辅助函数：输入弧度，返回近似 Sin/Cos 值
+  function getFastSin(rad) {
+    // 将弧度转换为 0-359 的整数索引
+    let deg = (rad * RAD_TO_DEG) % 360;
+    if (deg < 0) deg += 360;
+    return sinTable[deg | 0]; // | 0 取整
+  }
+
+  function getFastCos(rad) {
+    let deg = (rad * RAD_TO_DEG) % 360;
+    if (deg < 0) deg += 360;
+    return cosTable[deg | 0];
+  }
+
+  // 基类：提供通用属性
+  class CelestialObject {
     constructor() {
-      this.depth = Math.random()  // 深度层次
-      this.reset()
+      this.depth = Math.random();
+      this.depthLayer = Math.floor(this.depth * config.depthLayers);
+      this.x = 0;
+      this.y = 0;
     }
-    
+
+    // 验证数值有效性
+    isValid() {
+      return isFinite(this.x) && isFinite(this.y);
+    }
+  }
+
+  // 星星类
+  class Star extends CelestialObject {
+    constructor() {
+      super();
+      // 初始化属性
+      this.colorHex = this.getStarColor(); // 保存原始 Hex
+      this.colorRgb = this.hexToRgbStr(this.colorHex); // 预计算 RGB 字符串 (例如 "255,255,255")
+      this.reset();
+      this.opacity = Math.random();
+      this.twinkleSpeed = 0.02 + Math.random() * 0.03;
+      this.parallaxFactor = 0.2 + this.depth * 0.8;
+      this.color = this.getStarColor();
+      this.originalX = 0;
+      this.originalY = 0;
+      // 初始化位置
+      this.originalX = this.x = Math.random() * width;
+      this.originalY = this.y = Math.random() * height;
+    }
+
     reset() {
-      this.x = Math.random() * width
-      this.y = Math.random() * height
-      
-      // 根据深度调整大小和透明度
-      const depthScale = 0.3 + this.depth * 0.7
-      this.size = (0.2 + Math.random() * 0.8) * depthScale
-      this.baseOpacity = (0.1 + Math.random() * 0.3) * (0.5 + this.depth * 0.5)
-      
-      // 近处的粒子移动更快
+      // 根据深度层级调整大小和透明度
+      const depthScale = 0.3 + this.depth * 0.7;
+      this.size = Math.max(0.1, (0.3 + Math.random() * 1.8) * depthScale);
+      this.baseOpacity = Math.max(0.05, Math.min(1, (0.15 + Math.random() * 0.7) * depthScale));
+      this.blur = (1 - this.depth) * 2;
+      this.twinklePhase = Math.random() * PI_2;
+    }
+
+    getStarColor() {
+      const colors = config.colors.stars;
+      return colors[Math.floor(Math.random() * colors.length)];
+    }
+
+    update() {
+      this.twinklePhase += this.twinkleSpeed;
+      // 优化：使用查表法
+      this.opacity = this.baseOpacity + getFastSin(this.twinklePhase) * 0.3;
+
+      // 视差滚动：使用 globalTime
+      this.x = this.originalX + getFastSin(globalTime * 0.05) * this.parallaxFactor * 10;
+      this.y = this.originalY + getFastCos(globalTime * 0.05) * this.parallaxFactor * 5;
+    }
+
+    // 辅助函数：将 hex 颜色转为 "r, g, b" 字符串，方便后续拼接 rgba
+    hexToRgbStr(hex) {
+      let c;
+      if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
+        c = hex.substring(1).split('');
+        if (c.length === 3) {
+          c = [c[0], c[0], c[1], c[1], c[2], c[2]];
+        }
+        c = '0x' + c.join('');
+        return +((c >> 16) & 255) + ',' + +((c >> 8) & 255) + ',' + +(c & 255);
+      }
+      // 如果解析失败或已经是rgb格式，返回默认白色（防止崩溃）
+      return '255,255,255';
+    }
+
+    draw() {
+      if (!this.isValid()) return;
+
+      ctx.save();
+      const depthOpacity = this.opacity * (0.4 + this.depth * 0.6);
+      ctx.globalAlpha = Math.max(0, Math.min(1, depthOpacity));
+
+      // 仅对较近的且需要模糊的星星应用滤镜，减少性能损耗
+      if (this.blur > 0.5) ctx.filter = `blur(${this.blur}px)`;
+
+      // 绘制光晕
+      const haloSize = Math.max(0.1, this.size * (2 + this.depth * 2));
+      // 简单绘制，减少 Gradient 创建开销（可选优化：缓存 Gradient，但这里颜色多变暂不缓存）
+      const gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, haloSize);
+      // 计算核心亮度：深度越深（越近），核心越亮
+      const coreIntensity = Math.min(1, 0.5 + this.depth * 0.5);
+
+      // 使用预计算的 RGB 字符串拼接 RGBA
+      // 中心颜色：应用 coreIntensity
+      gradient.addColorStop(0, `rgba(${this.colorRgb}, ${coreIntensity})`);
+      // 中间过渡：亮度减半
+      gradient.addColorStop(0.4, `rgba(${this.colorRgb}, ${coreIntensity * 0.5})`);
+      // 边缘透明
+      gradient.addColorStop(1, 'transparent');
+
+      ctx.fillStyle = gradient;
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, haloSize, 0, PI_2);
+      ctx.fill();
+
+      // 绘制核心
+      ctx.globalAlpha = Math.max(0, Math.min(1, depthOpacity * 1.2));
+      ctx.fillStyle = this.colorHex;
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, Math.max(0.1, this.size * (0.8 + this.depth * 0.4)), 0, PI_2);
+      ctx.fill();
+
+      // 十字光芒
+      if (this.depth > 0.8 && this.opacity > 0.7) {
+        ctx.globalAlpha = Math.max(0, Math.min(1, depthOpacity * 0.8));
+        ctx.strokeStyle = `rgba(${this.colorRgb}, 0.8)`; // 使用 RGB 确保兼容性
+        ctx.lineWidth = 0.5;
+        const rayLength = this.size * 4;
+        ctx.beginPath();
+        ctx.moveTo(this.x - rayLength, this.y);
+        ctx.lineTo(this.x + rayLength, this.y);
+        ctx.moveTo(this.x, this.y - rayLength);
+        ctx.lineTo(this.x, this.y + rayLength);
+        ctx.stroke();
+      }
+
+      ctx.restore();
+    }
+  }
+
+  // 流星类
+  class Meteor extends CelestialObject {
+    constructor() {
+      super();
+      this.reset();
+    }
+
+    reset() {
+      this.depth = Math.random(); // 流星每次重置深度随机
+      this.x = Math.random() * width * 0.8;
+      this.y = -50;
+      this.angle = Math.random() * Math.PI / 3 + Math.PI / 6;
+
+      const depthScale = 0.4 + this.depth * 0.6;
+      this.speed = (4 + Math.random() * 3) * depthScale; // 稍微调快一点
+      this.curve = Math.random() * 0.002 - 0.001;
+      this.size = (0.8 + Math.random() * 1.5) * depthScale;
+      this.opacity = 1;
+      this.trail = [];
+      this.color = config.colors.meteors[Math.floor(Math.random() * config.colors.meteors.length)];
+      this.life = (100 + Math.random() * 100) * (0.8 + this.depth * 0.4);
+      this.maxLife = this.life;
+      this.blur = (1 - this.depth) * 1.5;
+    }
+
+    update() {
+      this.angle += this.curve;
+      // 优化：查表法
+      this.x += getFastCos(this.angle) * this.speed;
+      this.y += getFastSin(this.angle) * this.speed;
+      this.life--;
+
+      this.trail.push({ x: this.x, y: this.y });
+      if (this.trail.length > 15) this.trail.shift();
+
+      this.opacity = this.life / this.maxLife;
+
+      if (this.life <= 0 || this.x < -100 || this.y > height + 100) {
+        this.reset();
+      }
+    }
+
+    draw() {
+      if (!this.isValid()) return;
+
+      ctx.save();
+      if (this.blur > 0.5) ctx.filter = `blur(${this.blur}px)`;
+
+      const depthOpacity = this.opacity * (0.5 + this.depth * 0.5);
+
+      // 绘制轨迹
+      const trailLength = this.trail.length;
+      for (let i = 0; i < trailLength; i++) {
+        const point = this.trail[i];
+        const progress = i / trailLength;
+        const trailOpacity = progress * depthOpacity * 0.6;
+        const trailSize = Math.max(0.1, this.size * progress * (0.8 + this.depth * 0.4));
+
+        ctx.globalAlpha = Math.max(0, Math.min(1, trailOpacity));
+        ctx.fillStyle = this.color;
+        ctx.beginPath();
+        ctx.arc(point.x, point.y, trailSize, 0, PI_2);
+        ctx.fill();
+      }
+
+      // 头部
+      ctx.globalAlpha = Math.max(0, Math.min(1, depthOpacity));
+      const headSize = Math.max(0.1, this.size * (1.5 + this.depth));
+      const gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, headSize);
+      gradient.addColorStop(0, this.color);
+      gradient.addColorStop(1, 'transparent');
+
+      ctx.fillStyle = gradient;
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, headSize, 0, PI_2);
+      ctx.fill();
+
+      ctx.restore();
+    }
+  }
+
+  // 星云类
+  class Nebula extends CelestialObject {
+    constructor() {
+      super();
+      this.x = Math.random() * width;
+      this.y = Math.random() * height;
+
+      const depthScale = 0.5 + this.depth * 0.5;
+      this.radius = (100 + Math.random() * 150) * depthScale;
+      this.opacity = (0.05 + Math.random() * 0.15) * (0.6 + this.depth * 0.4);
+      this.color = config.colors.nebulae[Math.floor(Math.random() * config.colors.nebulae.length)];
+      this.pulseSpeed = (0.002 + Math.random() * 0.008) * (0.8 + this.depth * 0.4);
+      this.pulsePhase = Math.random() * PI_2;
+      this.drift = {
+        x: (Math.random() - 0.5) * 0.2,
+        y: (Math.random() - 0.5) * 0.2
+      };
+      this.blur = (1 - this.depth) * 3;
+    }
+
+    update() {
+      this.pulsePhase += this.pulseSpeed;
+      this.x += this.drift.x;
+      this.y += this.drift.y;
+
+      // 循环边界
+      if (this.x < -this.radius) this.x = width + this.radius;
+      if (this.x > width + this.radius) this.x = -this.radius;
+      if (this.y < -this.radius) this.y = height + this.radius;
+      if (this.y > height + this.radius) this.y = -this.radius;
+    }
+
+    draw() {
+      if (!this.isValid()) return;
+
+      ctx.save();
+      if (this.blur > 1) ctx.filter = `blur(${this.blur}px)`;
+
+      // 优化：查表
+      const pulseOpacity = this.opacity + getFastSin(this.pulsePhase) * 0.05;
+      const depthOpacity = pulseOpacity * (0.4 + this.depth * 0.6);
+      ctx.globalAlpha = Math.max(0, Math.min(1, depthOpacity));
+
+      const gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.radius);
+      // 简化渐变处理，提升兼容性
+      gradient.addColorStop(0, this.color);
+      gradient.addColorStop(0.5, this.color);
+      gradient.addColorStop(1, 'transparent');
+
+      ctx.fillStyle = gradient;
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.radius, 0, PI_2);
+      ctx.fill();
+
+      ctx.restore();
+    }
+  }
+
+  // 漂浮粒子类
+  class FloatingParticle extends CelestialObject {
+    constructor() {
+      super();
+      this.reset();
+    }
+
+    reset() {
+      this.x = Math.random() * width;
+      this.y = Math.random() * height;
+
+      const depthScale = 0.3 + this.depth * 0.7;
+      this.size = (0.2 + Math.random() * 0.8) * depthScale;
+      this.baseOpacity = (0.1 + Math.random() * 0.3) * (0.5 + this.depth * 0.5);
+
       this.drift = {
         x: (Math.random() - 0.5) * 0.3 * (0.6 + this.depth * 0.4),
         y: (Math.random() - 0.5) * 0.3 * (0.6 + this.depth * 0.4)
-      }
-      this.pulseSpeed = (0.005 + Math.random() * 0.01) * (0.8 + this.depth * 0.4)
-      this.pulsePhase = Math.random() * Math.PI * 2
-      this.blur = (1 - this.depth) * 1  // 远处的粒子更模糊
+      };
+      this.pulseSpeed = 0.02 + Math.random() * 0.03;
+      this.pulsePhase = Math.random() * PI_2;
+      this.blur = (1 - this.depth);
     }
-    
+
     update() {
-      // 缓慢漂移
-      this.x += this.drift.x
-      this.y += this.drift.y
-      
-      // 脉动效果
-      this.pulsePhase += this.pulseSpeed
-      
-      // 边界检查
-      if (this.x < 0) this.x = width
-      if (this.x > width) this.x = 0
-      if (this.y < 0) this.y = height
-      if (this.y > height) this.y = 0
+      this.x += this.drift.x;
+      this.y += this.drift.y;
+      this.pulsePhase += this.pulseSpeed;
+
+      if (this.x < 0) this.x = width;
+      if (this.x > width) this.x = 0;
+      if (this.y < 0) this.y = height;
+      if (this.y > height) this.y = 0;
     }
-    
+
     draw() {
-      // 数值验证
-      if (!isFinite(this.x) || !isFinite(this.y) || !isFinite(this.size) || !isFinite(this.baseOpacity)) {
-        return
-      }
-      
-      ctx.save()
-      
-      // 根据深度添加模糊效果
-      if (this.blur > 0.3) {
-        ctx.filter = `blur(${this.blur}px)`
-      }
-      
-      const pulseOpacity = this.baseOpacity + Math.sin(this.pulsePhase) * 0.1
-      const depthOpacity = pulseOpacity * (0.3 + this.depth * 0.7)
-      const finalOpacity = Math.max(0, Math.min(1, depthOpacity))
-      
-      ctx.globalAlpha = finalOpacity
-      
-      // 近处的粒子有光晕效果
-      if (this.depth > 0.7) {
-        const haloSize = this.size * 2
-        const gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, haloSize)
-        gradient.addColorStop(0, config.colors.particles)
-        gradient.addColorStop(1, 'transparent')
-        
-        ctx.fillStyle = gradient
-        ctx.beginPath()
-        ctx.arc(this.x, this.y, haloSize, 0, Math.PI * 2)
-        ctx.fill()
-      }
-      
-      // 绘制粒子核心
-      ctx.fillStyle = config.colors.particles
-      ctx.beginPath()
-      ctx.arc(this.x, this.y, Math.max(0.1, this.size), 0, Math.PI * 2)
-      ctx.fill()
-      
-      ctx.restore()
+      if (!this.isValid()) return;
+
+      ctx.save();
+      if (this.blur > 0.3) ctx.filter = `blur(${this.blur}px)`;
+
+      const pulseOpacity = this.baseOpacity + getFastSin(this.pulsePhase) * 0.1;
+      ctx.globalAlpha = Math.max(0, Math.min(1, pulseOpacity * (0.3 + this.depth * 0.7)));
+      ctx.fillStyle = config.colors.particles;
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, Math.max(0.1, this.size), 0, PI_2);
+      ctx.fill();
+
+      ctx.restore();
     }
   }
-  
+
   // 初始化
   function init() {
-    resize()
-    
-    // 创建星星
-    stars = []
-    for (let i = 0; i < config.starCount; i++) {
-      stars.push(new Star())
-    }
-    
-    // 创建流星
-    meteors = []
-    for (let i = 0; i < config.meteorCount; i++) {
-      meteors.push(new Meteor())
-    }
-    
-    // 创建星云
-    nebulae = []
-    for (let i = 0; i < config.nebulaCount; i++) {
-      nebulae.push(new Nebula())
-    }
-    
+    resize();
 
-    
-    // 创建漂浮粒子
-    floatingParticles = []
-    for (let i = 0; i < config.floatingParticleCount; i++) {
-      floatingParticles.push(new FloatingParticle())
-    }
-    
+    staticEntities = [];
+    meteors = [];
+
+    // 批量创建对象
+    for (let i = 0; i < config.nebulaCount; i++) staticEntities.push(new Nebula());
+    for (let i = 0; i < config.starCount; i++) staticEntities.push(new Star());
+    for (let i = 0; i < config.floatingParticleCount; i++) staticEntities.push(new FloatingParticle());
+
+    // --- 优化2：预先排序，避免在 animate 中每帧 sort ---
+    // 根据 depth 从小到大排序 (远的先画)
+    staticEntities.sort((a, b) => a.depth - b.depth);
+
+    // 流星单独处理
+    for (let i = 0; i < config.meteorCount; i++) meteors.push(new Meteor());
+
     // 渐现效果
     setTimeout(() => {
-      canvas.style.opacity = '1'
-    }, 500)
+      canvas.style.opacity = '1';
+    }, 100);
   }
-  
+
   // 调整画布大小
   function resize() {
-    width = window.innerWidth
-    height = window.innerHeight
-    canvas.width = width
-    canvas.height = height
-    
-    // 重新定位现有元素
-    stars.forEach(star => {
-      if (star.x > width) star.x = width - 10
-      if (star.y > height) star.y = height - 10
-    })
-  }
-  
-  // 性能优化变量
-  let frameCount = 0
-  const targetFPS = 30 // 降低帧率以提升性能
-  
-  // 动画循环
-  function animate() {
-    frameCount++
-    
-    // 性能优化：降低更新频率
-    if (frameCount % 2 === 0) {
-      // 清除画布
-      ctx.clearRect(0, 0, width, height)
-      
-      // 不绘制背景渐变，让原有星空背景显示
-      
-      // 更新所有元素
-      nebulae.forEach(nebula => nebula.update())
+    width = window.innerWidth;
+    height = window.innerHeight;
 
-      stars.forEach(star => star.update())
-      floatingParticles.forEach(particle => particle.update())
-      meteors.forEach(meteor => meteor.update())
-      
-      // 按深度分层渲染 - 从远到近
-      const allElements = [
-        ...nebulae.map(n => ({element: n, depth: n.depth, type: 'nebula'})),
-
-        ...stars.map(s => ({element: s, depth: s.depth, type: 'star'})),
-        ...floatingParticles.map(p => ({element: p, depth: p.depth, type: 'particle'})),
-        ...meteors.map(m => ({element: m, depth: m.depth, type: 'meteor'}))
-      ]
-      
-      // 按深度排序，远处的先绘制
-      allElements.sort((a, b) => a.depth - b.depth)
-      
-      // 分层绘制
-      allElements.forEach(({element}) => {
-        element.draw()
-      })
+    // 只有尺寸真正变化时才重置 canvas 属性，避免闪烁
+    if (canvas.width !== width || canvas.height !== height) {
+      canvas.width = width;
+      canvas.height = height;
     }
-    
-    animationId = requestAnimationFrame(animate)
+
+    // 确保静态实体不在视口外（简单修正）
+    if (staticEntities.length > 0) {
+      staticEntities.forEach(entity => {
+        if (entity.x > width) entity.x = Math.random() * width;
+        if (entity.y > height) entity.y = Math.random() * height;
+      });
+    }
   }
-  
+
+  let lastTime = 0;
+  const targetFPS = 30;
+  const frameInterval = 1000 / targetFPS;
+
+  // 动画循环
+  function animate(timestamp) {
+    if (!lastTime) lastTime = timestamp;
+    const deltaTime = timestamp - lastTime;
+
+    if (deltaTime > frameInterval) {
+      // 调整 globalTime 步进，使其与实际时间流逝挂钩，而不是帧数
+      // 乘数控制整体动画速度
+      globalTime += deltaTime * 0.05;
+
+      lastTime = timestamp - (deltaTime % frameInterval);
+
+      ctx.clearRect(0, 0, width, height);
+
+      // 1. 更新并绘制静态实体 (已预排序)
+      // 使用 for 循环比 forEach 性能略好
+      for (let i = 0, len = staticEntities.length; i < len; i++) {
+        const entity = staticEntities[i];
+        entity.update();
+        entity.draw();
+      }
+
+      // 2. 更新并绘制流星 (流星通常在最上层或穿插，这里为了性能放在最上层)
+      for (let i = 0, len = meteors.length; i < len; i++) {
+        const meteor = meteors[i];
+        meteor.update();
+        meteor.draw();
+      }
+    }
+
+    animationId = requestAnimationFrame(animate);
+  }
+
   // 销毁函数
   function destroy() {
-    if (animationId) {
-      cancelAnimationFrame(animationId)
-    }
-    const existingCanvas = document.getElementById('enhanced-starry-sky')
+    if (animationId) cancelAnimationFrame(animationId);
+    window.removeEventListener('resize', resize);
+    const existingCanvas = document.getElementById('enhanced-starry-sky');
     if (existingCanvas) {
-      existingCanvas.remove()
+      existingCanvas.style.opacity = '0';
+      setTimeout(() => existingCanvas.remove(), 2000);
     }
-    window.removeEventListener('resize', resize)
   }
-  
+
   // 事件监听
-  window.addEventListener('resize', resize)
-  
+  window.addEventListener('resize', resize);
+
   // 启动
-  init()
-  animate()
-  
-  // 返回销毁函数
-  return destroy
+  init();
+  animationId = requestAnimationFrame(animate);
+
+  return destroy;
 }
 
-// 销毁函数
+// 销毁函数 (全局暴露)
 function destroyEnhancedStarrySky() {
-  const canvas = document.getElementById('enhanced-starry-sky')
+  const canvas = document.getElementById('enhanced-starry-sky');
   if (canvas) {
-    canvas.style.opacity = '0'
+    canvas.style.opacity = '0';
     setTimeout(() => {
-      canvas.remove()
-    }, 2000)
+      canvas.remove();
+    }, 2000);
   }
 }
 
 // 导出到全局
-window.createEnhancedStarrySky = createEnhancedStarrySky
-window.destroyEnhancedStarrySky = destroyEnhancedStarrySky
+window.createEnhancedStarrySky = createEnhancedStarrySky;
+window.destroyEnhancedStarrySky = destroyEnhancedStarrySky;
