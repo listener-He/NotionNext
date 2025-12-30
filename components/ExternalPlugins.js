@@ -218,7 +218,6 @@ const ExternalPlugin = props => {
       <VConsole />
       {ENABLE_NPROGRSS && <LoadingProgress />}
       {ENABLE_AOS && <AosAnimation />}
-      {ANALYTICS_51LA_ID && ANALYTICS_51LA_CK && <LA51 />}
       {COZE_BOT_ID && <Coze />}
 
       {/* 谷歌广告 */}
@@ -227,6 +226,13 @@ const ExternalPlugin = props => {
           strategy='lazyOnload'
           src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_GOOGLE_ID}`}
           crossOrigin='anonymous'
+          onLoad={() => {
+            try {
+              ;(window.adsbygoogle = window.adsbygoogle || []).push({})
+            } catch (e) {
+              console.error('Google Adsense Error:', e)
+            }
+          }}
         />
       )}
 
@@ -237,6 +243,12 @@ const ExternalPlugin = props => {
             id='LA_COLLECT'
             src='//sdk.51.la/js-sdk-pro.min.js'
             strategy='lazyOnload'
+            onLoad={() => {
+              window.LA.init({
+                id: ANALYTICS_51LA_ID,
+                ck: ANALYTICS_51LA_CK
+              })
+            }}
           />
         </>
       )}
@@ -264,23 +276,24 @@ const ExternalPlugin = props => {
 
       {/* Clarity */}
       {CLARITY_ID && (
-        <Script id='clarity-init' strategy='lazyOnload'>
-          {`
-            (function(c, l, a, r, i, t, y) {
-              c[a] = c[a] || function() {
-                (c[a].q = c[a].q || []).push(arguments);
-              };
-              t = l.createElement(r);
-              t.async = 1;
-              t.src = "https://www.clarity.ms/tag/" + i;
-              y = l.getElementsByTagName(r)[0];
-              if (y && y.parentNode) {
-                y.parentNode.insertBefore(t, y);
-              } else {
-                l.head.appendChild(t);
-              }
-            })(window, document, "clarity", "script", "${CLARITY_ID}");
-          `}
+        <Script id='clarity-init' strategy='lazyOnload'
+         onLoad={() => {
+           (function(c, l, a, r, i, t, y) {
+             c[a] = c[a] || function() {
+               (c[a].q = c[a].q || []).push(arguments);
+             };
+             t = l.createElement(r);
+             t.async = 1;
+             t.src = "https://www.clarity.ms/tag/" + i;
+             y = l.getElementsByTagName(r)[0];
+             if (y && y.parentNode) {
+               y.parentNode.insertBefore(t, y);
+             } else {
+               l.head.appendChild(t);
+             }
+           })(window, document, "clarity", "script", CLARITY_ID);
+         }}>
+
         </Script>
       )}
 
@@ -368,16 +381,19 @@ const ExternalPlugin = props => {
 
       {/* 百度统计 */}
       {ANALYTICS_BAIDU_ID && (
-        <Script id='baidu-analytics' strategy='lazyOnload'>
-          {`
-            var _hmt = _hmt || [];
+        <Script
+          id='baidu-analytics'
+          strategy='lazyOnload'
+          onLoad={() => {
+            window._hmt = window._hmt || [];
             (function() {
-              var hm = document.createElement("script");
+              const hm = document.createElement('script')
               hm.src = "https://hm.baidu.com/hm.js?${ANALYTICS_BAIDU_ID}";
-              var s = document.getElementsByTagName("script")[0]; 
+              const s = document.getElementsByTagName('script')[0]
               s.parentNode.insertBefore(hm, s);
             })();
-          `}
+          }}
+        >
         </Script>
       )}
 
@@ -411,6 +427,14 @@ const ExternalPlugin = props => {
           <Script
             src={getCDNResourceSync(`https://www.googletagmanager.com/gtag/js?id=${ANALYTICS_GOOGLE_ID}`)}
             strategy='afterInteractive'
+            onLoad={() => {
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', ANALYTICS_GOOGLE_ID, {
+                page_path: window.location.pathname,
+              });
+            }}
           />
         </>
       )}
@@ -500,9 +524,7 @@ const AosAnimation = dynamic(() => import('@/components/AOSAnimation'), {
 const Coze = dynamic(() => import('@/components/Coze'), {
   ssr: false
 })
-const LA51 = dynamic(() => import('@/components/LA51'), {
-  ssr: false
-})
+
 const TianliGPT = dynamic(() => import('@/components/TianliGPT'), {
   ssr: false
 })
