@@ -33,10 +33,10 @@ const ArchiveIndex = props => {
 
 export async function getStaticProps({ locale }) {
   // 优化：只获取归档页需要的数据类型
-  const props = await getGlobalData({ 
-    from: 'archive-index', 
+  const props = await getGlobalData({
+    from: 'archive-index',
     locale,
-    dataTypes: ['allPages'] 
+    dataTypes: ['allPages']
   })
   // 处理分页
   props.posts = Array.isArray(props.allPages)
@@ -67,7 +67,6 @@ export async function getStaticProps({ locale }) {
   props.archivePosts = archivePosts || {}
   delete props.posts
   delete props.allPages
-  delete props.latestPosts
   delete props.allNavPages
 
   const revalidate = process.env.EXPORT

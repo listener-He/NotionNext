@@ -57,7 +57,7 @@ export async function getStaticProps({ params: { prefix, slug }, locale }) {
   const props = await getGlobalData({
     from,
     locale,
-    dataTypes: ['allPages', 'NOTION_CONFIG', 'siteInfo']
+    dataTypes: ['allPages', 'NOTION_CONFIG', 'siteInfo', 'latestPosts']
   })
 
   // 在列表内查找文章
@@ -77,8 +77,7 @@ export async function getStaticProps({ params: { prefix, slug }, locale }) {
   if (!props?.post) {
     const pageId = slug.slice(-1)[0]
     if (pageId && pageId.length >= 32) {
-      const post = await getPost(pageId)
-      props.post = post
+      props.post = await getPost(pageId)
     }
   }
 

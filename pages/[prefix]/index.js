@@ -108,9 +108,9 @@ export async function getStaticPaths() {
 
   const from = 'slug-paths'
   // 优化：只获取路径生成需要的数据类型
-  const { allPages } = await getGlobalData({ 
+  const { allPages } = await getGlobalData({
     from,
-    dataTypes: ['allPages'] 
+    dataTypes: ['allPages']
   })
   // 添加空值检查
   const paths = allPages
@@ -126,10 +126,10 @@ export async function getStaticProps({ params: { prefix }, locale }) {
   let fullSlug = prefix
   const from = `slug-props-${fullSlug}`
   // 优化：只获取文章页需要的数据类型
-  const props = await getGlobalData({ 
-    from, 
+  const props = await getGlobalData({
+    from,
     locale,
-    dataTypes: ['allPages', 'NOTION_CONFIG', 'siteInfo'] 
+    dataTypes: ['allPages', 'NOTION_CONFIG', 'siteInfo', 'latestPosts']
   })
   if (siteConfig('PSEUDO_STATIC', false, props.NOTION_CONFIG)) {
     if (!fullSlug.endsWith('.html')) {

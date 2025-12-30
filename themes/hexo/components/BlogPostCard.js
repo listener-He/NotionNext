@@ -8,12 +8,10 @@ import { useEffect, useRef, useState } from 'react'
 
 
 const BlogPostCard = ({ index, post, showSummary, siteInfo }) => {
-  const HEXO_POST_LIST_PREVIEW = siteConfig('HEXO_POST_LIST_PREVIEW', null, CONFIG)
   const HEXO_POST_LIST_COVER = siteConfig('HEXO_POST_LIST_COVER', null, CONFIG)
   const HEXO_POST_LIST_IMG_CROSSOVER = siteConfig('HEXO_POST_LIST_IMG_CROSSOVER', null, CONFIG)
   const HEXO_POST_LIST_COVER_HOVER_ENLARGE = siteConfig('HEXO_POST_LIST_COVER_HOVER_ENLARGE', null, CONFIG)
   const HEXO_POST_LIST_COVER_DEFAULT = siteConfig('HEXO_POST_LIST_COVER_DEFAULT', null, CONFIG)
-  const showPreviewConfig = HEXO_POST_LIST_PREVIEW && post.blockMap
   const infoRef = useRef(null)
   const imgWrapRef = useRef(null)
   if (
@@ -24,7 +22,7 @@ const BlogPostCard = ({ index, post, showSummary, siteInfo }) => {
     post.pageCoverThumbnail = siteInfo?.pageCover
   }
   const showPageCover =
-    HEXO_POST_LIST_COVER && post?.pageCoverThumbnail && !showPreviewConfig
+    HEXO_POST_LIST_COVER && post?.pageCoverThumbnail
   // 获取设备性能信息
   const { isLowEndDevice, performanceLevel } = getDevicePerformance()
 
@@ -105,7 +103,7 @@ const BlogPostCard = ({ index, post, showSummary, siteInfo }) => {
           <BlogPostCardInfo
             post={post}
             showPageCover={showPageCover}
-            showPreview={showSummary ? false : showPreviewConfig}
+            showPreview={!showSummary}
             showSummary={showSummary}
             dateAlign={showPageCover && HEXO_POST_LIST_IMG_CROSSOVER && index % 2 === 1 ? 'right' : 'left'}
             containerRef={infoRef}
