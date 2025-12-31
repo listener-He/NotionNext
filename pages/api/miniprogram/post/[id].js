@@ -47,7 +47,7 @@ export default async function handler(req, res) {
       fullPost = globalData.allPages.find(post =>
         post.id === id ||
         post.slug === id ||
-        post.slug === (id.startsWith('article/') ? id : `article/${id}`)
+        post.slug === (id.startsWith('article/') || id.startsWith('archives/') ? id : `article/${id}`)
       )
 
       if (!fullPost) {
