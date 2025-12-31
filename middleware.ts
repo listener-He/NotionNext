@@ -71,8 +71,9 @@ const noAuthMiddleware = async (req: NextRequest, ev: any) => {
  * 鉴权中间件
  */
 const authMiddleware = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
-  ? clerkMiddleware((auth, req) => {
-      const { userId } = auth()
+  ? clerkMiddleware(async (auth, req) => {
+      const { userId } = await auth() // 从 auth() Promise 中获取 userId
+      
       // 处理 /dashboard 路由的登录保护
       if (isTenantRoute(req)) {
         if (!userId) {
@@ -85,7 +86,7 @@ const authMiddleware = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
 
       // 处理管理员相关权限保护
       if (isTenantAdminRoute(req)) {
-        auth().protect(has => {
+        await auth.protect((has: any) => { // 直接在 auth 参数上调用 protect 方法
           return (
             has({ permission: 'org:sys_memberships:manage' }) ||
             has({ permission: 'org:sys_domains_manage' })
