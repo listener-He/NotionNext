@@ -386,7 +386,8 @@ const Style = () => {
             color: #111827;
             text-rendering: optimizeLegibility;
             -webkit-font-smoothing: antialiased;
-            font-family: "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Source Han Sans SC", "Segoe UI", "Roboto", "Helvetica Neue", Arial, sans-serif;
+            -moz-osx-font-smoothing: grayscale;
+            font-family: var(--font-noto-sans-sc), var(--font-bitter), "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Source Han Sans SC", "Segoe UI", "Roboto", "Helvetica Neue", Arial, sans-serif;
         }
 
         .dark #theme-hexo .article-content {
