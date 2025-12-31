@@ -198,7 +198,14 @@ const nextConfig = {
       }
       return [
         ...langsRewrites,
-        { source: '/:path*.html', destination: '/:path*' }
+        { source: '/:path*.html', destination: '/:path*' },
+        // RSS 路由重写：确保 RSS 请求始终走 API 路由
+        { source: '/rss/feed.xml', destination: '/api/rss' },
+        { source: '/rss/atom.xml', destination: '/api/rss?format=atom' },
+        { source: '/rss/feed.json', destination: '/api/rss?format=json' },
+        { source: '/feed', destination: '/rss/feed.xml' },
+        { source: '/rss', destination: '/rss/feed.xml' },
+        { source: '/atom', destination: '/rss/atom.xml' }
       ]
     },
 

@@ -2,7 +2,6 @@ import BLOG from '@/blog.config'
 import { siteConfig } from '@/lib/config'
 import { getGlobalData, getPostBlocks } from '@/lib/db/getSiteData'
 import { generateRobotsTxt } from '@/lib/robots.txt'
-import { generateRss } from '@/lib/rss'
 import { DynamicLayout } from '@/themes/theme'
 import { generateRedirectJson } from '@/lib/redirect'
 import { checkDataFromAlgolia } from '@/lib/plugins/algolia'
@@ -27,10 +26,10 @@ export async function getStaticProps(req) {
   const { locale } = req
   const from = 'index'
   // 优化：只获取首页需要的数据类型
-  const props = await getGlobalData({ 
-    from, 
+  const props = await getGlobalData({
+    from,
     locale,
-    dataTypes: ['allPages', 'siteInfo', 'tagOptions', 'categoryOptions', 'NOTION_CONFIG', 'latestPosts'] 
+    dataTypes: ['allPages', 'siteInfo', 'tagOptions', 'categoryOptions', 'NOTION_CONFIG', 'latestPosts']
   })
   const POST_PREVIEW_LINES = siteConfig(
     'POST_PREVIEW_LINES',
@@ -71,7 +70,7 @@ export async function getStaticProps(req) {
   // 生成robotTxt
   generateRobotsTxt(props)
   // 生成Feed订阅
-  generateRss(props)
+  //generateRss(props)
   // 生成
   generateSitemap(props)
   // 检查数据是否需要从algolia删除
