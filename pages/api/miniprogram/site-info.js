@@ -60,7 +60,7 @@ export default async function handler(req, res) {
       : 0
 
     // 获取分类和标签数量
-    const categoryCount = globalData.categoryOptions?.length || 0
+    const categoryCount = globalData.categoryCount ? globalData.categoryCount : (globalData.categoryOptions?.length || 0)
     const tagCount = globalData.tagCount ? globalData.tagCount : (globalData.tagOptions?.length || 0)
 
     // 构建返回数据

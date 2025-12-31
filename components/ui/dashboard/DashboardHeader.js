@@ -26,12 +26,12 @@ export default function DashboardHeader() {
             <div className='flex items-center gap-x-2'>
               <span>{user?.fullName}</span>
               <SmartLink href='/dashboard/membership'>
-                <span class='bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300'>
+                <span class='bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-indigo-200'>
                   普通用户
                 </span>
               </SmartLink>
             </div>
-            <div className='text-sm text-gray-500 gap-x-2 flex dark:text-gray-400'>
+            <div className='text-sm text-gray-500 gap-x-2 flex dark:text-indigo-300'>
               <span>{user?.username}</span>
               <span>{formatDate(user?.createdAt)}</span>
             </div>

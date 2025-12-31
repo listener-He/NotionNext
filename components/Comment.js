@@ -81,7 +81,7 @@ const Comment = ({ frontMatter, className }) => {
       key={frontMatter?.id}
       id='comment'
       ref={commentRef}
-      className={`comment mt-5 text-gray-800 dark:text-gray-300 ${className || ''}`}>
+      className={`comment mt-5 text-gray-800 dark:text-indigo-200 ${className || ''}`}>
       {/* 延迟加载评论区 */}
       {!shouldLoad && (
         <div className='text-center'>

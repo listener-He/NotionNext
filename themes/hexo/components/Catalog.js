@@ -87,7 +87,7 @@ const Catalog = ({ toc }) => {
                 key={id}
                 href={`#${id}`}
                 aria-current={activeSection === id ? 'true' : 'false'}
-                className={`${activeSection === id ? 'catalog-item-active' : ''} hover:font-semibold border-l pl-4 block hover:text-indigo-800 duration-300 ease-standard transform dark:text-indigo-400 dark:border-indigo-400
+                className={`${activeSection === id ? 'catalog-item-active' : ''} hover:font-semibold border-l pl-4 block hover:text-indigo-600 duration-300 ease-standard transform dark:text-indigo-200 dark:border-indigo-400
         notion-table-of-contents-item-indent-level-${tocItem.indentLevel} catalog-item bg-transparent`}>
                 <span
                   style={{

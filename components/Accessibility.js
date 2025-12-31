@@ -263,7 +263,7 @@ const Accessibility = () => {
           </div>
         </div>
         
-        <div className="mt-2 text-xs text-gray-600 dark:text-gray-400">
+        <div className="mt-2 text-xs text-gray-600 dark:text-indigo-300">
           快捷键: Alt+H (对比度), Alt+/- (字体)
         </div>
       </div>

@@ -22,7 +22,7 @@ const DarkModeButton = props => {
 
   return (
     <div
-      className={`${className || ''} flex justify-center dark:text-gray-200 text-gray-800`}>
+      className={`${className || ''} flex justify-center dark:text-indigo-200 text-gray-800`}>
       <div
         onClick={toggleDarkMode}
         id='darkModeButton'

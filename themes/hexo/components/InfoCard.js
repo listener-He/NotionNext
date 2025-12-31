@@ -16,7 +16,7 @@ export function InfoCard(props) {
   return (
         <Card className={className}>
             <div
-                className='justify-center items-center flex py-xl dark:text-gray-100 transform duration-300 ease-standard cursor-pointer tap-target bg-transparent'
+                className='justify-center items-center flex py-xl dark:text-indigo-100 transform duration-300 ease-standard cursor-pointer tap-target bg-transparent'
                 onClick={() => {
                   router.push('/')
                 }}

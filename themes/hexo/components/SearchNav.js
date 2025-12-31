@@ -24,7 +24,7 @@ export default function SearchNav(props) {
         <SearchInput cRef={cRef} {...props} />
         {/* 分类 */}
         <Card className="w-full mt-4">
-            <div className="dark:text-gray-200 mb-5 mx-3">
+            <div className="dark:text-indigo-200 mb-5 mx-3">
                 <i className="mr-4 fas fa-th" />
                 {locale.COMMON.CATEGORY}:
             </div>
@@ -34,7 +34,7 @@ export default function SearchNav(props) {
                     <SmartLink
                           key={category.name}
                           href={`/category/${category.name}`}
-                          className='duration-300 rounded-lg px-5 cursor-pointer py-2 hover:bg-black/80 hover:text-white text-secondary dark:text-gray-300'>
+                          className='duration-300 rounded-lg px-5 cursor-pointer py-2 hover:bg-black/80 hover:text-white text-indigo-700 dark:text-indigo-300'>
                           <i className="mr-4 fas fa-folder" />
                           {category.name}({category.count})
                     </SmartLink>

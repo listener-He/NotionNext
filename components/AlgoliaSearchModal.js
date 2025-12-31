@@ -274,7 +274,7 @@ export default function AlgoliaSearchModal({ cRef }) {
           onChange={e => handleInputChange(e)}
           onFocus={() => setIsInputFocused(true)} // 聚焦时
           onBlur={() => setIsInputFocused(false)} // 失去焦点时
-          className='text-black dark:text-gray-200 bg-gray-50 dark:bg-gray-600 outline-blue-500 w-full px-4 my-2 py-1 mb-4 border rounded-md'
+          className='text-black dark:text-indigo-100 bg-gray-50 dark:bg-gray-600 outline-blue-500 w-full px-4 my-2 py-1 mb-4 border rounded-md'
           ref={inputRef}
         />
 
@@ -301,23 +301,23 @@ export default function AlgoliaSearchModal({ cRef }) {
               rounded-lg
               ${activeIndex === index ? 'bg-blue-600 dark:bg-yellow-600' : ''}`}>
               <a
-                className={`${activeIndex === index ? ' text-white' : ' text-black dark:text-gray-300 '}`}>
+                className={`${activeIndex === index ? ' text-white' : ' text-black dark:text-indigo-200 '}`}>
                 {result.title}
               </a>
             </li>
           ))}
         </ul>
         <Pagination totalPage={totalPage} page={page} switchPage={switchPage} />
-        <div className='flex items-center justify-between mt-2 sm:text-sm text-xs dark:text-gray-300'>
+        <div className='flex items-center justify-between mt-2 sm:text-sm text-xs dark:text-indigo-200'>
           {totalHit === 0 && (
             <div className='flex items-center'>
               {ShortCutActions.map((action, index) => {
                 return (
                   <Fragment key={index}>
-                    <div className='border-gray-300 dark:text-gray-300 text-gray-600 px-2 rounded border inline-block'>
+                    <div className='border-gray-300 dark:text-indigo-200 text-gray-600 px-2 rounded border inline-block'>
                       {action.key}
                     </div>
-                    <span className='ml-2 mr-4  text-gray-600 dark:text-gray-300'>
+                    <span className='ml-2 mr-4  text-gray-600 dark:text-indigo-200'>
                       {action.action}
                     </span>
                   </Fragment>
@@ -332,7 +332,7 @@ export default function AlgoliaSearchModal({ cRef }) {
               </p>
             )}
           </div>
-          <div className='text-gray-600 dark:text-gray-300  text-right'>
+          <div className='text-gray-600 dark:text-indigo-200  text-right'>
             <span>
               <i className='fa-brands fa-algolia'></i> Algolia 提供搜索服务
             </span>
@@ -368,7 +368,7 @@ function TagGroups() {
             className={'cursor-pointer inline-block whitespace-nowrap'}>
             <div
               className={
-                'flex items-center text-black dark:text-gray-300 hover:bg-blue-600 dark:hover:bg-yellow-600 hover:scale-110 hover:text-white rounded-lg px-2 py-0.5 duration-150 transition-all'
+                'flex items-center text-black dark:text-indigo-200 hover:bg-blue-600 dark:hover:bg-yellow-600 hover:scale-110 hover:text-white rounded-lg px-2 py-0.5 duration-150 transition-all'
               }>
               <div className='text-lg'>{tag.name} </div>
               {tag.count ? (
@@ -399,7 +399,7 @@ function Pagination(props) {
         const classNames =
           page === i
             ? 'font-bold text-white bg-blue-600 dark:bg-yellow-600 rounded'
-            : 'hover:text-blue-600 hover:font-bold dark:text-gray-300'
+            : 'hover:text-blue-600 hover:font-bold dark:text-indigo-200'
 
         return (
           <div

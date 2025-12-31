@@ -68,23 +68,27 @@ const Header = props => {
       // const textWhite = header && scrollInHeader
 
       if (scrollInHeader) {
-        nav && nav.classList.replace('bg-white', 'bg-transparent')
+        nav && nav.classList.replace('bg-white/90', 'bg-transparent')
         nav && nav.classList.replace('border', 'border-transparent')
         nav && nav.classList.replace('drop-shadow-md', 'shadow-none')
-        nav && nav.classList.replace('dark:bg-hexo-black-gray', 'dark:bg-transparent')
+        nav && nav.classList.replace('dark:bg-hexo-black-gray/80', 'dark:bg-transparent')
       } else {
-        nav && nav.classList.replace('bg-transparent', 'bg-white')
+        nav && nav.classList.replace('bg-transparent', 'bg-white/90')
         nav && nav.classList.replace('border-transparent', 'border')
         nav && nav.classList.replace('shadow-none', 'drop-shadow-md')
-        nav && nav.classList.replace('dark:bg-transparent', 'dark:bg-hexo-black-gray')
+        nav && nav.classList.replace('dark:bg-transparent', 'dark:bg-hexo-black-gray/80')
       }
 
       if (scrollInHeader) {
-        nav && nav.classList.remove('text-black')
+        nav && nav.classList.remove('text-indigo-700')
+        nav && nav.classList.remove('dark:text-indigo-100')
         nav && nav.classList.add('text-white')
+        nav && nav.classList.add('dark:text-white')
       } else {
         nav && nav.classList.remove('text-white')
-        nav && nav.classList.add('text-black')
+        nav && nav.classList.remove('dark:text-white')
+        nav && nav.classList.add('text-indigo-700')
+        nav && nav.classList.add('dark:text-indigo-100')
       }
 
       // 导航栏不在头图里，且页面向下滚动一定程度 隐藏导航栏
@@ -107,7 +111,7 @@ const Header = props => {
       {categories && (
         <section className='mt-8'>
           <div className='text-sm flex flex-nowrap justify-between font-light px-2'>
-            <div className='text-gray-700 dark:text-gray-200'>
+            <div className='text-indigo-700 dark:text-indigo-100'>
               <i className='mr-2 fas fa-th-list' />
               {locale.COMMON.CATEGORY}
             </div>
@@ -128,7 +132,7 @@ const Header = props => {
       {tags && (
         <section className='mt-4'>
           <div className='text-sm py-2 px-2 flex flex-nowrap justify-between font-light'>
-            <div className='text-gray-700 dark:text-gray-200'>
+            <div className='text-indigo-700 dark:text-indigo-100'>
               <i className='mr-2 fas fa-tag' />
               {locale.COMMON.TAGS}
             </div>
@@ -160,7 +164,7 @@ const Header = props => {
           willChange: 'top'
         }}
         className={
-          'top-0 duration-300 transition-all shadow-none fixed bg-transparent dark:bg-transparent dark:text-gray-200 text-gray-700 w-full z-20 transform border-transparent'
+          'top-0 duration-300 transition-all shadow-none fixed bg-white/90 dark:bg-hexo-black-gray/80 dark:text-indigo-100 text-indigo-700 w-full z-20 transform border-transparent'
         }>
         <div className='w-full flex justify-between items-center px-4 py-2 glass-nav'>
           <div className='flex'>
@@ -168,22 +172,22 @@ const Header = props => {
           </div>
 
           {/* 右侧功能 */}
-          <div className='flex justify-end items-center space-x-2 text-xs text-gray-700 dark:text-gray-400 mr-1'>
+          <div className='flex justify-end items-center space-x-2 text-xs text-indigo-700 dark:text-indigo-200 mr-1'>
             <div className='hidden lg:flex'>
               {' '}
               <MenuListTop {...props} />
             </div>
             <div
               onClick={toggleMenuOpen}
-              className='w-8 justify-center items-center h-8 cursor-pointer flex lg:hidden text-gray-700 dark:text-gray-400'
+              className='w-8 justify-center items-center h-8 cursor-pointer flex lg:hidden text-indigo-700 dark:text-indigo-200'
               role='button'
               aria-label='Toggle menu'
               aria-expanded={isOpen}
               aria-controls='mobile-sidebar'>
               {isOpen ? (
-                <i className='fas fa-times text-gray-700 dark:text-gray-400' />
+                <i className='fas fa-times text-indigo-700 dark:text-indigo-200' />
               ) : (
-                <i className='fas fa-bars text-gray-700 dark:text-gray-400' />
+                <i className='fas fa-bars text-indigo-700 dark:text-indigo-200' />
               )}
             </div>
             {showSearchButton && <SearchButton />}

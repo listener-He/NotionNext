@@ -167,7 +167,7 @@ const Style = () => {
 
         /* 深色模式下目录项的默认文字颜色和边框线颜色 */
         .dark #theme-hexo .catalog-item {
-            color: white !important;
+            color: #e2e8f0 !important;
             border-color: white !important;
         }
 
@@ -178,6 +178,7 @@ const Style = () => {
         /* 深色模式下当前高亮标题的边框线颜色 */
         .dark #theme-hexo .catalog-item.font-bold {
             border-color: var(--theme-color) !important;
+            color: #ffffff !important;
         }
 
         /* 文章底部版权声明组件左侧边框线颜色 */
