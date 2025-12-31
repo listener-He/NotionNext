@@ -58,9 +58,6 @@ function checkFileSystemSupport() {
 export async function getServerSideProps({ params, req, res }) {
   const slug = params.slug.join('/')
 
-  // 检测文件系统支持
-  const isFileSystemSupported = checkFileSystemSupport()
-
   // 确定目标 API 路由
   let destination = '/api/rss'
   if (slug === 'atom.xml') {
@@ -69,43 +66,11 @@ export async function getServerSideProps({ params, req, res }) {
     destination = '/api/rss?format=json'
   }
 
-  // 如果文件系统不支持或使用其他模式，直接重定向到 API
-  if (!isFileSystemSupported || process.env.EXPORT) {
-    console.log(`[RSS] 文件系统不支持，重定向到 API: ${destination}`)
-    return {
-      redirect: {
-        destination,
-        permanent: false
-      }
-    }
-  }
-
-  // 如果文件系统支持，只在文件不存在时才重定向到 API
-  // 文件存在时，让 Next.js 的静态文件服务自然处理（保持原有RSS自更新逻辑）
-  const filePath = path.join(process.cwd(), 'public', 'rss', slug)
-
-  try {
-    fs.accessSync(filePath, fs.constants.R_OK)
-    // 文件存在，记录日志但不做任何处理
-    // 让 Next.js 的静态文件服务优先级生效
-    console.log(`[RSS] 静态文件 ${slug} 存在，保持原有RSS自更新逻辑`)
-  } catch (error) {
-    // 文件不存在，重定向到 API
-    console.log(`[RSS] 静态文件 ${slug} 不存在，重定向到 API: ${destination}`)
-    // 设置缓存头以优化性能
-    res.setHeader('Cache-Control', 'public, max-age=3600, stale-while-revalidate=59')
-    return {
-      redirect: {
-        destination,
-        permanent: false
-      }
-    }
-  }
-
-  // 如果文件存在，我们不返回任何重定向，让静态文件服务处理
-  // 但是由于这是动态路由，我们需要返回404让Next.js回退到静态文件查找
   return {
-    notFound: true
+    redirect: {
+      destination,
+      permanent: false
+    }
   }
 }
 
