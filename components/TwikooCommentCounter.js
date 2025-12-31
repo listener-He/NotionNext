@@ -18,7 +18,9 @@ const TwikooCommentCounter = (props) => {
   useEffect(() => {
     // console.log('路由触发评论计数')
     if (props?.posts && props?.posts?.length > 0) {
-      fetchTwikooData(props.posts)
+      fetchTwikooData(props.posts).catch(error => {
+        console.error('Twikoo 加载失败', error)
+      })
     }
   }, [router.events])
 
@@ -42,11 +44,11 @@ const TwikooCommentCounter = (props) => {
     try {
       // 先加载 cloudbase SDK
       await loadExternalResource('https://imgcache.qq.com/qcloud/cloudbase-js-sdk/1.3.3/cloudbase.full.js', 'js')
-      
+
       // 然后加载 Twikoo
       await loadExternalResource(twikooCDNURL, 'js')
-      
-      
+
+
       const twikoo = window.twikoo
       twikoo.getCommentsCount({
         envId: twikooENVID, // 环境 ID

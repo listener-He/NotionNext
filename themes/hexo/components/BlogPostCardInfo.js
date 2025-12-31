@@ -83,11 +83,12 @@ export const BlogPostCardInfo = ({
                   })}
                 </div>
               )}
-
-              <TwikooCommentCount
-                className='text-sm hover:text-indigo-700 dark:hover:text-indigo-400'
-                post={post}
-              />
+              {siteConfig('COMMENT_TWIKOO_COUNT_ENABLE') && (
+                <TwikooCommentCount
+                  className='text-sm hover:text-indigo-700 dark:hover:text-indigo-400'
+                  post={post}
+                />
+              )}
             </div>
           )}
         </header>

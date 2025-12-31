@@ -47,7 +47,7 @@ const ExternalPlugin = props => {
   const FLUTTERINGRIBBON = siteConfig('FLUTTERINGRIBBON', null, NOTION_CONFIG)
   const COMMENT_TWIKOO_COUNT_ENABLE = siteConfig(
     'COMMENT_TWIKOO_COUNT_ENABLE',
-    null,
+    false,
     NOTION_CONFIG
   )
   const RIBBON = siteConfig('RIBBON', null, NOTION_CONFIG)
