@@ -1,4 +1,3 @@
-import replaceSearchResult from '@/components/Mark'
 import { siteConfig } from '@/lib/config'
 import { useGlobal } from '@/lib/global'
 import algoliasearch from 'algoliasearch'
@@ -10,7 +9,10 @@ import {
   useEffect,
   useImperativeHandle,
   useRef,
-  useState
+  useState,
+  memo,
+  useCallback,
+  useMemo
 } from 'react'
 import { useHotkeys } from 'react-hotkeys-hook'
 
@@ -45,6 +47,10 @@ export default function AlgoliaSearchModal({ cRef }) {
   const [activeIndex, setActiveIndex] = useState(0)
   const [isLoading, setIsLoading] = useState(false)
   const [isInputFocused, setIsInputFocused] = useState(false)
+  
+  // 添加缓存机制以提高性能
+  const searchCache = useRef(new Map())
+  const lastSearchRef = useRef({ keyword: '', page: 0 })
 
   const inputRef = useRef(null)
   const router = useRouter()
@@ -96,22 +102,19 @@ export default function AlgoliaSearchModal({ cRef }) {
     'enter',
     e => {
       if (isInputFocused && searchResults.length > 0) {
-        if (index) {
-          onJumpSearchResult(index)
-        } else {
-          onJumpSearchResult() 
-        }
+        e.preventDefault()
+        onJumpSearchResult()
       }
     },
     { enableOnFormTags: true }
   )
   // 跳转Search结果
-  const onJumpSearchResult = () => {
+  const onJumpSearchResult = useCallback(() => {
     if (searchResults.length > 0) {
       const searchResult = searchResults[activeIndex]
       window.location.href = `${siteConfig('SUB_PATH', '')}/${searchResult.slug || searchResult.objectID}`
     }
-  }
+  }, [searchResults, activeIndex])
 
   const resetSearch = () => {
     setActiveIndex(0)
@@ -175,6 +178,19 @@ export default function AlgoliaSearchModal({ cRef }) {
     if (!query || query === '') {
       return
     }
+    
+    // 检查缓存
+    const cacheKey = `${query}-${page}`
+    if (searchCache.current.has(cacheKey)) {
+      const cachedResult = searchCache.current.get(cacheKey)
+      setSearchResults(cachedResult.hits)
+      setTotalPage(cachedResult.nbPages)
+      setTotalHit(cachedResult.nbHits)
+      setUseTime(cachedResult.processingTimeMS)
+      setIsLoading(false)
+      return
+    }
+    
     setIsLoading(true)
     try {
       const res = await index.search(query, { page, hitsPerPage: 10 })
@@ -183,23 +199,26 @@ export default function AlgoliaSearchModal({ cRef }) {
       setTotalPage(nbPages)
       setTotalHit(nbHits)
       setSearchResults(hits)
+      
+      // 添加到缓存
+      searchCache.current.set(cacheKey, {
+        hits,
+        nbPages,
+        nbHits,
+        processingTimeMS
+      })
+      
+      // 限制缓存大小，防止内存泄漏
+      if (searchCache.current.size > 50) {
+        const firstKey = searchCache.current.keys().next().value
+        searchCache.current.delete(firstKey)
+      }
+      
       setIsLoading(false)
-      const doms = document
-        .getElementById('search-wrapper')
-        .getElementsByClassName('replace')
-
-      setTimeout(() => {
-        replaceSearchResult({
-          doms,
-          search: query,
-          target: {
-            element: 'span',
-            className: 'font-bold border-b border-dashed'
-          }
-        })
-      }, 200) // 延时高亮
+      
     } catch (error) {
       console.error('Algolia search error:', error)
+      setIsLoading(false)
     }
   }
 
@@ -207,7 +226,7 @@ export default function AlgoliaSearchModal({ cRef }) {
   const throttledHandleInputChange = useRef(
     throttle((query, page = 0) => {
       handleSearch(query, page)
-    }, 1000)
+    }, 500) // 减少搜索延迟，提升响应速度
   )
 
   // 用于存储搜索延迟的计时器
@@ -225,7 +244,7 @@ export default function AlgoliaSearchModal({ cRef }) {
     // 设置新的计时器，在用户停止输入一段时间后触发搜索
     searchTimer.current = setTimeout(() => {
       throttledHandleInputChange.current(query)
-    }, 800)
+    }, 300) // 减少用户输入延迟
   }
 
   /**
@@ -246,6 +265,21 @@ export default function AlgoliaSearchModal({ cRef }) {
   if (!siteConfig('ALGOLIA_APP_ID')) {
     return <></>
   }
+  
+  // 使用 useMemo 优化搜索结果的渲染
+  const memoizedSearchResults = useMemo(() => {
+    return searchResults.map((result, index) => (
+      <SearchResultItem 
+        key={result.objectID} 
+        result={result} 
+        index={index}
+        activeIndex={activeIndex}
+        setActiveIndex={setActiveIndex}
+        onJumpSearchResult={onJumpSearchResult}
+      />
+    ))
+  }, [searchResults, activeIndex, setActiveIndex, onJumpSearchResult])
+
   return (
     <div
       id='search-wrapper'
@@ -256,27 +290,31 @@ export default function AlgoliaSearchModal({ cRef }) {
       <div
         className={`${
           isModalOpen ? 'opacity-100' : 'invisible opacity-0 translate-y-10'
-        } max-h-[80vh] flex flex-col justify-between w-full min-h-[10rem] h-full md:h-fit max-w-xl dark:bg-hexo-black-gray dark:border-gray-800 bg-white dark:bg- p-5 rounded-lg z-50 shadow border hover:border-blue-600 duration-300 transition-all `}>
-        <div className='flex justify-between items-center'>
-          <div className='text-2xl text-blue-600 dark:text-yellow-600 font-bold'>
+        } max-h-[80vh] flex flex-col justify-between w-full min-h-[10rem] h-full md:h-fit max-w-2xl lg:max-w-3xl dark:bg-hexo-black-gray dark:border-gray-700 bg-white dark:bg-gray-900 p-6 rounded-xl z-50 shadow-2xl border border-gray-200 dark:border-gray-700 duration-300 transition-all glass-layer-soft`}>
+        <div className='flex justify-between items-center pb-3 border-b border-gray-200 dark:border-gray-700'>
+          <div className='text-xl font-bold text-gray-800 dark:text-white flex items-center'>
+            <i className='fas fa-search text-blue-500 mr-2'></i>
             搜索
           </div>
-          <div>
-            <i
-              className='text-gray-600 fa-solid fa-xmark p-1 cursor-pointer hover:text-blue-600'
-              onClick={closeModal}></i>
-          </div>
+          <button
+            onClick={closeModal}
+            className='text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200'>
+            <i className='fas fa-times text-base'></i>
+          </button>
         </div>
 
-        <input
-          type='text'
-          placeholder='在这里输入搜索关键词...'
-          onChange={e => handleInputChange(e)}
-          onFocus={() => setIsInputFocused(true)} // 聚焦时
-          onBlur={() => setIsInputFocused(false)} // 失去焦点时
-          className='text-black dark:text-indigo-100 bg-gray-50 dark:bg-gray-600 outline-blue-500 w-full px-4 my-2 py-1 mb-4 border rounded-md'
-          ref={inputRef}
-        />
+        <div className='relative mb-4'>
+          <i className='absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 fas fa-search'></i>
+          <input
+            type='text'
+            placeholder='在这里输入搜索关键词...'
+            onChange={e => handleInputChange(e)}
+            onFocus={() => setIsInputFocused(true)} // 聚焦时
+            onBlur={() => setIsInputFocused(false)} // 失去焦点时
+            className='text-black dark:text-indigo-100 bg-gray-50 dark:bg-gray-800/70 outline-blue-500 w-full px-10 py-3 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200'
+            ref={inputRef}
+          />
+        </div>
 
         {/* 标签组 */}
         <div className='mb-4'>
@@ -291,51 +329,41 @@ export default function AlgoliaSearchModal({ cRef }) {
             </p>
           </div>
         )}
-        <ul className='flex-1 overflow-auto'>
-          {searchResults.map((result, index) => (
-            <li
-              key={result.objectID}
-              onMouseEnter={() => setActiveIndex(index)}
-              onClick={() => onJumpSearchResult(index)}
-              className={`cursor-pointer replace my-2 p-2 duration-100 
-              rounded-lg
-              ${activeIndex === index ? 'bg-blue-600 dark:bg-yellow-600' : ''}`}>
-              <a
-                className={`${activeIndex === index ? ' text-white' : ' text-black dark:text-indigo-200 '}`}>
-                {result.title}
-              </a>
-            </li>
-          ))}
-        </ul>
-        <Pagination totalPage={totalPage} page={page} switchPage={switchPage} />
-        <div className='flex items-center justify-between mt-2 sm:text-sm text-xs dark:text-indigo-200'>
-          {totalHit === 0 && (
-            <div className='flex items-center'>
-              {ShortCutActions.map((action, index) => {
-                return (
-                  <Fragment key={index}>
-                    <div className='border-gray-300 dark:text-indigo-200 text-gray-600 px-2 rounded border inline-block'>
-                      {action.key}
-                    </div>
-                    <span className='ml-2 mr-4  text-gray-600 dark:text-indigo-200'>
-                      {action.action}
-                    </span>
-                  </Fragment>
-                )
-              })}
-            </div>
+        <div className='flex-1 overflow-auto max-h-64 md:max-h-80'>
+          {searchResults.length > 0 && (
+            <ul className='space-y-1'>
+              {memoizedSearchResults}
+            </ul>
           )}
-          <div>
-            {totalHit > 0 && (
-              <p>
-                共搜索到 {totalHit} 条结果，用时 {useTime} 毫秒
-              </p>
-            )}
-          </div>
-          <div className='text-gray-600 dark:text-indigo-200  text-right'>
-            <span>
-              <i className='fa-brands fa-algolia'></i> Algolia 提供搜索服务
-            </span>
+        </div>
+        <div className='mt-4 pt-4 border-t border-gray-200 dark:border-gray-700'>
+          <Pagination totalPage={totalPage} page={page} switchPage={switchPage} />
+          <div className='flex flex-col sm:flex-row sm:items-center justify-between mt-3 gap-2 sm:gap-0'>
+            <div className='flex items-center space-x-3'>
+              {totalHit > 0 ? (
+                <div className='text-sm text-gray-600 dark:text-gray-400'>
+                  共搜索到 <span className='font-semibold text-gray-800 dark:text-indigo-200'>{totalHit}</span> 条结果，用时 <span className='font-semibold text-gray-800 dark:text-indigo-200'>{useTime}</span> 毫秒
+                </div>
+              ) : (
+                <div className='flex items-center space-x-4'>
+                  {ShortCutActions.map((action, index) => (
+                    <Fragment key={index}>
+                      <div className='flex items-center'>
+                        <kbd className='px-2 py-0.5 text-xs rounded bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-800 dark:text-gray-200'>
+                          {action.key}
+                        </kbd>
+                        <span className='ml-1 text-sm text-gray-600 dark:text-gray-400'>
+                          {action.action}
+                        </span>
+                      </div>
+                    </Fragment>
+                  ))}
+                </div>
+              )}
+            </div>
+            <div className='text-xs text-gray-500 dark:text-gray-500 flex items-center'>
+              <i className='fa-brands fa-algolia mr-1'></i> <span>Algolia 搜索</span>
+            </div>
           </div>
         </div>
       </div>
@@ -343,11 +371,50 @@ export default function AlgoliaSearchModal({ cRef }) {
       {/* 遮罩 */}
       <div
         onClick={closeModal}
-        className='z-30 fixed top-0 left-0 w-full h-full flex items-center justify-center glassmorphism'
+        className='z-30 fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black/20 backdrop-blur-sm dark:bg-black/40'
       />
     </div>
   )
 }
+
+/**
+ * 搜索结果项组件
+ */
+const SearchResultItem = memo(({ result, index, activeIndex, setActiveIndex, onJumpSearchResult }) => {
+  const handleClick = useCallback(() => {
+    onJumpSearchResult()
+  }, [onJumpSearchResult])
+
+  const handleMouseEnter = useCallback(() => {
+    setActiveIndex(index)
+  }, [setActiveIndex, index])
+
+  return (
+    <li
+      key={result.objectID}
+      onMouseEnter={handleMouseEnter}
+      onClick={handleClick}
+      className={`cursor-pointer p-3 duration-150 
+      rounded-lg transition-all border border-transparent
+      ${activeIndex === index 
+        ? 'bg-blue-100 dark:bg-blue-900/50 border-blue-300 dark:border-blue-700 text-blue-600 dark:text-blue-300' 
+        : 'hover:bg-gray-100 dark:hover:bg-gray-800/50'}`}>
+      <a
+        className={`block font-medium ${activeIndex === index ? 'text-blue-600 dark:text-blue-300' : 'text-gray-800 dark:text-indigo-100'}`}>
+        <div className='flex items-start'>
+          <i className={`mr-2 mt-0.5 text-sm ${activeIndex === index ? 'text-blue-500 dark:text-blue-400' : 'text-gray-400 dark:text-gray-500'} fas fa-file-alt`}></i>
+          <span className='truncate flex-1'>{result.title}</span>
+        </div>
+        {result.summary && (
+          <p className='text-sm mt-1 text-gray-600 dark:text-gray-400 truncate pl-6'>
+            {result.summary}
+          </p>
+        )}
+      </a>
+    </li>
+  )
+})
+SearchResultItem.displayName = 'SearchResultItem'
 
 /**
  * 标签组
@@ -368,7 +435,7 @@ function TagGroups() {
             className={'cursor-pointer inline-block whitespace-nowrap'}>
             <div
               className={
-                'flex items-center text-black dark:text-indigo-200 hover:bg-blue-600 dark:hover:bg-yellow-600 hover:scale-110 hover:text-white rounded-lg px-2 py-0.5 duration-150 transition-all'
+                'flex items-center text-gray-700 dark:text-indigo-200 hover:bg-blue-100 dark:hover:bg-blue-900/30 hover:text-blue-600 dark:hover:text-blue-400 rounded-lg px-3 py-1.5 duration-150 transition-all text-sm'
               }>
               <div className='text-lg'>{tag.name} </div>
               {tag.count ? (
@@ -394,17 +461,17 @@ function Pagination(props) {
     return <></>
   }
   return (
-    <div className='flex space-x-1 w-full justify-center py-1'>
+    <div className='flex space-x-1 w-full justify-center py-2'>
       {Array.from({ length: totalPage }, (_, i) => {
-        const classNames =
-          page === i
-            ? 'font-bold text-white bg-blue-600 dark:bg-yellow-600 rounded'
-            : 'hover:text-blue-600 hover:font-bold dark:text-indigo-200'
+        const isActive = page === i;
+        const classNames = isActive
+          ? 'font-bold text-white bg-blue-600 dark:bg-blue-600 rounded-full w-8 h-8 flex items-center justify-center'
+          : 'hover:text-blue-600 hover:font-bold dark:text-indigo-200 w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-gray-800'
 
         return (
           <div
             onClick={() => switchPage(i)}
-            className={`text-center cursor-pointer w-6 h-6 ${classNames}`}
+            className={`${classNames} transition-colors duration-200 cursor-pointer`}
             key={i}>
             {i + 1}
           </div>
