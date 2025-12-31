@@ -1,4 +1,3 @@
-import { siteConfig } from '@/lib/config'
 import { compressImage, mapImgUrl } from '@/lib/notion/mapImage'
 import { isBrowser, loadExternalResource } from '@/lib/utils'
 import mediumZoom from '@fisch0920/medium-zoom'
@@ -6,6 +5,7 @@ import 'katex/dist/katex.min.css'
 import dynamic from 'next/dynamic'
 import { useEffect, useRef } from 'react'
 import { NotionRenderer } from 'react-notion-x'
+import { siteConfig } from '@/lib/config'
 
 /**
  * 整个站点的核心组件
@@ -52,7 +52,7 @@ const NotionPage = ({ post, className }) => {
      * 放大查看图片时替换成高清图像
      */
     let observer = null;
-    
+
     // 只在浏览器环境中创建MutationObserver
     if (isBrowser) {
       observer = new MutationObserver((mutationsList, observer) => {
@@ -127,7 +127,8 @@ const NotionPage = ({ post, className }) => {
   return (
     <div
       id='notion-article'
-      className={`mx-auto overflow-hidden ${className || ''} article-content`}>
+      className={`mx-auto overflow-hidden ${className || ''} article-content`}
+      style={{ contain: 'layout style paint' }}> {/* 添加contain属性以优化渲染性能 */}
       <NotionRenderer
         recordMap={post?.blockMap}
         mapPageUrl={mapPageUrl}

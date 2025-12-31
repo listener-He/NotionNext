@@ -318,9 +318,9 @@ const nextConfig = {
     optimizePackageImports: [
       '@heroicons/react',
       'lodash',
-      'react-notion-x'
+      'react-notion-x',
+      '@clerk/nextjs'
     ],
-    serverComponentsExternalPackages: ['@clerk/nextjs']
   },
 
   serverExternalPackages:

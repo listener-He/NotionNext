@@ -13,7 +13,7 @@ const PerformanceMonitor = () => {
 
     // 动态导入web-vitals库以避免编译错误
     import('web-vitals')
-      .then(({ getCLS, getFID, getFCP, getLCP, getTTFB }) => {
+      .then(({ getCLS, getFID, getFCP, getLCP, getTTFB, getINP }) => {
         // 监控Core Web Vitals
         const reportWebVitals = (metric) => {
           const { name, value, id } = metric
@@ -34,6 +34,12 @@ const PerformanceMonitor = () => {
               break
             case 'CLS':
               isOverBudget = value > budget.CLS
+              break
+            case 'TBT':
+              isOverBudget = value > budget.TBT || value > 300 // 默认TBT预算为300ms
+              break
+            case 'INP': // Interaction to Next Paint - 新增核心指标
+              isOverBudget = value > 200 // INP预算为200ms
               break
           }
 
@@ -59,6 +65,11 @@ const PerformanceMonitor = () => {
         getFCP(reportWebVitals)
         getLCP(reportWebVitals)
         getTTFB(reportWebVitals)
+        
+        // 如果支持INP指标，也进行监控
+        if (getINP) {
+          getINP(reportWebVitals)
+        }
       })
       .catch(err => {
         console.warn('Failed to load web-vitals:', err)
@@ -80,6 +91,32 @@ const PerformanceMonitor = () => {
 
     // 延迟执行资源监控
     setTimeout(monitorResourceTiming, 5000)
+
+    // 监控布局偏移事件
+    const monitorLayoutShifts = () => {
+      let cls = 0
+      const observer = new PerformanceObserver((list) => {
+        for (const entry of list.getEntries()) {
+          if (!entry.hadRecentInput) {
+            cls += entry.value
+            // 检查布局偏移源
+            for (const source of entry.sources) {
+              const node = source.node
+              if (node) {
+                console.warn(`Layout shift detected from element:`, node.tagName, node.className)
+              }
+            }
+          }
+        }
+        if (cls > 0.1) { // 超过CLS预算
+          console.warn(`[Performance] Cumulative Layout Shift: ${cls}`)
+        }
+      })
+      
+      observer.observe({entryTypes: ['layout-shift']})
+    }
+    
+    monitorLayoutShifts()
 
   }, [])
 

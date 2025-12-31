@@ -138,8 +138,10 @@ const ExternalPlugin = props => {
   if (isBrowser) {
     // 初始化AOS动画
     // 静态导入本地自定义样式
-    loadExternalResource('/css/custom.css', 'css')
-    loadExternalResource('/js/custom.js', 'js')
+    if (siteConfig('CUSTOM_CSS_ENABLED', true)) {
+      loadExternalResource('/css/custom.css', 'css')
+      loadExternalResource('/js/custom.js', 'js')
+    }
 
     // 自动添加图片阴影
     if (IMG_SHADOW) {
@@ -222,7 +224,7 @@ const ExternalPlugin = props => {
       {/* 谷歌广告 */}
       {ADSENSE_GOOGLE_ID && (
         <Script
-          strategy='lazyOnload'
+          strategy='afterInteractive' // 改为 afterInteractive 以减少阻塞
           src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_GOOGLE_ID}`}
           crossOrigin='anonymous'
           onLoad={() => {
@@ -262,7 +264,7 @@ const ExternalPlugin = props => {
         <>
           <Script
             id='chatbase-init'
-            strategy='lazyOnload'
+            strategy='afterInteractive' // 改为 afterInteractive
           >
             {`
               window.chatbaseConfig = {
@@ -273,14 +275,14 @@ const ExternalPlugin = props => {
           <Script
             id='chatbase-embed'
             src='https://www.chatbase.co/embed.min.js'
-            strategy='lazyOnload'
+            strategy='afterInteractive' // 改为 afterInteractive
           />
         </>
       )}
 
       {/* Clarity */}
       {CLARITY_ID && (
-        <Script id='clarity-init' strategy='lazyOnload'
+        <Script id='clarity-init' strategy='afterInteractive'
          onLoad={() => {
            (function(c, l, a, r, i, t, y) {
              c[a] = c[a] || function() {
@@ -304,7 +306,7 @@ const ExternalPlugin = props => {
       {/* DaoVoice */}
       {COMMENT_DAO_VOICE_ID && (
         <>
-          <Script id='daovoice-init' strategy='lazyOnload'>
+          <Script id='daovoice-init' strategy='afterInteractive'> {/* 改为 afterInteractive */}
             {`
               (function(i, s, o, g, r, a, m) {
                 i["DaoVoiceObject"] = r;
@@ -348,21 +350,21 @@ const ExternalPlugin = props => {
           </Head>
           <Script
             src={getCDNResourceSync('https://cdn.wwads.cn/js/makemoney.js')}
-            strategy='lazyOnload'
+            strategy='afterInteractive' // 改为 afterInteractive
           />
         </>
       )}
 
       {/* Artalk */}
       {COMMENT_ARTALK_SERVER && (
-        <Script src={COMMENT_ARTALK_JS} strategy='lazyOnload' />
+        <Script src={COMMENT_ARTALK_JS} strategy='afterInteractive' />
       )}
 
       {/* Tidio */}
       {COMMENT_TIDIO_ID && (
         <Script
           src={getCDNResourceSync(`//code.tidio.co/${COMMENT_TIDIO_ID}.js`)}
-          strategy='lazyOnload'
+          strategy='afterInteractive' // 改为 afterInteractive
         />
       )}
 
@@ -371,9 +373,9 @@ const ExternalPlugin = props => {
         <>
           <Script
             src={getCDNResourceSync('https://sidecar.gitter.im/dist/sidecar.v1.js')}
-            strategy='lazyOnload'
+            strategy='afterInteractive' // 改为 afterInteractive
           />
-          <Script id='gitter-init' strategy='lazyOnload'>
+          <Script id='gitter-init' strategy='afterInteractive'>
             {`
               ((window.gitter = {}).chat = {}).options = {
                 room: '${COMMENT_GITTER_ROOM}'
@@ -387,7 +389,7 @@ const ExternalPlugin = props => {
       {ANALYTICS_BAIDU_ID && (
         <Script
           id='baidu-analytics'
-          strategy='lazyOnload'
+          strategy='afterInteractive' // 改为 afterInteractive
           onLoad={() => {
             window._hmt = window._hmt || [];
             (function() {
@@ -403,7 +405,7 @@ const ExternalPlugin = props => {
 
       {/* 站长统计 - 转换为 Script 组件，避免 document.write */}
       {ANALYTICS_CNZZ_ID && (
-        <Script id='cnzz-analytics' strategy='lazyOnload'>
+        <Script id='cnzz-analytics' strategy='afterInteractive'> {/* 改为 afterInteractive */}
           {`
             var cnzz_s_tag = document.createElement('script');
             cnzz_s_tag.type = 'text/javascript';
@@ -421,7 +423,7 @@ const ExternalPlugin = props => {
         <Script
           src={UMAMI_HOST}
           data-website-id={UMAMI_ID}
-          strategy='lazyOnload'
+          strategy='afterInteractive' // 改为 afterInteractive
         />
       )}
 
@@ -445,7 +447,7 @@ const ExternalPlugin = props => {
 
       {/* Matomo 统计 */}
       {MATOMO_HOST_URL && MATOMO_SITE_ID && (
-        <Script id='matomo-analytics' strategy='lazyOnload'>
+        <Script id='matomo-analytics' strategy='afterInteractive'> {/* 改为 afterInteractive */}
           {`
             var _paq = window._paq = window._paq || [];
             _paq.push(['trackPageView']);

@@ -71,12 +71,21 @@ export default function LazyImage({
     // 如果是优先级图片，直接加载
     if (priority) {
       const img = new Image()
-      img.src = adjustedImageSrc
-      img.onload = () => {
-        setCurrentSrc(adjustedImageSrc)
-        handleImageLoaded(adjustedImageSrc)
+      // 预加载图片以防止布局偏移
+      if (width && height) {
+        img.onload = () => {
+          setCurrentSrc(adjustedImageSrc)
+          handleImageLoaded(adjustedImageSrc)
+        }
+      } else {
+        // 如果没有指定宽高，直接加载
+        img.onload = () => {
+          setCurrentSrc(adjustedImageSrc)
+          handleImageLoaded(adjustedImageSrc)
+        }
       }
       img.onerror = handleImageError
+      img.src = adjustedImageSrc
       return
     }
 
@@ -84,12 +93,12 @@ export default function LazyImage({
     if (!window.IntersectionObserver) {
       // 降级处理：直接加载图片
       const img = new Image()
-      img.src = adjustedImageSrc
       img.onload = () => {
         setCurrentSrc(adjustedImageSrc)
         handleImageLoaded(adjustedImageSrc)
       }
       img.onerror = handleImageError
+      img.src = adjustedImageSrc
       return
     }
 
@@ -103,12 +112,12 @@ export default function LazyImage({
             if ('decoding' in img) {
               img.decoding = 'async'
             }
-            img.src = adjustedImageSrc
             img.onload = () => {
               setCurrentSrc(adjustedImageSrc)
               handleImageLoaded(adjustedImageSrc)
             }
             img.onerror = handleImageError
+            img.src = adjustedImageSrc
 
             observer.unobserve(entry.target)
           }
@@ -129,7 +138,7 @@ export default function LazyImage({
         observer.unobserve(imageRef.current)
       }
     }
-  }, [src, maxWidth, priority])
+  }, [src, maxWidth, priority, width, height])
 
   // 动态添加width、height和className属性，仅在它们为有效值时添加
   const imgProps = {
@@ -143,7 +152,16 @@ export default function LazyImage({
     style: {
       ...style,
       objectFit: 'cover',
-      objectPosition: 'center'
+      objectPosition: 'center',
+      // 预设宽高以防止布局偏移
+      ...(width && height && {
+        width: width,
+        height: height
+      }),
+      // 如果没有指定宽高，使用 aspect-ratio 来防止布局偏移
+      ...(!width && !height && {
+        aspectRatio: '16/9'
+      })
     },
     width: width || 'auto',
     height: height || 'auto',
