@@ -168,7 +168,7 @@ export default function LazyImage({
     },
     onClick,
     loading: priority ? 'eager' : 'lazy',
-    fetchPriority: priority ? 'high' : 'low', // 注意 React 中属性名通常是小驼峰，但 fetchpriority 是个特例，React 18+ 可能支持小写或驼峰
+    fetchpriority: priority ? 'high' : 'low',
     decoding: 'async',
     // 数据属性
     'data-src': src,

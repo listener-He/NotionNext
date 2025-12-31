@@ -1,5 +1,5 @@
-import { siteConfig } from '@/lib/config'
 import LazyImage from './LazyImage'
+import { siteConfig } from '@/lib/config'
 
 /**
  * 公安备案号组件

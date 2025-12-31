@@ -40,11 +40,17 @@ export const BeiAnGongAn: React.FC<BeiAnGongAnProps> = ({
   return (
     <div className={className}>
       <LazyImage
+        id='gongan-icon'
         src={iconPath}
         width={iconSize}
         height={iconSize}
         alt='公安备案图标'
         className='inline-block align-middle'
+        placeholderSrc={iconPath}
+        title='公安备案图标'
+        onLoad={() => {}}
+        onClick={() => {}}
+        style={{}}
         loading='lazy'
         decoding='async'
       />
