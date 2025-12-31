@@ -34,9 +34,11 @@ const Hero = props => {
     updateHeaderHeight()
 
     // 在黑暗模式下不启用打字机效果
-    if (isClient && !isDarkMode && !typed && window && window !== 'undefined' && document.getElementById('typed')) {
+    if (isClient && !isDarkMode && !typed && window && window !== 'undefined') {
       loadExternalResource('/js/typed.min.js', 'js').then(() => {
-        if (window.Typed) {
+        // 确保元素存在后再初始化Typed.js
+        const typedElement = document.getElementById('typed')
+        if (typedElement && window.Typed) {
           changeType(
             new window.Typed('#typed', {
               strings: GREETING_WORDS,
@@ -44,7 +46,8 @@ const Hero = props => {
               backSpeed: 100,
               backDelay: 400,
               showCursor: true,
-              smartBackspace: true
+              smartBackspace: true,
+              loop: siteConfig('TYPED_LOOP', true, CONFIG) // 添加循环播放配置
             })
           )
         }
@@ -63,7 +66,7 @@ const Hero = props => {
         window.removeEventListener('resize', updateHeaderHeight)
       }
     }
-  }, [typed, GREETING_WORDS, isDarkMode])
+  }, [typed, GREETING_WORDS, isDarkMode, isClient])
 
   function updateHeaderHeight() {
     if (typeof window !== 'undefined' && typeof requestAnimationFrame !== 'undefined') {
