@@ -200,7 +200,6 @@ const ExternalPlugin = props => {
       {ANALYTICS_GOOGLE_ID && <Gtag />}
       {ANALYTICS_VERCEL && <Analytics />}
       {ANALYTICS_BUSUANZI_ENABLE && <Busuanzi />}
-      {FACEBOOK_APP_ID && FACEBOOK_PAGE_ID && <Messenger />}
       {FIREWORKS && <Fireworks />}
       {SAKURA && <Sakura />}
       {STARRY_SKY && <StarrySky />}
@@ -228,7 +227,12 @@ const ExternalPlugin = props => {
           crossOrigin='anonymous'
           onLoad={() => {
             try {
-              ;(window.adsbygoogle = window.adsbygoogle || []).push({})
+              // 检查是否已经初始化过，避免重复推送
+              if (!window.adsbygoogle || !window.adsbygoogle.loaded) {
+                window.adsbygoogle = window.adsbygoogle || [];
+                // 不再自动推送，而是由广告组件本身控制
+                window.adsbygoogle.loaded = true;
+              }
             } catch (e) {
               console.error('Google Adsense Error:', e)
             }
@@ -500,9 +504,6 @@ const MusicPlayer = dynamic(() => import('@/components/Player'), { ssr: false })
 const Ackee = dynamic(() => import('@/components/Ackee'), { ssr: false })
 const Gtag = dynamic(() => import('@/components/Gtag'), { ssr: false })
 const Busuanzi = dynamic(() => import('@/components/Busuanzi'), { ssr: false })
-const Messenger = dynamic(() => import('@/components/FacebookMessenger'), {
-  ssr: false
-})
 const VConsole = dynamic(() => import('@/components/VConsole'), { ssr: false })
 const CustomContextMenu = dynamic(
   () => import('@/components/CustomContextMenu'),

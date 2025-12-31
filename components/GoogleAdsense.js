@@ -67,10 +67,16 @@ export const initGoogleAdsense = ADSENSE_GOOGLE_ID => {
     'js'
   ).then(url => {
     setTimeout(() => {
-      // 页面加载完成后加载一次广告
-      const ads = document.querySelectorAll('ins.adsbygoogle')
-      if (window.adsbygoogle && ads.length > 0) {
-        requestAd(Array.from(ads))
+      // 检查是否已经初始化过，避免重复推送
+      if (window.adsbygoogle && !window.adsbygoogle.initialized) {
+        // 标记为已初始化
+        window.adsbygoogle.initialized = true
+        
+        // 页面加载完成后加载一次广告
+        const ads = document.querySelectorAll('ins.adsbygoogle')
+        if (ads.length > 0) {
+          requestAd(Array.from(ads))
+        }
       }
 
       // 创建一个 MutationObserver 实例，监听页面上新出现的广告单元
