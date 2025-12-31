@@ -67,7 +67,7 @@ export default async function handler(req, res) {
         }
 
         // 使用原有的 RSS 生成逻辑
-        const feed = await generateRssFeed(props)
+        const feed = generateRssFeed(props)
 
         if (!feed) {
           throw new Error('Failed to generate RSS feed')

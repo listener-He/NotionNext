@@ -69,8 +69,8 @@ export async function getServerSideProps({ params, req, res }) {
     destination = '/api/rss?format=json'
   }
 
-  // 如果文件系统不支持，直接重定向到 API
-  if (!isFileSystemSupported) {
+  // 如果文件系统不支持或使用其他模式，直接重定向到 API
+  if (!isFileSystemSupported || process.env.EXPORT) {
     console.log(`[RSS] 文件系统不支持，重定向到 API: ${destination}`)
     return {
       redirect: {
