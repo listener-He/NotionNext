@@ -1,5 +1,6 @@
 import { loadExternalResource } from '@/lib/utils'
 import { useEffect } from 'react'
+import { getCDNResourceSync } from '@/lib/utils/cdn'
 
 /**
  * 二维码生成
@@ -7,7 +8,7 @@ import { useEffect } from 'react'
 export default function QrCode({ value }) {
   const qrCodeCDN =
     process.env.NEXT_PUBLIC_QR_CODE_CDN ||
-    'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js'
+    getCDNResourceSync('https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js')
 
   useEffect(() => {
     let qrcode
