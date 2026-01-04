@@ -87,7 +87,7 @@ const Header = props => {
       } else {
         nav && nav.classList.remove('text-white')
         nav && nav.classList.remove('dark:text-white')
-        nav && nav.classList.add('text-indigo-700')
+        nav && nav.classList.add('text-gray-700')
         nav && nav.classList.add('dark:text-indigo-100')
       }
 
@@ -164,7 +164,7 @@ const Header = props => {
           willChange: 'top'
         }}
         className={
-          'top-0 duration-300 transition-all shadow-none fixed bg-white/90 dark:bg-hexo-black-gray/80 dark:text-indigo-100 text-indigo-700 w-full z-20 transform border-transparent'
+          'top-0 duration-300 transition-all shadow-none fixed bg-white/90 dark:bg-hexo-black-gray/80 dark:text-indigo-100 text-gray-700 w-full z-20 transform border-transparent'
         }>
         <div className='w-full flex justify-between items-center px-4 py-2 glass-nav'>
           <div className='flex'>
@@ -172,22 +172,22 @@ const Header = props => {
           </div>
 
           {/* 右侧功能 */}
-          <div className='flex justify-end items-center space-x-2 text-xs text-indigo-700 dark:text-indigo-200 mr-1'>
+          <div className='flex justify-end items-center space-x-2 text-xs text-gray-700 dark:text-indigo-200 mr-1'>
             <div className='hidden lg:flex'>
               {' '}
               <MenuListTop {...props} />
             </div>
             <div
               onClick={toggleMenuOpen}
-              className='w-8 justify-center items-center h-8 cursor-pointer flex lg:hidden text-indigo-700 dark:text-indigo-200'
+              className='w-8 justify-center items-center h-8 cursor-pointer flex lg:hidden text-gray-700 dark:text-indigo-200'
               role='button'
               aria-label='Toggle menu'
               aria-expanded={isOpen}
               aria-controls='mobile-sidebar'>
               {isOpen ? (
-                <i className='fas fa-times text-indigo-700 dark:text-indigo-200' />
+                <i className='fas fa-times text-gray-700 dark:text-indigo-200' />
               ) : (
-                <i className='fas fa-bars text-indigo-700 dark:text-indigo-200' />
+                <i className='fas fa-bars text-gray-700 dark:text-indigo-200' />
               )}
             </div>
             {showSearchButton && <SearchButton />}
