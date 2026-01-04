@@ -1,36 +1,29 @@
-// import '@/styles/animate.css' // @see https://animate.style/
 import '@/styles/globals.css'
 import '@/styles/utility-patterns.css'
 
 // core styles shared by all of react-notion-x (required)
 import '@/styles/notion.css' //  重写部分notion样式
 import 'react-notion-x/src/styles.css' // 原版的react-notion-x
-
 import useAdjustStyle from '@/hooks/useAdjustStyle'
 import { GlobalContextProvider } from '@/lib/global'
 import { getBaseLayoutByTheme } from '@/themes/theme'
 import { useRouter } from 'next/router'
 import { useCallback, useMemo } from 'react'
-import { getQueryParam } from '../lib/utils'
+import { getQueryParam } from '@/lib/utils'
 
 // 各种扩展插件 这个要阻塞引入
 import BLOG from '@/blog.config'
 import ExternalPlugins from '@/components/ExternalPlugins'
 import SEO from '@/components/SEO'
 import DarkModeAutoSwitch from '@/components/DarkModeAutoSwitch'
-import { zhCN } from '@clerk/localizations'
-import dynamic from 'next/dynamic'
 import { Bitter } from 'next/font/google'
-// import { ClerkProvider } from '@clerk/nextjs'
-const ClerkProvider = dynamic(() =>
-  import('@clerk/nextjs').then(m => m.ClerkProvider)
-)
 
 const bitter = Bitter({
   subsets: ['latin'],
   weight: ['300', '400', '700'],
   display: 'swap'
 })
+
 /**
  * App挂载DOM 入口文件
  * @param {*} param0
@@ -58,8 +51,7 @@ const MyApp = ({ Component, pageProps }) => {
     [theme]
   )
 
-  const enableClerk = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
-  const content = (
+  return (
     <div className={bitter.className}>
       <GlobalContextProvider {...pageProps}>
         <DarkModeAutoSwitch />
@@ -70,15 +62,6 @@ const MyApp = ({ Component, pageProps }) => {
         <ExternalPlugins {...pageProps} />
       </GlobalContextProvider>
     </div>
-  )
-  return (
-    <>
-      {enableClerk ? (
-        <ClerkProvider localization={zhCN}>{content}</ClerkProvider>
-      ) : (
-        content
-      )}
-    </>
   )
 }
 

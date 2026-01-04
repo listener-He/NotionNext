@@ -253,7 +253,6 @@ const nextConfig = {
 
     if (isServer) {
       config.externals.push(
-        '@clerk/clerk-react',
         'algoliasearch',
         'canvas',
         'jsdom',
@@ -318,8 +317,7 @@ const nextConfig = {
     optimizePackageImports: [
       '@heroicons/react',
       'lodash',
-      'react-notion-x',
-      '@clerk/nextjs'
+      'react-notion-x'
     ],
   },
 
