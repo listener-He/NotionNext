@@ -394,7 +394,7 @@ const ExternalPlugin = props => {
             window._hmt = window._hmt || [];
             (function() {
               const hm = document.createElement('script')
-              hm.src = "https://hm.baidu.com/hm.js?${ANALYTICS_BAIDU_ID}";
+              hm.src = `https://hm.baidu.com/hm.js?${ANALYTICS_BAIDU_ID}`;
               const s = document.getElementsByTagName('script')[0]
               s.parentNode.insertBefore(hm, s);
             })();
