@@ -1,4 +1,3 @@
-import LazyImage from '@/components/LazyImage'
 import NotionIcon from '@/components/NotionIcon'
 import { siteConfig } from '@/lib/config'
 import { useGlobal } from '@/lib/global'
@@ -68,7 +67,7 @@ export default function ArticleInfo({ post, siteInfo }) {
             {post.category}
           </SmartLink>
         )}
-        
+
         {/* 标签 */}
         {post.tagItems && post.tagItems.length > 0 && (
           <div className='flex flex-wrap gap-2'>

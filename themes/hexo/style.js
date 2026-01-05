@@ -306,6 +306,28 @@ const Style = () => {
             will-change: transform;
         }
 
+        /* 移动端文章卡片封面图样式 */
+        @media (max-width: 768px) {
+            #theme-hexo #blog-post-card {
+                flex-direction: column !important;
+            }
+            
+            #theme-hexo #blog-post-card .md\\:w-6\/12 {
+                width: 100% !important;
+            }
+            
+            #theme-hexo #blog-post-card .md\\:w-5\/12 {
+                width: 100% !important;
+                height: 200px;
+            }
+            
+            #theme-hexo .article-cover img {
+                width: 100% !important;
+                height: 200px !important;
+                object-fit: cover;
+            }
+        }
+
         #theme-hexo .links-page-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);

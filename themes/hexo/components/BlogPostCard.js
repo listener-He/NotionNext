@@ -121,18 +121,18 @@ const BlogPostCard = ({ index, post, showSummary, siteInfo }) => {
 
         {/* 图片封面 */}
         {showPageCover && (
-          <div ref={imgWrapRef} className={`md:w-5/12 relative overflow-hidden rounded-2xl 
+          <div ref={imgWrapRef} className={`w-full md:w-5/12 relative overflow-hidden rounded-2xl h-40 md:h-auto aspect-video md:aspect-auto article-cover flex-shrink-0
             ${HEXO_POST_LIST_IMG_CROSSOVER && index % 2 === 1 
               ? 'md:rounded-l-2xl md:rounded-r-3xl'  // 图片在左，右内角更大
               : 'md:rounded-l-3xl md:rounded-r-2xl'  // 图片在右，左内角更大
-            } bg-transparent`}>
-            <SmartLink href={post?.href} className='bg-transparent'>
+            } bg-transparent`} style={{ minHeight: '150px' }}>
+            <SmartLink href={post?.href} className='bg-transparent w-full h-full'>
               <>
                 <LazyImage
                   priority={index === 1 || typeof window !== 'undefined' && window.innerWidth < 768} // 移动端也优先加载第一张图片
                   alt={post?.title}
                   src={post?.pageCoverThumbnail}
-                  className={`absolute inset-0 h-full w-full object-cover object-center ${!shouldUseAdvancedEffects ? '' : 'group-hover:scale-[1.02] duration-300 ease-standard'}`}
+                  className={`w-full h-full object-cover object-center ${!shouldUseAdvancedEffects ? '' : 'group-hover:scale-[1.02] duration-300 ease-standard'}`}
                   title={post?.title} // 为图片添加title属性以提高SEO
                 />
 
