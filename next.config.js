@@ -279,6 +279,7 @@ const nextConfig = {
         splitChunks: {
           chunks: 'all',
           minSize: 20000,
+          maxSize: 244000,
           maxInitialRequests: 25,
           automaticNameDelimiter: '-',
           cacheGroups: {
@@ -286,13 +287,27 @@ const nextConfig = {
               test: /[\\/]node_modules[\\/]/,
               name: 'vendors',
               chunks: 'all',
-              maxSize: 200000
+              maxSize: 244000
             },
             common: {
               name: 'common',
               minChunks: 2,
               chunks: 'all',
-              enforce: true
+              enforce: true,
+              maxSize: 100000 // 限制common chunk大小
+            },
+            // 新增：针对特定库的分割
+            react: {
+              test: /[\\/]node_modules[\\/](react|react-dom|react-dom-server|react-is)[\\/]/,
+              name: 'react',
+              chunks: 'all',
+              priority: 20
+            },
+            notion: {
+              test: /[\\/]node_modules[\\/](notion-client|notion-utils|react-notion-x)[\\/]/,
+              name: 'notion',
+              chunks: 'all',
+              priority: 15
             }
           }
         }
