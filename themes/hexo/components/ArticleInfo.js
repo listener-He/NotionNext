@@ -43,7 +43,7 @@ export default function ArticleInfo({ post, siteInfo }) {
           {/* 除了文章页面外不显示阅读统计 */}
           {post?.type && post.type === 'Post' && post?.wordCount && post?.readTime && (
             <div className='flex items-center'>
-              <i className='fas fa-book mr-1 text-xs' /> <WordCount wordCount={post.wordCount} readTime={post.readTime} />
+              <WordCount wordCount={post.wordCount} readTime={post.readTime} />
             </div>
           )}
         </div>
