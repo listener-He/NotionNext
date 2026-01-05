@@ -18,13 +18,6 @@ export default function ArticleInfo({ post, siteInfo }) {
 
   return (
     <div className='mb-8'>
-      {/* 文章Title */}
-      <div className={`leading-tight font-bold tracking-tight text-xl md:text-2xl lg:text-3xl mb-4 text-center ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-        {siteConfig('POST_TITLE_ICON') && (
-          <NotionIcon icon={post.pageIcon} className='text-2xl mx-1' />
-        )}
-        {post.title}
-      </div>
 
       {/* 文章元信息：发布日期、最后编辑日期、阅读量、字数等 */}
       <div className={`flex-wrap flex text-xs sm:text-sm justify-center mb-4 ${isDarkMode ? 'text-gray-100' : 'text-gray-700'} font-medium gap-4`}>
