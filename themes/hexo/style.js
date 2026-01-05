@@ -632,33 +632,41 @@ const Style = () => {
             align-items: center;
             gap: .5rem;
             font-weight: 700;
+            font-size: 0.8125rem; /* 13px，减小字体大小 */
         }
 
         #theme-hexo .catalog-item {
-            border-left-width: 2px;
-            padding-left: .75rem;
+            border-left-width: 1.5px; /* 减小边框宽度 */
+            padding-left: 0.625rem; /* 减小内边距 */
             border-color: rgba(17, 24, 39, .1);
-            color: #374151;
+            color: #4b5563; /* 更浅的灰色 */
+            font-size: 0.75rem; /* 12px，减小字体大小 */
+            line-height: 1.4; /* 调整行高 */
+            padding-top: 0.125rem;
+            padding-bottom: 0.125rem;
         }
 
         .dark #theme-hexo .catalog-item {
-            border-color: rgba(255, 255, 255, .15);
-            color: #cbd5e1;
+            border-color: rgba(255, 255, 255, .1);
+            color: #9ca3af; /* 深色模式下更浅的灰色 */
         }
 
         #theme-hexo .catalog-item:hover {
             color: var(--theme-color);
+            background: rgba(146, 140, 238, 0.05); /* 添加轻微背景色 */
+            border-radius: 0.125rem;
         }
 
         #theme-hexo .catalog-item-active {
             background: color-mix(in srgb, var(--theme-color) 12%, transparent);
             border-color: var(--theme-color);
             color: var(--theme-color);
-            border-radius: .375rem;
+            border-radius: 0.125rem;
+            font-weight: 500; /* 增加活动项的字重 */
         }
 
         .dark #theme-hexo .catalog-item-active {
-            background: color-mix(in srgb, var(--theme-color) 18%, transparent);
+            background: color-mix(in srgb, var(--theme-color) 15%, transparent);
         }
 
         // 优化分页导航
