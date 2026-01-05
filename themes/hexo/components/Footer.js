@@ -128,6 +128,9 @@ const Footer = ({ title }) => {
             </div>
           </div>
         </a>
+        <a title="无聊湾 🥱 The Boring Bay" href="https://boringbay.com" target="_blank" className="transition-transform hover:scale-105">
+          <LazyImage height={18} src="https://boringbay.com/api/badge/blog.hehouhui.cn"></LazyImage>
+        </a>
       </div>
     </footer>
   )
