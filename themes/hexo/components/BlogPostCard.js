@@ -91,7 +91,7 @@ const BlogPostCard = ({ index, post, showSummary, siteInfo }) => {
   }, [])
 
   return (
-    <div ref={containerRef} className={hovereffectclass}>
+    <div ref={containerRef} className={hovereffectclass + ' hover:shadow-xl'}>
       <div
         key={post.id}
         {...(enableAOS && {
@@ -103,29 +103,15 @@ const BlogPostCard = ({ index, post, showSummary, siteInfo }) => {
           'data-aos-anchor-placement': 'top-bottom'
         })}
         id='blog-post-card'
-        className={`group w-full flex justify-between items-stretch md:flex-row flex-col-reverse ${HEXO_POST_LIST_IMG_CROSSOVER && index % 2 === 1 ? 'md:flex-row-reverse' : ''}
-                    overflow-hidden rounded-xl glass-layer-soft`}>
-        {/* 文字内容 */}
-        {visible ? (
-          <BlogPostCardInfo
-            post={post}
-            showPageCover={showPageCover}
-            showPreview={!showSummary}
-            showSummary={showSummary}
-            dateAlign={showPageCover && HEXO_POST_LIST_IMG_CROSSOVER && index % 2 === 1 ? 'right' : 'left'}
-            containerRef={infoRef}
-          />
-        ) : (
-          <div className='md:w-6/12 w-full min-h-[160px] bg-transparent' />
-        )}
-
+        className={`group w-full flex flex-col sm:flex-row justify-between items-stretch ${HEXO_POST_LIST_IMG_CROSSOVER && index % 2 === 1 ? 'sm:flex-row-reverse' : ''}
+                    overflow-hidden rounded-xl glass-layer-soft transition-all duration-300 ease-standard transform-gpu shadow-sm hover:shadow-md min-h-[180px] relative`}>
         {/* 图片封面 */}
         {showPageCover && (
-          <div ref={imgWrapRef} className={`w-full md:w-5/12 relative overflow-hidden rounded-2xl h-40 md:h-auto aspect-video md:aspect-auto article-cover flex-shrink-0
+          <div ref={imgWrapRef} className={`w-full md:w-5/12 relative overflow-hidden rounded-t-xl md:rounded-none h-48 sm:h-56 md:h-64 aspect-video md:aspect-auto article-cover flex-shrink-0 hover:scale-[1.01] transition-transform duration-300 ease-standard transform-gpu
             ${HEXO_POST_LIST_IMG_CROSSOVER && index % 2 === 1 
               ? 'md:rounded-l-2xl md:rounded-r-3xl'  // 图片在左，右内角更大
               : 'md:rounded-l-3xl md:rounded-r-2xl'  // 图片在右，左内角更大
-            } bg-transparent`} style={{ minHeight: '150px' }}>
+            } bg-transparent`}>
             <SmartLink href={post?.href} className='bg-transparent w-full h-full'>
               <>
                 <LazyImage
@@ -139,6 +125,20 @@ const BlogPostCard = ({ index, post, showSummary, siteInfo }) => {
               </>
             </SmartLink>
           </div>
+        )}
+
+        {/* 文字内容 */}
+        {visible ? (
+          <BlogPostCardInfo
+            post={post}
+            showPageCover={showPageCover}
+            showPreview={!showSummary}
+            showSummary={showSummary}
+            dateAlign={showPageCover && HEXO_POST_LIST_IMG_CROSSOVER && index % 2 === 1 ? 'right' : 'left'}
+            containerRef={infoRef}
+          />
+        ) : (
+          <div className='md:w-6/12 w-full min-h-[160px] bg-transparent' />
         )}
       </div>
     </div>

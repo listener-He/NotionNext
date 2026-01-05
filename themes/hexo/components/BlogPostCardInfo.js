@@ -24,7 +24,7 @@ export const BlogPostCardInfo = ({
   return (
     <article
       ref={containerRef}
-      className={`flex flex-col justify-between lg:p-4 p-3 ${showPageCover && !showPreview ? 'md:w-6/12 w-full' : 'w-full'} rounded-xl bg-transparent article-info`}>
+      className={`flex flex-col justify-between lg:p-4 p-3 sm:p-4 md:p-5 h-auto mt-1 md:mt-0 ${showPageCover && !showPreview ? 'md:w-6/12 w-full' : 'w-full'} rounded-b-xl md:rounded-xl bg-transparent article-info hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-300 ease-standard overflow-hidden`}>
       <div>
         <header className="relative px-3 py-2 bg-transparent">
           <div className={`flex ${showPreview ? 'justify-center' : 'justify-start'} items-start bg-transparent`}>

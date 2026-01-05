@@ -306,7 +306,7 @@ const Style = () => {
             will-change: transform;
         }
 
-        /* 移动端文章卡片封面图样式 */
+        /* 移动端文章卡片封面图样式 - 封面图在上半部分 */
         @media (max-width: 768px) {
             #theme-hexo #blog-post-card {
                 flex-direction: column !important;
@@ -318,13 +318,28 @@ const Style = () => {
             
             #theme-hexo #blog-post-card .md\\:w-5\/12 {
                 width: 100% !important;
-                height: 200px;
+                border-radius: 0.75rem 0.75rem 0 0 !important;
+            }
+            
+            #theme-hexo .article-info {
+                border-radius: 0 0 0.75rem 0.75rem;
+                margin-top: 0;
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
             }
             
             #theme-hexo .article-cover img {
                 width: 100% !important;
                 height: 200px !important;
                 object-fit: cover;
+            }
+            
+            #theme-hexo .article-cover {
+                overflow: hidden;
+                transition: transform 300ms ease-standard;
+            }
+            
+            #theme-hexo #blog-post-card:hover .article-cover {
+                transform: scale(1.01);
             }
         }
 
