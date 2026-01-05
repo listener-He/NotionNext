@@ -1,7 +1,5 @@
 import { siteConfig } from '@/lib/config'
-import { useGlobal } from '@/lib/global'
 import algoliasearch from 'algoliasearch/lite' // 优化：使用 lite 版本减少包体积
-import SmartLink from '@/components/SmartLink'
 import { useRouter } from 'next/router'
 import {
   useEffect,
@@ -29,8 +27,6 @@ const SHORTCUTS = [
  */
 export default function AlgoliaSearchModal({ cRef }) {
   const router = useRouter()
-  const { tagOptions } = useGlobal()
-
   // -- 状态管理 --
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [keyword, setKeyword] = useState('')
@@ -85,14 +81,21 @@ export default function AlgoliaSearchModal({ cRef }) {
 
       const { hits, nbHits, nbPages, processingTimeMS } = res
 
+      // 处理搜索结果，优化描述显示
+      const processedHits = hits.map(hit => ({
+        ...hit,
+        // 优先使用摘要，然后是描述，最后使用内容的前120个字符
+        processedSummary: hit.summary || hit.description || (hit.content ? hit.content.substring(0, 120) + '...' : '')
+      }))
+
       // 更新状态
-      setSearchResults(hits)
+      setSearchResults(processedHits)
       setTotalPage(nbPages)
       setTotalHit(nbHits)
       setUseTime(processingTimeMS)
 
       // 2. 写入缓存
-      searchCache.current.set(cacheKey, { hits, nbPages, nbHits, processingTimeMS })
+      searchCache.current.set(cacheKey, { hits: processedHits, nbPages, nbHits, processingTimeMS })
       // 防止内存无限增长，保留最近 50 条
       if (searchCache.current.size > 50) {
         const firstKey = searchCache.current.keys().next().value
@@ -245,19 +248,30 @@ export default function AlgoliaSearchModal({ cRef }) {
         {/* 内容区域 */}
         <div className="p-4 max-h-[60vh] overflow-y-auto custom-scrollbar" ref={resultsContainerRef}>
 
-          {/* 默认状态：标签云 */}
+          {/* 默认状态：仅显示提示信息 */}
           {!keyword && (
-            <div className="py-2">
-              <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 px-1">推荐标签</h3>
-              <TagGroups tags={tagOptions} />
+            <div className="py-8 text-center">
+              <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gray-100 dark:bg-gray-800 mb-4">
+                <i className="fas fa-search text-gray-400 text-xl"></i>
+              </div>
+              <h3 className="text-lg font-medium text-gray-700 dark:text-gray-300 mb-1">搜索文章</h3>
+              <p className="text-gray-500 dark:text-gray-400 text-sm">输入关键词查找您感兴趣的内容</p>
             </div>
           )}
 
           {/* 空状态 */}
           {keyword && !isLoading && searchResults.length === 0 && (
-            <div className="text-center py-12 text-gray-500 dark:text-gray-400">
-              <i className="fas fa-inbox text-4xl mb-3 opacity-50"></i>
-              <p>未找到与 <span className="font-bold text-gray-800 dark:text-gray-200">"{keyword}"</span> 相关的内容</p>
+            <div className="text-center py-12">
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 dark:bg-gray-800 mb-6">
+                <i className="fas fa-search text-gray-400 text-2xl"></i>
+              </div>
+              <h3 className="text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">未找到结果</h3>
+              <p className="text-gray-500 dark:text-gray-400 mb-4">
+                未找到与 <span className="font-bold text-gray-800 dark:text-gray-200">"{keyword}"</span> 相关的内容
+              </p>
+              <div className="text-sm text-gray-400">
+                <p>尝试使用其他关键词或检查拼写</p>
+              </div>
             </div>
           )}
 
@@ -334,7 +348,7 @@ const SearchResultItem = memo(({ result, isActive, index, onSelect, onClick }) =
           ) : result.title}
         </h4>
         <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 line-clamp-2 leading-relaxed">
-          {result.summary || result.description || '暂无描述'}
+          {result.processedSummary || '暂无内容摘要'}
         </p>
       </div>
 
@@ -348,30 +362,7 @@ const SearchResultItem = memo(({ result, isActive, index, onSelect, onClick }) =
 })
 SearchResultItem.displayName = 'SearchResultItem'
 
-/**
- * 标签组
- */
-const TagGroups = memo(({ tags }) => {
-  if (!tags?.length) return null
-  return (
-    <div className="flex flex-wrap gap-2">
-      {tags.slice(0, 10).map((tag, i) => (
-        <SmartLink key={i} href={`/tag/${encodeURIComponent(tag.name)}`}>
-          <span className="
-            inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium
-            bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300
-            hover:bg-blue-100 hover:text-blue-700 dark:hover:bg-blue-900/30 dark:hover:text-blue-300
-            transition-colors duration-200 cursor-pointer border border-transparent hover:border-blue-200 dark:hover:border-blue-800
-          ">
-            {tag.name}
-            {tag.count > 0 && <span className="ml-1.5 opacity-60 text-[10px]">{tag.count}</span>}
-          </span>
-        </SmartLink>
-      ))}
-    </div>
-  )
-})
-TagGroups.displayName = 'TagGroups'
+// 删除 TagGroups 组件，不再显示标签组
 
 /**
  * 简易分页器
