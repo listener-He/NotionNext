@@ -88,7 +88,6 @@ const Style = () => {
             z-index: 9999 !important;
             transform: translateZ(0);
             pointer-events: none;
-            opacity: 0.8;
         }
 
         // 优化文本高清度

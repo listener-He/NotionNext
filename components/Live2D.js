@@ -11,7 +11,7 @@ import { getDevicePerformance } from '@/components/PerformanceDetector'
  * @returns
  */
 export default function Live2D() {
-  const { theme, switchTheme, isDarkMode } = useGlobal()
+  const {switchTheme, isDarkMode } = useGlobal()
   const [currentModel, setCurrentModel] = useState('')
   const animationFrameRef = useRef()
   const showPet = JSON.parse(siteConfig('WIDGET_PET'))
@@ -31,7 +31,7 @@ export default function Live2D() {
     } else if (!isDarkMode && petLinkDuring) {
       return petLinkDuring
     }
-    
+
     return petLink
   }, [petLink, petLinkDuring, petLinkNight, isDarkMode])
 

@@ -1,275 +1,214 @@
 import { useEffect, useState } from 'react'
 import { siteConfig } from '@/lib/config'
 
+const FONT_SIZES = ['small', 'normal', 'large', 'extra-large']
+
 /**
  * 可访问性增强组件
  * 提供键盘导航、屏幕阅读器支持、高对比度模式等功能
+ * 优化：使用 styled-jsx 替代原生 style 注入，添加折叠功能，优化事件监听
  */
 const Accessibility = () => {
+  // 配置检查
+  const enabled = siteConfig('ACCESSIBILITY_ENABLED', true)
+
   const [isHighContrast, setIsHighContrast] = useState(false)
   const [fontSize, setFontSize] = useState('normal')
-  const [isReducedMotion, setIsReducedMotion] = useState(false)
+  const [isOpen, setIsOpen] = useState(false)
+  const [mounted, setMounted] = useState(false)
+  const [shortcutKey, setShortcutKey] = useState('Alt')
 
+  // 初始化设置
   useEffect(() => {
-    // 检查用户偏好设置
-    const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    const prefersHighContrast = window.matchMedia('(prefers-contrast: high)').matches
-
-    setIsReducedMotion(prefersReducedMotion)
-    setIsHighContrast(prefersHighContrast)
-
-    // 从localStorage恢复设置
+    setMounted(true)
+    // 仅在客户端执行
     const savedFontSize = localStorage.getItem('accessibility-font-size')
     const savedHighContrast = localStorage.getItem('accessibility-high-contrast')
-    
+    const savedShortcut = localStorage.getItem('accessibility-shortcut-key')
+
     if (savedFontSize) setFontSize(savedFontSize)
     if (savedHighContrast === 'true') setIsHighContrast(true)
 
-    // 应用设置
-    applyAccessibilitySettings()
+    // 快捷键系统检测
+    if (savedShortcut) {
+      setShortcutKey(savedShortcut)
+    } else {
+      const isMac = /Mac|iPod|iPhone|iPad/.test(navigator.platform)
+      const key = isMac ? 'Option' : 'Alt'
+      setShortcutKey(key)
+      localStorage.setItem('accessibility-shortcut-key', key)
+    }
 
-    // 添加键盘导航支持
-    setupKeyboardNavigation()
-
-    // 添加跳转链接
-    addSkipLinks()
-
-    // 监听媒体查询变化
-    const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
+    // 媒体查询监听
     const contrastQuery = window.matchMedia('(prefers-contrast: high)')
-    
-    motionQuery.addEventListener('change', (e) => setIsReducedMotion(e.matches))
-    contrastQuery.addEventListener('change', (e) => setIsHighContrast(e.matches))
+    const handleContrastChange = (e) => setIsHighContrast(e.matches)
 
+    // 初始化系统偏好
+    if (!savedHighContrast && contrastQuery.matches) {
+      setIsHighContrast(true)
+    }
+
+    contrastQuery.addEventListener('change', handleContrastChange)
     return () => {
-      motionQuery.removeEventListener('change', (e) => setIsReducedMotion(e.matches))
-      contrastQuery.removeEventListener('change', (e) => setIsHighContrast(e.matches))
+      contrastQuery.removeEventListener('change', handleContrastChange)
     }
   }, [])
 
+  // 应用设置到 DOM
   useEffect(() => {
-    applyAccessibilitySettings()
-  }, [isHighContrast, fontSize, isReducedMotion])
-
-  const applyAccessibilitySettings = () => {
+    if (!mounted) return
     const root = document.documentElement
 
-    // 应用字体大小
+    // 清除旧类名
     root.classList.remove('font-small', 'font-normal', 'font-large', 'font-extra-large')
+    // 添加新类名
     root.classList.add(`font-${fontSize}`)
 
-    // 应用高对比度模式
     if (isHighContrast) {
       root.classList.add('high-contrast')
     } else {
       root.classList.remove('high-contrast')
     }
 
-    // 应用减少动画
-    if (isReducedMotion) {
-      root.classList.add('reduce-motion')
-    } else {
-      root.classList.remove('reduce-motion')
-    }
-
-    // 保存到localStorage
     localStorage.setItem('accessibility-font-size', fontSize)
     localStorage.setItem('accessibility-high-contrast', isHighContrast.toString())
-  }
+  }, [fontSize, isHighContrast, mounted])
 
-  const setupKeyboardNavigation = () => {
-    // 为所有可交互元素添加焦点指示器
-    const style = document.createElement('style')
-    style.textContent = `
-      .focus-visible:focus {
-        outline: 2px solid #0066cc !important;
-        outline-offset: 2px !important;
-      }
-      
-      .skip-link {
-        position: absolute;
-        top: -40px;
-        left: 6px;
-        background: #000;
-        color: #fff;
-        padding: 8px;
-        text-decoration: none;
-        z-index: 9999;
-        border-radius: 4px;
-      }
-      
-      .skip-link:focus {
-        top: 6px;
-      }
-      
-      /* 高对比度模式样式 */
-      .high-contrast {
-        filter: contrast(150%);
-      }
-      
-      .high-contrast img {
-        filter: contrast(120%);
-      }
-      
-      /* 字体大小样式 */
-      .font-small { font-size: 14px; }
-      .font-normal { font-size: 16px; }
-      .font-large { font-size: 18px; }
-      .font-extra-large { font-size: 20px; }
-      
-      /* 减少动画 */
-      .reduce-motion * {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-      }
-      
-      /* 屏幕阅读器专用文本 */
-      .sr-only {
-        position: absolute;
-        width: 1px;
-        height: 1px;
-        padding: 0;
-        margin: -1px;
-        overflow: hidden;
-        clip: rect(0, 0, 0, 0);
-        white-space: nowrap;
-        border: 0;
-      }
-    `
-    document.head.appendChild(style)
-
-    // 添加键盘事件监听
-    document.addEventListener('keydown', (e) => {
-      // Alt + H: 切换高对比度
-      if (e.altKey && e.key === 'h') {
+  // 键盘快捷键支持
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      // Alt + A: 切换面板
+      if (e.altKey && e.key.toLowerCase() === 'a') {
         e.preventDefault()
-        toggleHighContrast()
+        setIsOpen(prev => !prev)
       }
-      
-      // Alt + +: 增大字体
-      if (e.altKey && e.key === '=') {
-        e.preventDefault()
-        increaseFontSize()
-      }
-      
-      // Alt + -: 减小字体
-      if (e.altKey && e.key === '-') {
-        e.preventDefault()
-        decreaseFontSize()
-      }
-    })
-  }
-
-  const addSkipLinks = () => {
-    // 添加跳转到主内容的链接
-    const skipLink = document.createElement('a')
-    skipLink.href = '#main-content'
-    skipLink.className = 'skip-link'
-    skipLink.textContent = '跳转到主内容'
-    skipLink.setAttribute('aria-label', '跳转到主内容')
-    
-    document.body.insertBefore(skipLink, document.body.firstChild)
-
-    // 确保主内容区域有正确的ID
-    const mainContent = document.querySelector('main') || document.querySelector('#__next')
-    if (mainContent && !mainContent.id) {
-      mainContent.id = 'main-content'
     }
-  }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [])
 
-  const toggleHighContrast = () => {
-    setIsHighContrast(!isHighContrast)
-    announceToScreenReader(isHighContrast ? '已关闭高对比度模式' : '已开启高对比度模式')
-  }
+  const toggleHighContrast = () => setIsHighContrast(!isHighContrast)
 
-  const increaseFontSize = () => {
+  const changeFontSize = (direction) => {
     const sizes = ['small', 'normal', 'large', 'extra-large']
     const currentIndex = sizes.indexOf(fontSize)
-    if (currentIndex < sizes.length - 1) {
-      const newSize = sizes[currentIndex + 1]
-      setFontSize(newSize)
-      announceToScreenReader(`字体大小已调整为${newSize}`)
-    }
+    let newIndex = currentIndex + direction
+
+    if (newIndex < 0) newIndex = 0
+    if (newIndex >= sizes.length) newIndex = sizes.length - 1
+
+    setFontSize(sizes[newIndex])
   }
 
-  const decreaseFontSize = () => {
-    const sizes = ['small', 'normal', 'large', 'extra-large']
-    const currentIndex = sizes.indexOf(fontSize)
-    if (currentIndex > 0) {
-      const newSize = sizes[currentIndex - 1]
-      setFontSize(newSize)
-      announceToScreenReader(`字体大小已调整为${newSize}`)
-    }
-  }
-
-  const announceToScreenReader = (message) => {
-    const announcement = document.createElement('div')
-    announcement.setAttribute('aria-live', 'polite')
-    announcement.setAttribute('aria-atomic', 'true')
-    announcement.className = 'sr-only'
-    announcement.textContent = message
-    
-    document.body.appendChild(announcement)
-    
-    setTimeout(() => {
-      document.body.removeChild(announcement)
-    }, 1000)
-  }
-
-  // 如果禁用了可访问性功能，不渲染组件
-  if (!siteConfig('ACCESSIBILITY_ENABLED', true)) {
-    return null
-  }
+  if (!enabled || !mounted) return null
 
   return (
     <>
-      {/* 可访问性控制面板 */}
-      <div 
-        className="accessibility-controls fixed bottom-4 right-4 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg z-50 border"
-        role="region"
-        aria-label="可访问性控制"
-      >
-        <h3 className="text-sm font-semibold mb-2">可访问性选项</h3>
-        
-        <div className="space-y-2">
-          <button
-            onClick={toggleHighContrast}
-            className="block w-full text-left px-2 py-1 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
-            aria-pressed={isHighContrast}
-          >
-            {isHighContrast ? '关闭' : '开启'}高对比度
-          </button>
-          
-          <div className="flex items-center space-x-2">
-            <button
-              onClick={decreaseFontSize}
-              className="px-2 py-1 text-sm bg-gray-200 dark:bg-gray-600 rounded hover:bg-gray-300 dark:hover:bg-gray-500"
-              aria-label="减小字体"
-              disabled={fontSize === 'small'}
-            >
-              A-
-            </button>
-            <span className="text-xs">字体</span>
-            <button
-              onClick={increaseFontSize}
-              className="px-2 py-1 text-sm bg-gray-200 dark:bg-gray-600 rounded hover:bg-gray-300 dark:hover:bg-gray-500"
-              aria-label="增大字体"
-              disabled={fontSize === 'extra-large'}
-            >
-              A+
-            </button>
+      <div className="fixed bottom-40 right-4 z-50 flex flex-col items-end gap-2">
+        {/* 控制面板 */}
+        <div
+          className={`
+            transition-all duration-300 ease-out origin-bottom-right overflow-hidden
+            ${isOpen ? 'scale-100 opacity-100 mb-2' : 'scale-0 opacity-0 h-0'}
+          `}
+        >
+          <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-md p-4 rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 w-64">
+            <div className="flex justify-between items-center mb-4 border-b border-gray-100 dark:border-gray-700 pb-2">
+              <h3 className="font-semibold text-gray-800 dark:text-gray-200">辅助功能</h3>
+              <span className="text-xs text-gray-500 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">{shortcutKey} + A</span>
+            </div>
+
+            <div className="space-y-4">
+              {/* 对比度开关 */}
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-gray-600 dark:text-gray-300">高对比度</span>
+                <button
+                  onClick={toggleHighContrast}
+                  className={`
+                    w-12 h-6 rounded-full transition-colors duration-200 flex items-center px-1
+                    ${isHighContrast ? 'bg-indigo-600' : 'bg-gray-300 dark:bg-gray-600'}
+                  `}
+                  aria-pressed={isHighContrast}
+                >
+                  <div className={`w-4 h-4 bg-white rounded-full transform transition-transform duration-200 ${isHighContrast ? 'translate-x-6' : ''}`} />
+                </button>
+              </div>
+
+              {/* 字体大小调节 */}
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm text-gray-600 dark:text-gray-100">
+                  <span>字体大小</span>
+                  <span>{fontSize === 'normal' ? '默认' : fontSize}</span>
+                </div>
+                <div className="flex gap-2 bg-gray-100 dark:bg-gray-800 p-1 rounded-lg">
+                  <button 
+                    onClick={() => changeFontSize(-1)}
+                    disabled={fontSize === 'small'}
+                    className="flex-1 py-1 text-sm text-gray-700 dark:text-gray-100 rounded hover:bg-white dark:hover:bg-gray-700 shadow-sm disabled:opacity-50 disabled:shadow-none transition-all"
+                  >
+                    A-
+                  </button>
+                  <button 
+                    onClick={() => setFontSize('normal')}
+                    className="flex-1 py-1 text-xs text-gray-700 dark:text-gray-100 rounded hover:bg-white dark:hover:bg-gray-700 shadow-sm transition-all"
+                  >
+                    重置
+                  </button>
+                  <button 
+                    onClick={() => changeFontSize(1)}
+                    disabled={fontSize === 'extra-large'}
+                    className="flex-1 py-1 text-lg text-gray-700 dark:text-gray-100 rounded hover:bg-white dark:hover:bg-gray-700 shadow-sm disabled:opacity-50 disabled:shadow-none transition-all leading-none"
+                  >
+                    A+
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-        
-        <div className="mt-2 text-xs text-gray-600 dark:text-indigo-300">
-          快捷键: Alt+H (对比度), Alt+/- (字体)
-        </div>
+
+        {/* 悬浮开关按钮 */}
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className={`
+            w-12 h-12 rounded-full shadow-lg flex items-center justify-center transition-all duration-300
+            ${isOpen 
+              ? 'bg-gray-200 text-gray-600 rotate-45 dark:bg-gray-700 dark:text-gray-300' 
+              : 'bg-indigo-600 text-white hover:bg-indigo-700 hover:scale-110'}
+          `}
+          aria-label="打开辅助功能菜单"
+          title="辅助功能 (Alt + A)"
+        >
+          {isOpen ? (
+            <i className="fas fa-plus text-lg" />
+          ) : (
+            <i className="fas fa-universal-access text-xl" />
+          )}
+        </button>
       </div>
 
-      {/* 屏幕阅读器公告区域 */}
-      <div aria-live="polite" aria-atomic="true" className="sr-only" />
+      <style jsx global>{`
+        /* 字体大小类 */
+        html.font-small { font-size: 14px; }
+        html.font-normal { font-size: 16px; }
+        html.font-large { font-size: 18px; }
+        html.font-extra-large { font-size: 20px; }
+
+        /* 高对比度模式 */
+        html.high-contrast {
+          filter: contrast(1.5);
+        }
+        html.high-contrast img,
+        html.high-contrast video {
+          filter: contrast(0.8); /* 防止图片过曝 */
+        }
+        
+        /* 焦点指示器优化 */
+        :focus-visible {
+          outline: 2px solid #4F46E5;
+          outline-offset: 2px;
+        }
+      `}</style>
     </>
   )
 }

@@ -39,6 +39,8 @@ import PerformanceDetector from '@/components/PerformanceDetector'
 import Comment from '@/components/Comment'
 import ArticleInfo from './components/ArticleInfo'
 import BLOG from '@/blog.config'
+import FullScreenButton from '@/components/FullScreenButton'
+import Accessibility from '@/components/Accessibility'
 
 // 使用 useMemo 优化动态导入
 const AlgoliaSearchModal = dynamic(
@@ -337,7 +339,8 @@ const LayoutSlug = props => {
               <section className='px-5 justify-center mx-auto max-w-2xl lg:max-w-full'>
                 <ArticleInfo post={post} />
               </section>
-
+              {/* 全屏按钮 */}
+              <FullScreenButton />
               {/* Notion文章主体 */}
               <section className='px-5 justify-center mx-auto max-w-2xl lg:max-w-full'>
                 {post && (
@@ -367,6 +370,8 @@ const LayoutSlug = props => {
           </div>
         )}
       </div>
+      {/* 添加可访问性组件 - 仅在文章详情页加载 */}
+      <Accessibility />
     </>
   )
 }
