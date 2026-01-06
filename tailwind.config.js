@@ -21,7 +21,12 @@ module.exports = {
   ],
   darkMode: BLOG.APPEARANCE === 'class' ? 'media' : 'class', // or 'media' or 'class'
   theme: {
-    fontFamily: fontFamilies,
+    fontFamily: {
+      sans: ['Inter', 'Noto Sans SC', ...fontFamilies.sans],
+      serif: ['Playfair Display', 'Noto Serif SC', 'Times New Roman', ...fontFamilies.serif],
+      mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
+      ...fontFamilies
+    },
     screens: {
       sm: '540px',
       // => @media (min-width: 576px) { ... }
@@ -43,58 +48,67 @@ module.exports = {
         sm: '8px',
         md: '12px',
         lg: '16px',
-        xl: '24px'
+        xl: '24px',
+        '2xl': '32px',
+        '3xl': '48px'
       },
       borderRadius: {
         sm: '6px',
         md: '12px',
-        lg: '16px'
+        lg: '16px',
+        xl: '24px'
       },
       colors: {
         day: {
-          DEFAULT: BLOG.BACKGROUND_LIGHT || '#ffffff'
+          DEFAULT: '#FFFFFF' // Pure White
         },
         night: {
-          DEFAULT: BLOG.BACKGROUND_DARK || '#111827'
+          DEFAULT: '#020617' // Deep Space
         },
         hexo: {
-          'background-gray': '#f5f5f5',
-          'black-gray': '#101414',
-          'light-gray': '#e5e5e5'
+          'background-gray': '#F9FAFB',
+          'black-gray': '#020617',
+          'light-gray': '#E5E7EB'
         },
-        // black: '#212b36',
-        'dark-700': '#090e34b3',
+        crystal: {
+          clear: '#FFFFFF',
+          sky: '#38BDF8',
+          glass: 'rgba(255, 255, 255, 0.7)',
+          'glass-dark': 'rgba(15, 23, 42, 0.6)'
+        },
         dark: {
-          DEFAULT: '#111928',
-          2: '#1F2A37',
-          3: '#374151',
-          4: '#4B5563',
-          5: '#6B7280',
-          6: '#9CA3AF',
-          7: '#D1D5DB',
-          8: '#E5E7EB'
+          DEFAULT: '#0F172A',
+          2: '#1E293B',
+          3: '#334155',
+          4: '#475569',
+          5: '#64748B',
+          6: '#94A3B8',
+          7: '#CBD5E1',
+          8: '#E2E8F0'
         },
-        primary: '#1E3A8A',
-        'blue-dark': '#1E40AF',
-        secondary: '#13C296',
-        'body-color': '#637381',
-        'body-secondary': '#8899A8',
+        primary: '#38BDF8', // Sky Blue
+        'blue-dark': '#0EA5E9',
+        secondary: '#64748B', // Slate
+        'body-color': '#374151',
+        'body-secondary': '#6B7280',
         warning: '#FBBF24',
-        stroke: '#DFE4EA',
-        'gray-1': '#F9FAFB',
-        'gray-2': '#F3F4F6',
-        'gray-7': '#CED4DA'
+        stroke: '#E2E8F0',
+        'gray-1': '#F8FAFC',
+        'gray-2': '#F1F5F9',
+        'gray-7': '#CBD5E1'
       },
       maxWidth: {
-        side: '14rem',
+        side: '16rem',
         '9/10': '90%',
         'screen-3xl': '1440px',
         'screen-4xl': '1560px'
       },
       boxShadow: {
-        'elevation-sm': '0 1px 2px rgba(0,0,0,.06)',
-        'elevation-md': '0 4px 12px rgba(0,0,0,.08)',
-        'elevation-lg': '0 10px 24px rgba(0,0,0,.12)',
+        'elevation-xs': '0 1px 2px rgba(0,0,0,0.02)',
+        'elevation-sm': '0 4px 6px -1px rgba(0,0,0,0.02), 0 2px 4px -1px rgba(0,0,0,0.02)',
+        'elevation-md': '0 10px 15px -3px rgba(0,0,0,0.04), 0 4px 6px -2px rgba(0,0,0,0.02)',
+        'elevation-lg': '0 20px 25px -5px rgba(0,0,0,0.05), 0 10px 10px -5px rgba(0,0,0,0.02)',
+        'elevation-xl': '0 25px 50px -12px rgba(0,0,0,0.08)',
         input: '0px 7px 20px rgba(0, 0, 0, 0.03)',
         form: '0px 1px 55px -11px rgba(0, 0, 0, 0.01)',
         pricing: '0px 0px 40px 0px rgba(0, 0, 0, 0.08)',
@@ -105,7 +119,9 @@ module.exports = {
         2: '0px 5px 12px 0px rgba(0, 0, 0, 0.10)'
       },
       transitionTimingFunction: {
-        standard: 'cubic-bezier(.2,.8,.2,1)'
+        standard: 'cubic-bezier(0.4, 0.0, 0.2, 1)',
+        entrance: 'cubic-bezier(0.0, 0.0, 0.2, 1)',
+        exit: 'cubic-bezier(0.4, 0.0, 1, 1)'
       },
       keyframes: {
         'bg-pulse': {
@@ -129,50 +145,47 @@ module.exports = {
           minHeight: '44px'
         },
         '.card-base': {
-          borderRadius: theme('borderRadius.lg'),
-          boxShadow: theme('boxShadow.elevation-md')
+          borderRadius: theme('borderRadius.xl'),
+          boxShadow: theme('boxShadow.elevation-sm'),
+          backgroundColor: 'rgba(255, 255, 255, 0.8)', // Higher opacity for clean look
+          backdropFilter: 'blur(20px)', // Stronger blur
+          border: '1px solid rgba(255, 255, 255, 0.8)'
         },
         '.ellipsis': {
           overflow: 'hidden',
           textOverflow: 'ellipsis',
           whiteSpace: 'nowrap'
         },
+        // Crystal Clear Gradients - Subtle & Airy
         '.bg-day-gradient': {
-          backgroundImage:
-            'linear-gradient(135deg, ' +
-            '#fafbff 0%, ' +
-            '#f0f8ff 6.25%, ' +
-            '#e6f4ff 12.5%, ' +
-            '#e0f2fe 18.75%, ' +
-            '#ebf8ff 25%, ' +
-            '#edf6ff 31.25%, ' +
-            '#f0f9ff 37.5%, ' +
-            '#f3fbff 43.75%, ' +
-            '#f5faff 50%, ' +
-            '#f8fcff 56.25%, ' +
-            '#fbfdff 62.5%, ' +
-            '#fdfdff 68.75%, ' +
-            '#ffffff 75%, ' +
-            '#ffffff 81.25%, ' +
-            '#ffffff 87.5%, ' +
-            '#ffffff 93.75%, ' +
-            '#ffffff 100%)'
+          backgroundImage: 'linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%)', // Pure White -> Very Light Slate
+          backgroundSize: '100% 100%' // Static for HD feel
         },
         '.bg-night-gradient': {
-          backgroundImage:
-            'linear-gradient(135deg, #0b1220 0%, #0a1a2b 50%, #111827 100%)'
+          backgroundImage: 'linear-gradient(180deg, #020617 0%, #0F172A 100%)', // Deep Space -> Slate
+          backgroundSize: '100% 100%'
         },
         '.tag-badge-day': {
-          backgroundImage:
-            'linear-gradient(135deg, #fff7f9 0%, #eaf6ff 50%, #e7fff2 100%)',
-          color: '#111827',
-          borderRadius: theme('borderRadius.sm')
+          backgroundColor: '#F0F9FF', // Sky tint
+          color: '#0369A1',
+          borderRadius: theme('borderRadius.sm'),
+          border: '1px solid #E0F2FE'
         },
         '.tag-badge-night': {
-          backgroundImage:
-            'linear-gradient(135deg, #1b2230 0%, #132033 50%, #111827 100%)',
-          color: '#ffffff',
-          borderRadius: theme('borderRadius.sm')
+          backgroundColor: '#0F172A',
+          color: '#38BDF8',
+          borderRadius: theme('borderRadius.sm'),
+          border: '1px solid #1E293B'
+        },
+        '.glass-morphism': {
+          background: 'rgba(255, 255, 255, 0.7)',
+          backdropFilter: 'blur(20px)',
+          border: '1px solid rgba(255, 255, 255, 0.5)'
+        },
+        '.glass-morphism-dark': {
+          background: 'rgba(2, 6, 23, 0.7)',
+          backdropFilter: 'blur(20px)',
+          border: '1px solid rgba(255, 255, 255, 0.05)'
         }
       }
       addUtilities(newUtilities, ['responsive'])

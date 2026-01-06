@@ -22,11 +22,9 @@ export const BlogPostCardInfo = ({
 }) => {
   const { isDarkMode } = useGlobal()
   return (
-    <article
-      ref={containerRef}
-      className={`flex flex-col justify-between lg:p-4 p-3 sm:p-4 md:p-5 h-auto mt-1 md:mt-0 ${showPageCover && !showPreview ? 'md:w-6/12 w-full' : 'w-full'} rounded-b-xl md:rounded-xl bg-transparent article-info hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-300 ease-standard overflow-hidden`}>
+    <div ref={containerRef} className="flex flex-col justify-between h-full bg-transparent overflow-hidden">
       <div>
-        <header className="relative px-3 py-2 bg-transparent">
+        <header className="relative py-2 bg-transparent">
           <div className={`flex ${showPreview ? 'justify-center' : 'justify-start'} items-start bg-transparent`}>
             <h2 className="mr-3 bg-transparent">
               {/* 标题 */}
@@ -44,7 +42,7 @@ export const BlogPostCardInfo = ({
               <SmartLink
                 href={`/archive#${formatDateFmt(post?.publishDate, 'yyyy-MM')}`}
                 passHref
-                className={`absolute top-0 ${dateAlign === 'left' ? 'left-4' : 'right-4'} text-xs leading-5 text-secondary dark:text-gray-400 whitespace-nowrap`}>
+                className={`absolute top-0 ${dateAlign === 'left' ? 'left-0' : 'right-0'} text-xs leading-5 text-secondary dark:text-gray-400 whitespace-nowrap`}>
                 <i className='far fa-calendar-alt mr-1' />
                 {post?.publishDay || post.lastEditedDay}
               </SmartLink>
@@ -113,9 +111,7 @@ export const BlogPostCardInfo = ({
           </div>
         )}
       </div>
-
-      {/* 底部日期区块移除，避免重复显示 */}
-    </article>
+    </div>
   )
 }
 
@@ -162,7 +158,7 @@ const SummaryCollapsible = ({ text }) => {
     <div className='my-2 bg-transparent'>
       <div
         ref={ref}
-        className={`${expanded ? 'line-clamp-none' : 'line-clamp-2'} relative text-primary dark:text-gray-300 text-[12px] font-normal leading-6 bg-transparent`}>
+        className={`${expanded ? 'line-clamp-none' : 'line-clamp-3'} relative text-primary dark:text-gray-300 text-[12px] font-normal leading-2 bg-transparent`}>
         {text}
         {!expanded && overflow && (
           <div className='absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-white/30 to-transparent dark:from-gray-900/30 pointer-events-none'></div>

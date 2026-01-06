@@ -45,13 +45,18 @@ export default function AlgoliaSearchModal({ cRef }) {
   // 会话级缓存 (Session Cache in Memory)
   const searchCache = useRef(new Map())
 
+  // 获取配置 (移到 useMemo 外部，确保 Hook 调用顺序一致)
+  // 假设 siteConfig 可能使用 hooks (Context), 所以必须在顶层调用
+  const appId = siteConfig('ALGOLIA_APP_ID')
+  const apiKey = siteConfig('ALGOLIA_SEARCH_ONLY_APP_KEY')
+  const algoliaIndex = siteConfig('ALGOLIA_INDEX')
+  const subPath = siteConfig('SUB_PATH', '')
+
   // -- 初始化 Algolia Client (Memoized) --
   const searchClient = useMemo(() => {
-    const appId = siteConfig('ALGOLIA_APP_ID')
-    const apiKey = siteConfig('ALGOLIA_SEARCH_ONLY_APP_KEY')
     if (!appId || !apiKey) return null
     return algoliasearch(appId, apiKey)
-  }, [])
+  }, [appId, apiKey])
 
   // -- 核心搜索逻辑 --
   const performSearch = useCallback(async (query, pageIndex = 0) => {
@@ -76,7 +81,7 @@ export default function AlgoliaSearchModal({ cRef }) {
 
     setIsLoading(true)
     try {
-      const index = searchClient.initIndex(siteConfig('ALGOLIA_INDEX'))
+      const index = searchClient.initIndex(algoliaIndex)
       const res = await index.search(query, { page: pageIndex, hitsPerPage: 10 })
 
       const { hits, nbHits, nbPages, processingTimeMS } = res
@@ -106,7 +111,7 @@ export default function AlgoliaSearchModal({ cRef }) {
     } finally {
       setIsLoading(false)
     }
-  }, [searchClient])
+  }, [searchClient, algoliaIndex])
 
   // -- 防抖 (Debounce) 处理 --
   // 相比 throttle，debounce 更适合输入搜索，用户停止打字后再请求
@@ -162,10 +167,10 @@ export default function AlgoliaSearchModal({ cRef }) {
     const result = searchResults[indexToJump]
     if (result) {
       // 优先使用 slug，没有则用 objectID，结合配置的前缀
-      const path = `${siteConfig('SUB_PATH', '')}/${result.slug || result.objectID}`
+      const path = `${subPath}/${result.slug || result.objectID}`
       router.push(path).then(() => closeModal())
     }
-  }, [searchResults, activeIndex, router])
+  }, [searchResults, activeIndex, router, subPath])
 
   // -- 快捷键 (Hotkeys) --
   // 合并管理，更清晰
@@ -200,7 +205,9 @@ export default function AlgoliaSearchModal({ cRef }) {
     }
   }, [activeIndex])
 
-  if (!siteConfig('ALGOLIA_APP_ID')) return null
+  // 如果没有配置 App ID，返回 null
+  // 必须在所有 hooks 调用之后返回，否则会违反 Rules of Hooks
+  if (!appId) return null
 
   // -- 渲染 --
   return (

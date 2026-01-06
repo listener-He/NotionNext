@@ -54,9 +54,6 @@ const Hero = props => {
       })
     }
 
-
-
-
     if (typeof window !== 'undefined') {
       window.addEventListener('resize', updateHeaderHeight)
     }
@@ -88,33 +85,35 @@ const Hero = props => {
   const showNavButtons = siteConfig('HEXO_HOME_NAV_BUTTONS', null, CONFIG)
   const showStartReading = siteConfig('HEXO_SHOW_START_READING', null, CONFIG)
   const backgroundFixed = siteConfig('HEXO_HOME_NAV_BACKGROUND_IMG_FIXED', null, CONFIG)
-  const siteTitle = siteConfig('TITLE')
+  // const siteTitle = siteConfig('TITLE')
 
   // 只在客户端渲染时才显示需要浏览器API的元素
   if (!isClient) {
     return (
       <header
         id='header'
-        style={{ height: isHalfScreenDarkMode ? '35vh' : '100vh'}}
+        style={{ height: isHalfScreenDarkMode ? '50vh' : '100vh'}}
         className={headerClass}>
-        <div className={`text-white absolute bottom-0 flex flex-col h-full items-center justify-center w-full ${contentPosition}`}>
+        <div className={`text-white absolute bottom-0 flex flex-col h-full items-center justify-center w-full ${contentPosition} z-10`}>
           {/* 站点标题 */}
-          {!isHalfScreenDarkMode && (
-            <div className='font-black text-4xl md:text-5xl shadow-text'>
-              {siteInfo?.title || siteTitle}
-            </div>
-          )}
+          {/*{!isHalfScreenDarkMode && (*/}
+          {/*  <div className='font-light text-5xl md:text-6xl drop-shadow-md tracking-widest uppercase transition-all duration-500 font-serif'>*/}
+          {/*    {siteInfo?.title || siteTitle}*/}
+          {/*  </div>*/}
+          {/*)}*/}
 
           {/* 站点欢迎语 - 仅在非黑暗模式下显示打字机效果 */}
           {!isHalfScreenDarkMode && (
-            <div className='mt-2 h-12 items-center text-center font-medium shadow-text text-lg'>
+            <div className='mt-6 h-12 items-center text-center font-medium text-2xl tracking-wider drop-shadow-sm font-serif italic text-white/90'>
               <span id='typed' />
             </div>
           )}
 
           {/* 首页导航大按钮 */}
           {showNavButtons && (
-            <NavButtonGroup {...props} />
+            <div className="mt-8">
+              <NavButtonGroup {...props} />
+            </div>
           )}
         </div>
 
@@ -123,7 +122,7 @@ const Hero = props => {
             id='header-cover'
             alt={siteInfo?.title}
             src={siteInfo?.pageCover}
-            className={`header-cover w-full ${headerHeight} object-cover object-center ${backgroundFixed ? 'fixed' : ''} dark:hidden`}
+            className={`header-cover w-full ${headerHeight} object-cover object-center ${backgroundFixed ? 'fixed' : ''} dark:hidden brightness-90`}
           />
         )}
       </header>
@@ -133,37 +132,39 @@ const Hero = props => {
   return (
     <header
       id='header'
-      style={{ height: isHalfScreenDarkMode ? '35vh' : '100vh'}}
+      style={{ height: isHalfScreenDarkMode ? '50vh' : '100vh'}}
       className={headerClass}>
-      <div className={`text-white absolute bottom-0 flex flex-col h-full items-center justify-center w-full ${contentPosition}`}>
+      <div className={`text-white absolute bottom-0 flex flex-col h-full items-center justify-center w-full ${contentPosition} z-10`}>
         {/* 站点标题 */}
-        {!isHalfScreenDarkMode && (
-          <div className='font-black text-4xl md:text-5xl shadow-text'>
-            {siteInfo?.title || siteTitle}
-          </div>
-        )}
+        {/*{!isHalfScreenDarkMode && (*/}
+        {/*  <div className='font-light text-5xl md:text-6xl drop-shadow-md tracking-widest uppercase transition-all duration-500 font-serif'>*/}
+        {/*    {siteInfo?.title || siteTitle}*/}
+        {/*  </div>*/}
+        {/*)}*/}
 
         {/* 站点欢迎语 - 仅在非黑暗模式下显示打字机效果 */}
         {!isHalfScreenDarkMode && (
-          <div className='mt-2 h-12 items-center text-center font-medium shadow-text text-lg'>
+          <div className='mt-6 h-12 items-center text-center font-medium text-2xl tracking-wider drop-shadow-sm font-serif italic text-white/90'>
             <span id='typed' />
           </div>
         )}
 
         {/* 首页导航大按钮 */}
         {showNavButtons && (
-          <NavButtonGroup {...props} />
+          <div className="mt-8">
+             <NavButtonGroup {...props} />
+          </div>
         )}
 
         {/* 滚动按钮 */}
         {!isHalfScreenDarkMode && (
           <div
             onClick={scrollToWrapper}
-            className='z-10 cursor-pointer w-full text-center py-4 text-3xl absolute bottom-10 text-white'>
-            <div className='opacity-70 animate-bounce text-xs'>
+            className='z-10 cursor-pointer w-full text-center py-8 text-3xl absolute bottom-8 text-white opacity-80 hover:opacity-100 transition-opacity duration-300'>
+            <div className='text-xs font-light tracking-widest mb-2 uppercase font-sans'>
               {showStartReading && locale.COMMON.START_READING}
             </div>
-            <i className='opacity-70 animate-bounce fas fa-angle-down' />
+            <i className='fas fa-chevron-down animate-bounce' />
           </div>
         )}
       </div>
@@ -172,7 +173,7 @@ const Hero = props => {
         id='header-cover'
         alt={siteInfo?.title}
         src={siteInfo?.pageCover}
-        className={`header-cover w-full  ${headerHeight} object-cover object-center ${backgroundFixed ? 'fixed' : ''} dark:hidden`}
+        className={`header-cover w-full  ${headerHeight} object-cover object-center ${backgroundFixed ? 'fixed' : ''} dark:hidden brightness-90`}
       />
     </header>
   )

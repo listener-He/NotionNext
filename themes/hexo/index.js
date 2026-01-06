@@ -125,10 +125,10 @@ const LayoutBase = props => {
           ) : null}
         </Transition>
 
-        {/* 主区块 */}
+        {/* 主区块 - 背景色改为完全透明 */}
         <main
           id='wrapper'
-          className={`${homeBannerEnable ? '' : 'pt-16'} w-full py-8 md:px-8 lg:px-24 min-h-screen relative bg-gradient-to-b from-transparent via-gray-50/10 to-transparent dark:via-gray-900/10`}>
+          className={`${homeBannerEnable ? '' : 'pt-16'} w-full py-8 md:px-8 lg:px-24 min-h-screen relative bg-transparent`}>
           <div
             id='container-inner'
             className={
@@ -161,6 +161,7 @@ const LayoutBase = props => {
           </div>
         </main>
 
+        {/* 侧拉抽屉 */}
         <div className='block lg:hidden'>
           <TocDrawer post={post} cRef={drawerRight} targetRef={tocRef} />
         </div>

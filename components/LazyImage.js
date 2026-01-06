@@ -3,15 +3,16 @@ import Head from 'next/head'
 import { useEffect, useRef, useState, useMemo, useCallback } from 'react'
 
 // 抽离工具函数，避免在组件内部重复定义
-// 注意：为了避免服务端和客户端渲染不一致(Hydration Mismatch)，
-// 初始渲染最好不要依赖 window.screen.width，或者接受 src 变化带来的重新渲染。
-const adjustImgSize = (src, maxWidth) => {
+const adjustImgSize = (src, maxWidth, isClient = false) => {
   if (!src) return ''
 
-  // 在服务端或未挂载前，仅使用配置的 maxWidth
-  // 只有在明确需要针对客户端屏幕优化时才读取 window
-  const isClient = typeof window !== 'undefined'
-  const screenWidth = isClient && window.screen?.width ? window.screen.width : maxWidth
+  // 默认使用 maxWidth (服务端渲染保持一致)
+  let screenWidth = maxWidth
+
+  // 只有在明确是在客户端，且 window 存在时，才使用屏幕宽度
+  if (isClient && typeof window !== 'undefined' && window.screen?.width) {
+    screenWidth = window.screen.width
+  }
 
   // 如果屏幕尺寸大于压缩限制，则不处理（或者逻辑根据需求调整）
   if (screenWidth > maxWidth) {
@@ -52,15 +53,26 @@ export default function LazyImage({
   // 状态管理
   const [isLoaded, setIsLoaded] = useState(false)
   const [hasError, setHasError] = useState(false)
+  // 客户端挂载状态
+  const [isMounted, setIsMounted] = useState(false)
 
   // 决定初始显示的图片：如果有优先级，直接尝试显示原图（稍后会被 effect 处理），否则显示占位图
   const initialSrc = placeholderSrc || defaultPlaceholderSrc
-  const [currentSrc, setCurrentSrc] = useState(priority ? src : initialSrc)
+  
+  // 初始状态：使用原始 src (避免 hydration mismatch)，或者占位符
+  // 注意：为了 SSR 匹配，初始值不能依赖 window
+  const [currentSrc, setCurrentSrc] = useState(priority ? adjustImgSize(src, maxWidth, false) : initialSrc)
+
+  // 客户端挂载检测
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
 
   // 计算最终的目标图片地址（使用 useMemo 避免重复计算）
+  // 只有在 isMounted 为 true 时，才允许使用 window 相关逻辑
   const finalSrc = useMemo(() => {
-    return adjustImgSize(src, maxWidth)
-  }, [src, maxWidth])
+    return adjustImgSize(src, maxWidth, isMounted)
+  }, [src, maxWidth, isMounted])
 
   // 图片加载完成的处理逻辑
   const handleLoadSuccess = useCallback(() => {
@@ -105,11 +117,14 @@ export default function LazyImage({
   useEffect(() => {
     if (!src) return
 
-    let isMounted = true
+    let isEffectMounted = true
     const observerTarget = imageRef.current
 
+    // 如果还没有挂载到客户端，或者 finalSrc 还没更新（依赖 isMounted），则等待
+    if (!isMounted) return
+
     // 策略1: 优先级图片或不支持 Observer 的环境，直接加载
-    if (priority || typeof window !== 'undefined' && !window.IntersectionObserver) {
+    if (priority || (typeof window !== 'undefined' && !window.IntersectionObserver)) {
       preloadImage(finalSrc)
       return
     }
@@ -118,7 +133,7 @@ export default function LazyImage({
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting && isMounted) {
+          if (entry.isIntersecting && isEffectMounted) {
             preloadImage(finalSrc)
             observer.unobserve(entry.target)
           }
@@ -135,12 +150,12 @@ export default function LazyImage({
     }
 
     return () => {
-      isMounted = false
+      isEffectMounted = false
       if (observerTarget) {
         observer.unobserve(observerTarget)
       }
     }
-  }, [src, finalSrc, priority, lazyLoadThreshold, preloadImage])
+  }, [src, finalSrc, priority, lazyLoadThreshold, preloadImage, isMounted])
 
   // 如果没有 src，直接不渲染
   if (!src) return null
