@@ -34,7 +34,7 @@ const BlogPostCard = ({ index, post, showSummary, siteInfo }) => {
   }, [])
 
   // 根据设备性能调整AOS动画 - 在客户端设置，确保服务端和客户端一致
-  const enableAOS = isClient && !isLowEndDevice
+  const enableAOS = siteConfig('ENABLE_AOS', false) && isClient && !isLowEndDevice
   const aosDuration = isClient && performanceLevel === 'high' ? '800' : '600'
   const aosDelay = isClient ? index * (performanceLevel === 'high' ? 50 : 100) : index * 100
 
@@ -107,7 +107,7 @@ const BlogPostCard = ({ index, post, showSummary, siteInfo }) => {
                     overflow-hidden rounded-xl glass-layer-soft transition-all duration-300 ease-standard transform-gpu shadow-sm hover:shadow-md min-h-[180px] relative`}>
         {/* 图片封面 */}
         {showPageCover && (
-          <div ref={imgWrapRef} className={`w-full md:w-5/12 relative overflow-hidden rounded-t-xl md:rounded-none h-48 sm:h-56 md:h-64 aspect-video md:aspect-auto article-cover flex-shrink-0 hover:scale-[1.01] transition-transform duration-300 ease-standard transform-gpu
+          <div ref={imgWrapRef} className={`w-full md:w-6/12 relative overflow-hidden rounded-t-xl md:rounded-none h-48 sm:h-56 md:h-64 aspect-video md:aspect-auto article-cover flex-shrink-0 hover:scale-[1.01] transition-transform duration-300 ease-standard transform-gpu
             ${HEXO_POST_LIST_IMG_CROSSOVER && index % 2 === 1 
               ? 'md:rounded-l-2xl md:rounded-r-3xl'  // 图片在左，右内角更大
               : 'md:rounded-l-3xl md:rounded-r-2xl'  // 图片在右，左内角更大
