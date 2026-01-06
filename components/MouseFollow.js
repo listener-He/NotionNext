@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 // import anime from 'animejs'
 import { siteConfig } from '@/lib/config'
 import { loadExternalResource } from '@/lib/utils'
+import { getDevicePerformance } from '@/components/PerformanceDetector'
 
 /**
  * 鼠标跟随特效
@@ -10,8 +11,14 @@ import { loadExternalResource } from '@/lib/utils'
 const MOUSE_FOLLOW = () => {
   const type = siteConfig('MOUSE_FOLLOW_EFFECT_TYPE')
   const color = siteConfig('MOUSE_FOLLOW_EFFECT_COLOR')
+  const { isLowEndDevice } = getDevicePerformance()
 
   useEffect(() => {
+    // 在低端设备上不加载鼠标跟随特效
+    if (isLowEndDevice) {
+      return
+    }
+    
     loadExternalResource('/js/mouse-follow.js', 'js').then(url => {
       window.createMouseCanvas && window.createMouseCanvas()({ type, color })
     })
@@ -21,7 +28,7 @@ const MOUSE_FOLLOW = () => {
       const mouseFollowElement = document.getElementById('vixcityCanvas')
       mouseFollowElement?.parentNode?.removeChild(mouseFollowElement)
     }
-  }, [])
+  }, [type, color, isLowEndDevice])
 
   return (
     <>

@@ -31,6 +31,7 @@ function renderStarrySky() {
   canvas.id = 'starry-sky-vixcity';
   canvas.className = 'fixed top-0 left-0 pointer-events-none w-full h-full';
   canvas.style.zIndex = '1'; // 适当调整层级，避免遮挡内容
+  canvas.style.willChange = 'contents'; // 使用will-change优化渲染
   div.appendChild(canvas);
   document.body.appendChild(div);
 
@@ -41,6 +42,9 @@ function renderStarrySky() {
   let stars = [];
   let animationFrameId = null;
   let isRunning = false;
+  let lastTime = 0; // 优化：记录上一帧时间
+  const targetFPS = 30; // 限制帧率为30fps以节省性能
+  const frameInterval = 1000 / targetFPS;
 
   // --- 核心类定义 ---
   class Star {
@@ -208,44 +212,49 @@ function renderStarrySky() {
   }
 
   // --- 渲染循环 ---
-  function animate() {
+  function animate(timestamp) {
     if (!isRunning) return;
 
-    // 检查暗色模式 (Tailwind dark mode class)
-    // 如果不是暗色模式，清空画布并挂起，节省性能
-    if (!htmlRoot.classList.contains('dark')) {
+    const deltaTime = timestamp - lastTime;
+    if (deltaTime > frameInterval) {
+      // 检查暗色模式 (Tailwind dark mode class)
+      // 如果不是暗色模式，清空画布并挂起，节省性能
+      if (!htmlRoot.classList.contains('dark')) {
+        ctx.clearRect(0, 0, width, height);
+        // 稍微延迟再次检查，而不是每秒60次
+        setTimeout(() => {
+          if (isRunning) requestAnimationFrame(animate);
+        }, 1000);
+        return;
+      }
+
       ctx.clearRect(0, 0, width, height);
-      // 稍微延迟再次检查，而不是每秒60次
-      setTimeout(() => {
-        if (isRunning) requestAnimationFrame(animate);
-      }, 1000);
-      return;
-    }
 
-    ctx.clearRect(0, 0, width, height);
-
-    // 批量绘制：先绘制所有普通星星，再绘制巨星，最后绘制流星（减少状态切换）
-    for (let i = 0; i < stars.length; i++) {
-      const star = stars[i];
-      if (!star.isGiant && !star.isComet) {
-        star.draw();
+      // 批量绘制：先绘制所有普通星星，再绘制巨星，最后绘制流星（减少状态切换）
+      for (let i = 0; i < stars.length; i++) {
+        const star = stars[i];
+        if (!star.isGiant && !star.isComet) {
+          star.draw();
+        }
       }
-    }
 
-    // 绘制巨星
-    for (let i = 0; i < stars.length; i++) {
-      const star = stars[i];
-      if (star.isGiant && !star.isComet) {
-        star.draw();
+      // 绘制巨星
+      for (let i = 0; i < stars.length; i++) {
+        const star = stars[i];
+        if (star.isGiant && !star.isComet) {
+          star.draw();
+        }
       }
-    }
 
-    // 最后绘制流星（避免频繁的状态切换）
-    for (let i = 0; i < stars.length; i++) {
-      const star = stars[i];
-      if (star.isComet) {
-        star.draw();
+      // 最后绘制流星（避免频繁的状态切换）
+      for (let i = 0; i < stars.length; i++) {
+        const star = stars[i];
+        if (star.isComet) {
+          star.draw();
+        }
       }
+
+      lastTime = timestamp - (deltaTime % frameInterval);
     }
 
     animationFrameId = requestAnimationFrame(animate);
@@ -258,6 +267,7 @@ function renderStarrySky() {
     if (!isRunning) {
       isRunning = true;
       resize();
+      lastTime = performance.now();
       animate();
     }
   }
@@ -279,29 +289,17 @@ function renderStarrySky() {
     }
   });
 
+
+
   // 4. 初始化逻辑
-  // 判断当前是否需要立即启动
   if (htmlRoot.classList.contains('dark')) {
     start();
   }
 
-  // 监听 DOM 变化以检测主题切换 (针对动态切换 class='dark' 的情况)
-  const observer = new MutationObserver((mutations) => {
-    mutations.forEach((mutation) => {
-      if (mutation.attributeName === 'class') {
-        const isDark = htmlRoot.classList.contains('dark');
-        if (isDark && !isRunning) {
-          start();
-        }
-        // 如果切回亮色，animate() 内部逻辑会处理暂停渲染
-      }
-    });
-  });
-  observer.observe(htmlRoot, { attributes: true });
 
   // 确保在组件卸载时断开MutationObserver连接
   window.addEventListener('beforeunload', () => {
-    observer.disconnect();
+    cancelAnimationFrame(animationFrameId);
   });
 }
 // 挂载到 window

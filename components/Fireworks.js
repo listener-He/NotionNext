@@ -6,6 +6,7 @@ import { useEffect } from 'react'
 // import anime from 'animejs'
 import { siteConfig } from '@/lib/config'
 import { loadExternalResource } from '@/lib/utils'
+import { getDevicePerformance } from '@/components/PerformanceDetector'
 
 /**
  * 鼠标点击烟花特效
@@ -13,8 +14,14 @@ import { loadExternalResource } from '@/lib/utils'
  */
 const Fireworks = () => {
   const fireworksColor = siteConfig('FIREWORKS_COLOR')
+  const { isLowEndDevice } = getDevicePerformance()
 
   useEffect(() => {
+    // 在低端设备上不加载烟花特效
+    if (isLowEndDevice) {
+      return
+    }
+    
     // 异步加载
     function loadFireworks() {
       loadExternalResource(
@@ -41,8 +48,13 @@ const Fireworks = () => {
         fireworksElements[0].parentNode.removeChild(fireworksElements[0])
       }
     }
-  }, [])
+  }, [fireworksColor, isLowEndDevice])
 
+  // 在低端设备上不渲染组件
+  if (isLowEndDevice) {
+    return <></>
+  }
+  
   return <></>
 }
 

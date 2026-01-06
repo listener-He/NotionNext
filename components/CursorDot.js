@@ -1,12 +1,21 @@
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
+import { getDevicePerformance } from '@/components/PerformanceDetector';
+
 /**
  * 白点鼠标跟随
  * @returns 
  */
 const CursorDot = () => {
     const router = useRouter();
+    const { isLowEndDevice } = getDevicePerformance()
+    
     useEffect(() => {
+        // 在低端设备上不加载白点鼠标跟随特效
+        if (isLowEndDevice) {
+            return
+        }
+        
         // 创建小白点元素
         const dot = document.createElement('div');
         dot.classList.add('cursor-dot');
@@ -71,7 +80,12 @@ const CursorDot = () => {
             });
             document.body.removeChild(dot);
         };
-    }, [router]);
+    }, [router, isLowEndDevice]);
+
+    // 在低端设备上不渲染组件
+    if (isLowEndDevice) {
+        return null
+    }
 
     return (
         <style jsx global>{`
