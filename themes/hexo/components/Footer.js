@@ -59,12 +59,12 @@ const Footer = ({ title }) => {
         <a href="https://blogscn.fun/random.html" title="BLOGS·CN" target="_blank"
            className="transition-transform hover:scale-105">
           <LazyImage src="https://photo.xiangming.site/img/blogscn.png" alt="本站已加入BLOGS·CN"
-                     width={60} height={16} />
+                     width={60} height={18} />
         </a>
         <a href="https://www.blogsclub.org/blog/523.html" target="_blank"
            className="transition-transform hover:scale-105">
           <LazyImage src="https://www.blogsclub.org/badge/blog.hehouhui.cn"
-                     height={60} width={100}/>
+                     height={18} width={60} alt="本站已加入BLOGS·CN"/>
         </a>
         <a href="https://blogs.quest" target="_blank" title="空间穿梭-随机访问BlogsClub成员博客"
            className="transition-transform hover:scale-105">
@@ -72,22 +72,22 @@ const Footer = ({ title }) => {
         </a>
         <a href="https://www.travellings.cn/go.html" target="_blank" title="开往-友链接力"
            className="transition-transform hover:scale-105">
-          <LazyImage src="https://www.travellings.cn/assets/logo.gif" alt="开往-友链接力" width={120} height={16} />
+          <LazyImage src="https://www.travellings.cn/assets/logo.gif" alt="开往-友链接力" width={60} height={18} />
         </a>
         <a href="https://storeweb.cn/member/o/2336" target="_blank"
            className="transition-transform hover:scale-105">
-          <LazyImage src="https://upload.storeweb.cn/image/logo.png" alt="个站商店" height={16}
-                     width={16} />
+          <LazyImage src="https://upload.storeweb.cn/image/logo.png" alt="个站商店" height={18}
+                     width={18} />
         </a>
         <a href="https://www.boyouquan.com/planet-shuttle" target="_blank"
            className="transition-transform hover:scale-105">
-          <LazyImage src="https://www.boyouquan.com/assets/images/sites/logo/planet-shuttle-dark.svg" alt="博友圈" height={20}
-                     width={100} />
+          <LazyImage src="https://www.boyouquan.com/assets/images/sites/logo/planet-shuttle-dark.svg" alt="博友圈" height={18}
+                     width={60} />
         </a>
         <a href="https://boke.lu" target="_blank"
            className="transition-transform hover:scale-105">
-          <LazyImage src="https://boke.lu/logo/横板新图标透明背景.png" alt="博客录" height={16}
-                     width={100} />
+          <LazyImage src="https://boke.lu/logo/横板新图标透明背景.png" alt="博客录" height={18}
+                     width={60} />
         </a>
         &nbsp;
         {/*<LazyImage src='https://blog-file.hehouhui.cn/20250724094940374.png' width={15} height={15} alt='萌20257012号'/>*/}
@@ -99,10 +99,10 @@ const Footer = ({ title }) => {
         <a href="https://bloginc.cn/18872.html">
           <div style={{
             display: 'inline-flex',
-            height: '24px',
+            height: '18px',
             fontFamily: 'Arial, sans-serif',
-            fontSize: '14px',
-            lineHeight: '24px',
+            fontSize: '10px',
+            lineHeight: '18px',
             textAlign: 'center',
             borderRadius: '8px',
             overflow: 'hidden',
@@ -111,7 +111,7 @@ const Footer = ({ title }) => {
             <div style={{
               backgroundColor: '#04314D',
               color: 'white',
-              padding: '0 12px',
+              padding: '0 6px',
               borderTopLeftRadius: '8px',
               borderBottomLeftRadius: '8px',
             }}>
@@ -120,7 +120,7 @@ const Footer = ({ title }) => {
             <div style={{
               backgroundColor: '#FF6A00',
               color: 'white',
-              padding: '0 12px',
+              padding: '0 6px',
               borderTopRightRadius: '8px',
               borderBottomRightRadius: '8px',
             }}>
@@ -129,7 +129,7 @@ const Footer = ({ title }) => {
           </div>
         </a>
         <a title="无聊湾 🥱 The Boring Bay" href="https://boringbay.com" target="_blank" className="transition-transform hover:scale-105">
-          <LazyImage height={18} width={55} src="https://boringbay.com/api/badge/blog.hehouhui.cn"></LazyImage>
+          <LazyImage height={18} width={60} src="https://boringbay.com/api/badge/blog.hehouhui.cn"></LazyImage>
         </a>
       </div>
     </footer>
