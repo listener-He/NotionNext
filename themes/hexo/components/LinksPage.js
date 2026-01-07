@@ -224,7 +224,13 @@ const extractLinksFromNotionPage = (post) => {
       }
     }
   })
-  return links
+  
+  // 按照名称排序，确保服务端和客户端渲染顺序一致
+  return links.sort((a, b) => {
+    const nameA = a.name || ''
+    const nameB = b.name || ''
+    return nameA.localeCompare(nameB)
+  })
 }
 
 /**
@@ -341,90 +347,83 @@ const LinksPage = ({ post }) => {
                 href={link.url}
                 target='_blank'
                 rel='noopener noreferrer'
-                className='group block relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:scale-[1.05] border border-gray-100 dark:border-gray-700 hover:border-blue-200 dark:hover:border-blue-600 glass-layer-soft'
-                // 修复Hydration错误：移除服务端和客户端不一致的style
-                style={isClient ? {
-                  animation: `fadeInUp 0.6s ease-out ${index * 0.08}s both`
-                } : undefined}
+                className='group block relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:scale-[1.05] border border-gray-100 dark:border-gray-700 hover:border-blue-400 dark:hover:border-blue-500 glass-layer-soft'
               >
-                   {/* 背景装饰层 */}
-                   <div className='absolute inset-0 bg-gradient-to-br from-blue-50/50 via-purple-50/30 to-pink-50/50 dark:from-blue-900/20 dark:via-purple-900/10 dark:to-pink-900/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500' />
-
-                   {/* 卡片内容 - 左右布局 */}
-                   <div className='relative flex items-stretch min-h-[47px]'>
-                     {/* 右侧内容区域背景层 - 完整覆盖 */}
-                     <div className='absolute inset-0 rounded-2xl overflow-hidden'
+                  <div className="w-full h-full">
+                     {/* 背景装饰层 */}
+                     <div className='absolute inset-0 bg-gradient-to-br from-blue-50/50 via-purple-50/30 to-pink-50/50 dark:from-blue-900/20 dark:via-purple-900/10 dark:to-pink-900/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500' />
+  
+                    {/* 卡片内容 - 左右布局 (使用row-reverse实现peer选择器逻辑: Content为DOM前置peer, Image为后置) */}
+                    <div className='relative flex flex-row-reverse items-stretch min-h-[28px]'>
+                      
+                      {/* 右侧内容区域 - Visual Right (DOM First) */}
+                      <div className='flex-1 relative z-10 p-1 flex flex-col justify-between min-w-0 h-full peer/right transition-all duration-500 overflow-hidden'>
+                        {/* 右侧背景图层 - 优先使用cover或avatar */}
+                        <div 
+                          className='absolute inset-0 bg-cover bg-center opacity-10 group-hover:opacity-20 transition-opacity duration-500'
                           style={{
-                            background: link.cover ? `url(${link.cover})` :
-                                       link.avatar ? `url(${link.avatar})` :
-                                       'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                            backgroundSize: 'cover',
-                            backgroundPosition: 'center',
-                            backgroundRepeat: 'no-repeat'
-                          }}>
-                       {/* 内容遮罩层 - 确保文字可读性 */}
-                       <div className='absolute inset-0 bg-white/85 dark:bg-gray-800/85 backdrop-blur-sm' />
-                     </div>
+                            backgroundImage: `url(${link.cover || link.avatar || ''})`
+                          }}
+                        />
+                        {/* 右侧背景遮罩 - 增加可读性 */}
+                        <div className='absolute inset-0 bg-white/50 dark:bg-black/50 backdrop-blur-[1px]' />
 
-                     {/* 左侧图片区域 - 3.5份宽度，左直线右圆弧 */}
-                     <div className='flex-shrink-0 w-[30%] relative z-10 overflow-hidden'
-                          style={{
-                            clipPath: 'polygon(0 0, calc(100% - 12px) 0, 100% 50%, calc(100% - 12px) 100%, 0 100%)'
-                          }}>
-                       {/* 图片优先级：封面图 > 头像 > 默认渐变 */}
-                       {link.backgroundImage ? (
-                         <LazyImage
-                           src={link.backgroundImage}
-                           alt={link.name}
-                           className='absolute inset-0 w-full h-full object-cover'
-                         />
-                       ) : link.avatar ? (
-                         <LazyImage
-                           src={link.avatar}
-                           alt={link.name}
-                           className='absolute inset-0 w-full h-full object-cover'
-                         />
-                       ) : (
-                         <div className='absolute inset-0 bg-gradient-to-br from-blue-400 via-purple-500 to-pink-500' />
-                       )}
-                     </div>
+                        <div className='relative z-10 flex flex-col flex-1 justify-center'>
+                          {/* 站点名称 */}
+                          <p className='text-[10px] font-bold text-gray-900 dark:text-white mb-0 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300 line-clamp-1'>
+                            {link.name}
+                          </p>
+                          {/* 描述 */}
+                          <p className='text-[8px] text-gray-500 dark:text-gray-400 leading-tight line-clamp-1 group-hover:text-gray-700 dark:group-hover:text-gray-300 transition-colors duration-300'>
+                            {link.summary || link.description}
+                          </p>
+                        </div>
 
-                     {/* 右侧内容区域 - 6.5份宽度 */}
-                     <div className='flex-1 relative z-10 p-0.3 flex flex-col justify-between min-w-0 h-full'>
-                       <div className='flex flex-col flex-1'>
-                         {/* 站点名称 */}
-                         <p className='text-[10px] font-bold text-gray-900 dark:text-white mb-0.167 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300 line-clamp-1'>
-                           {link.name}
-                         </p>
-                         {/* 描述 */}
-                         <p className='text-gray-700 dark:text-gray-200 ml-1 text-[6px] leading-tight line-clamp-1 group-hover:text-gray-800 dark:group-hover:text-gray-100 transition-colors duration-300 mt-0.167'>
-                           {link.summary || link.description}
-                         </p>
-                       </div>
-
-                       {/* 标签区域 - 单行显示 */}
-                       {link.tags && link.tags.length > 0 && (
-                         <div className='flex items-center ml-1 gap-1 overflow-hidden pt-1 pb-1'>
-                           {link.tags.slice(0, 6).map((tag, tagIndex) => {
-                             const colorClass = getTagColor(tag);
-                             return (
-                               <span
-                                 key={tagIndex}
-                                 className={`px-0.5 py-0.25 text-[6px] font-medium rounded-md shadow-sm flex-shrink-0 ${colorClass}`}
-                               >
-                                 {tag}
-                               </span>
-                             );
-                           })}
-                           {link.tags.length > 6 && (
-                             <span className='px-0.5 py-0.25 text-[6px] font-medium bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-md shadow-sm flex-shrink-0'>
-                               +{link.tags.length - 6}
-                             </span>
-                           )}
-                         </div>
-                       )}
-                     </div>
-                   </div>
+                        {/* 标签区域 - 单行显示 */}
+                        {link.tags && link.tags.length > 0 && (
+                          <div className='relative z-10 flex items-center gap-1 overflow-hidden pt-0.5'>
+                            {link.tags.slice(0, 4).map((tag, tagIndex) => {
+                              const colorClass = getTagColor(tag);
+                              return (
+                                <span
+                                  key={tagIndex}
+                                  className={`px-1 py-0 text-[8px] font-medium rounded-md shadow-sm flex-shrink-0 ${colorClass}`}
+                                >
+                                  {tag}
+                                </span>
+                              );
+                            })}
+                          </div>
+                        )}
+                      </div>
+ 
+                      {/* 左侧图片区域 - Visual Left (DOM Second) */}
+                      <div className='flex-shrink-0 w-[30%] relative z-10 overflow-hidden transition-all duration-500 ease-out hover:w-[70%] peer-hover/right:w-[10%]'
+                           style={{
+                             clipPath: 'polygon(0 0, 90% 0, 100% 50%, 90% 100%, 0 100%)' 
+                           }}>
+                        {/* 图片优先级：封面图 > 头像 > 默认渐变 */}
+                        {link.backgroundImage ? (
+                          <LazyImage
+                            src={link.backgroundImage}
+                            alt={link.name}
+                            className='absolute inset-0 w-full h-full object-cover'
+                          />
+                        ) : link.avatar ? (
+                          <LazyImage
+                            src={link.avatar}
+                            alt={link.name}
+                            className='absolute inset-0 w-full h-full object-cover'
+                          />
+                        ) : (
+                          <div className='absolute inset-0 bg-gradient-to-br from-blue-400 via-purple-500 to-pink-500' />
+                        )}
+                        
+                        {/* 遮罩层，让文字更清晰 */}
+                        <div className='absolute inset-0 bg-black/10 hover:bg-transparent transition-colors duration-300' />
+                      </div>
+                    </div>
+                  </div>
               </Link>
             ))}
           </div>

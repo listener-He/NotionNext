@@ -197,12 +197,12 @@ const Style = () => {
         
         /* Card Shadows - Diffused & Soft */
         #theme-hexo .card-shadow {
-            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.03);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
             transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
         }
 
         #theme-hexo .card-shadow:hover {
-            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.06);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
             transform: translateY(-4px);
         }
 

@@ -68,15 +68,15 @@ const Header = props => {
       // const textWhite = header && scrollInHeader
 
       if (scrollInHeader) {
-        nav && nav.classList.replace('bg-white/90', 'bg-transparent')
+        nav && nav.classList.replace('bg-white/80', 'bg-transparent')
         nav && nav.classList.replace('border', 'border-transparent')
         nav && nav.classList.replace('drop-shadow-md', 'shadow-none')
-        nav && nav.classList.replace('dark:bg-hexo-black-gray/80', 'dark:bg-transparent')
+        nav && nav.classList.replace('dark:bg-hexo-black-gray/60', 'dark:bg-transparent')
       } else {
-        nav && nav.classList.replace('bg-transparent', 'bg-white/90')
+        nav && nav.classList.replace('bg-transparent', 'bg-white/80')
         nav && nav.classList.replace('border-transparent', 'border')
         nav && nav.classList.replace('shadow-none', 'drop-shadow-md')
-        nav && nav.classList.replace('dark:bg-transparent', 'dark:bg-hexo-black-gray/80')
+        nav && nav.classList.replace('dark:bg-transparent', 'dark:bg-hexo-black-gray/60')
       }
 
       if (scrollInHeader) {
@@ -159,14 +159,14 @@ const Header = props => {
       <div
         id='sticky-nav'
         style={{
-          backdropFilter: 'blur(8px)',
-          WebkitBackdropFilter: 'blur(8px)',
+          backdropFilter: 'blur(12px)',
+          WebkitBackdropFilter: 'blur(12px)',
           willChange: 'top'
         }}
         className={
-          'top-0 duration-300 transition-all shadow-none fixed bg-white/90 dark:bg-hexo-black-gray/80 dark:text-indigo-100 text-gray-700 w-full z-20 transform border-transparent'
+          'top-0 duration-300 transition-all shadow-none fixed bg-white/80 dark:bg-hexo-black-gray/60 dark:text-indigo-100 text-gray-700 w-full z-20 transform border-transparent'
         }>
-        <div className='w-full flex justify-between items-center px-4 py-2 glass-nav'>
+        <div className='w-full flex justify-between items-center px-4 py-1 glass-nav'>
           <div className='flex'>
             <Logo {...props} />
           </div>

@@ -101,7 +101,7 @@ const BlogPostCard = ({ index, post, showSummary, siteInfo }) => {
         id='blog-post-card'
         className={`group w-full flex flex-col sm:flex-row justify-between items-stretch 
                     ${HEXO_POST_LIST_IMG_CROSSOVER && index % 2 === 1 ? 'sm:flex-row-reverse' : ''}
-                    overflow-hidden rounded-xl card-base dark:bg-gray-900/60 dark:border-gray-700/50 dark:backdrop-blur-md transition-all duration-300 ease-standard transform-gpu relative`}>
+                    overflow-hidden rounded-xl card-base shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 dark:border-white/10 bg-white/90 dark:bg-hexo-black-gray/60 backdrop-blur-md transition-all duration-300 ease-standard transform-gpu relative`}>
         
         {/* 图片封面  */}
         {showPageCover && (

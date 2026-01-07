@@ -4,11 +4,11 @@ import { getDevicePerformance } from '@/components/PerformanceDetector'
 import { useGlobal } from '@/lib/global'
 
 const StarrySky = () => {
-  const { isHighEndDevice, details} = getDevicePerformance();
+  const { isLowEndDevice, details} = getDevicePerformance();
   const { isDarkMode } = useGlobal()
   useEffect(() => {
     // 在低端设备或性能较差的设备上禁用星空动画
-    if (!isHighEndDevice || !isDarkMode) {
+    if (isLowEndDevice || !isDarkMode) {
       return;
     }
 
@@ -66,7 +66,7 @@ const StarrySky = () => {
       // 重置加载标志
       scriptLoaded = false;
     };
-  }, [isHighEndDevice, isDarkMode]);
+  }, [isLowEndDevice, isDarkMode]);
 
   return (
     <></>

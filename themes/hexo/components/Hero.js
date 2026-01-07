@@ -95,7 +95,7 @@ const Hero = props => {
         id='header'
         style={{ height: isHalfScreenDarkMode ? '50vh' : '100vh'}}
         className={headerClass}>
-        <div className={`text-white absolute bottom-0 flex flex-col h-full items-center justify-center w-full ${contentPosition} z-20`}>
+        <div className={`text-white absolute bottom-0 flex flex-col h-full items-center justify-center w-full ${contentPosition} z-10`}>
           {/* 站点标题 */}
           {/*{!isHalfScreenDarkMode && (*/}
           {/*  <div className='font-light text-5xl md:text-6xl drop-shadow-md tracking-widest uppercase transition-all duration-500 font-serif'>*/}
@@ -138,7 +138,7 @@ const Hero = props => {
       id='header'
       style={{ height: isHalfScreenDarkMode ? '50vh' : '100vh'}}
       className={headerClass}>
-      <div className={`text-white absolute bottom-0 flex flex-col h-full items-center justify-center w-full ${contentPosition} z-20`}>
+      <div className={`text-white absolute bottom-0 flex flex-col h-full items-center justify-center w-full ${contentPosition} z-10`}>
         {/* 站点标题 */}
         {/*{!isHalfScreenDarkMode && (*/}
         {/*  <div className='font-light text-5xl md:text-6xl drop-shadow-md tracking-widest uppercase transition-all duration-500 font-serif'>*/}
