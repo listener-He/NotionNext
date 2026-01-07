@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react'
 import { siteConfig } from '@/lib/config'
 
-const FONT_SIZES = ['small', 'normal', 'large', 'extra-large']
-
 /**
  * 可访问性增强组件
  * 提供键盘导航、屏幕阅读器支持、高对比度模式等功能
@@ -78,7 +76,7 @@ const Accessibility = () => {
   useEffect(() => {
     const handleKeyDown = (e) => {
       // Alt + A: 切换面板
-      if (e.altKey && e.key.toLowerCase() === 'a') {
+      if (e.altKey && e.key.toLowerCase() === 'e') {
         e.preventDefault()
         setIsOpen(prev => !prev)
       }
@@ -115,7 +113,7 @@ const Accessibility = () => {
           <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-md p-4 rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 w-64">
             <div className="flex justify-between items-center mb-4 border-b border-gray-100 dark:border-gray-700 pb-2">
               <h3 className="font-semibold text-gray-800 dark:text-gray-200">辅助功能</h3>
-              <span className="text-xs text-gray-500 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">{shortcutKey} + A</span>
+              <span className="text-xs text-gray-500 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">{shortcutKey} + E</span>
             </div>
 
             <div className="space-y-4">
@@ -141,20 +139,20 @@ const Accessibility = () => {
                   <span>{fontSize === 'normal' ? '默认' : fontSize}</span>
                 </div>
                 <div className="flex gap-2 bg-gray-100 dark:bg-gray-800 p-1 rounded-lg">
-                  <button 
+                  <button
                     onClick={() => changeFontSize(-1)}
                     disabled={fontSize === 'small'}
                     className="flex-1 py-1 text-sm text-gray-700 dark:text-gray-100 rounded hover:bg-white dark:hover:bg-gray-700 shadow-sm disabled:opacity-50 disabled:shadow-none transition-all"
                   >
                     A-
                   </button>
-                  <button 
+                  <button
                     onClick={() => setFontSize('normal')}
                     className="flex-1 py-1 text-xs text-gray-700 dark:text-gray-100 rounded hover:bg-white dark:hover:bg-gray-700 shadow-sm transition-all"
                   >
                     重置
                   </button>
-                  <button 
+                  <button
                     onClick={() => changeFontSize(1)}
                     disabled={fontSize === 'extra-large'}
                     className="flex-1 py-1 text-lg text-gray-700 dark:text-gray-100 rounded hover:bg-white dark:hover:bg-gray-700 shadow-sm disabled:opacity-50 disabled:shadow-none transition-all leading-none"
@@ -177,7 +175,7 @@ const Accessibility = () => {
               : 'bg-indigo-600 text-white hover:bg-indigo-700 hover:scale-110'}
           `}
           aria-label="打开辅助功能菜单"
-          title="辅助功能 (Alt + A)"
+          title="辅助功能 (Alt + E)"
         >
           {isOpen ? (
             <i className="fas fa-plus text-lg" />
