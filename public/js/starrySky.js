@@ -221,11 +221,6 @@ function renderStarrySky() {
       // 如果不是暗色模式，清空画布并挂起，节省性能
       if (!htmlRoot.classList.contains('dark')) {
         ctx.clearRect(0, 0, width, height);
-        // 稍微延迟再次检查，而不是每秒60次
-        setTimeout(() => {
-          if (isRunning) requestAnimationFrame(animate);
-        }, 1000);
-        return;
       }
 
       ctx.clearRect(0, 0, width, height);
