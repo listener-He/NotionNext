@@ -6,6 +6,7 @@ import { loadExternalResource } from '@/lib/utils'
 import { useEffect, useState } from 'react'
 import CONFIG from '../config'
 import NavButtonGroup from './NavButtonGroup'
+import Wave from './Wave'
 
 let wrapperTop = 0
 
@@ -94,7 +95,7 @@ const Hero = props => {
         id='header'
         style={{ height: isHalfScreenDarkMode ? '50vh' : '100vh'}}
         className={headerClass}>
-        <div className={`text-white absolute bottom-0 flex flex-col h-full items-center justify-center w-full ${contentPosition} z-10`}>
+        <div className={`text-white absolute bottom-0 flex flex-col h-full items-center justify-center w-full ${contentPosition} z-20`}>
           {/* 站点标题 */}
           {/*{!isHalfScreenDarkMode && (*/}
           {/*  <div className='font-light text-5xl md:text-6xl drop-shadow-md tracking-widest uppercase transition-all duration-500 font-serif'>*/}
@@ -104,8 +105,8 @@ const Hero = props => {
 
           {/* 站点欢迎语 - 仅在非黑暗模式下显示打字机效果 */}
           {!isHalfScreenDarkMode && (
-            <div className='mt-6 h-12 items-center text-center font-medium text-2xl tracking-wider drop-shadow-sm font-serif italic text-white/90'>
-              <span id='typed' />
+            <div className='mt-6 h-12 items-center text-center font-bold text-3xl md:text-5xl tracking-widest drop-shadow-sm font-serif text-white'>
+              <span id='typed' className="bg-clip-text text-transparent bg-gradient-to-r from-white to-cyan-400" />
             </div>
           )}
 
@@ -122,9 +123,12 @@ const Hero = props => {
             id='header-cover'
             alt={siteInfo?.title}
             src={siteInfo?.pageCover}
-            className={`header-cover w-full ${headerHeight} object-cover object-center ${backgroundFixed ? 'fixed' : ''} dark:hidden brightness-90`}
+            className={`header-cover w-full ${headerHeight} object-cover object-center ${backgroundFixed ? 'fixed' : ''} dark:hidden brightness-90 z-10`}
           />
         )}
+
+        {/* 白天模式下-波浪动画 */}
+        {!isDarkMode && <Wave />}
       </header>
     )
   }
@@ -134,7 +138,7 @@ const Hero = props => {
       id='header'
       style={{ height: isHalfScreenDarkMode ? '50vh' : '100vh'}}
       className={headerClass}>
-      <div className={`text-white absolute bottom-0 flex flex-col h-full items-center justify-center w-full ${contentPosition} z-10`}>
+      <div className={`text-white absolute bottom-0 flex flex-col h-full items-center justify-center w-full ${contentPosition} z-20`}>
         {/* 站点标题 */}
         {/*{!isHalfScreenDarkMode && (*/}
         {/*  <div className='font-light text-5xl md:text-6xl drop-shadow-md tracking-widest uppercase transition-all duration-500 font-serif'>*/}
@@ -160,7 +164,7 @@ const Hero = props => {
         {!isHalfScreenDarkMode && (
           <div
             onClick={scrollToWrapper}
-            className='z-10 cursor-pointer w-full text-center py-8 text-3xl absolute bottom-8 text-white opacity-80 hover:opacity-100 transition-opacity duration-300'>
+            className='z-30 cursor-pointer w-full text-center py-8 text-3xl absolute bottom-8 text-white opacity-80 hover:opacity-100 transition-opacity duration-300'>
             <div className='text-xs font-light tracking-widest mb-2 uppercase font-sans'>
               {showStartReading && locale.COMMON.START_READING}
             </div>
@@ -173,8 +177,11 @@ const Hero = props => {
         id='header-cover'
         alt={siteInfo?.title}
         src={siteInfo?.pageCover}
-        className={`header-cover w-full  ${headerHeight} object-cover object-center ${backgroundFixed ? 'fixed' : ''} dark:hidden brightness-90`}
+        className={`header-cover w-full  ${headerHeight} object-cover object-center ${backgroundFixed ? 'fixed' : ''} dark:hidden brightness-90 z-10`}
       />
+
+      {/* 波浪动画 */}
+        <Wave />
     </header>
   )
 }

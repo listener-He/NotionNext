@@ -424,3 +424,72 @@ html.dark {
   background-color: color-mix(in oklab, var(--surface) 50%, transparent);
   border: 1px solid color-mix(in oklab, var(--surface-border) 50%, transparent);
 }
+
+/* 波浪动画样式 */
+.waves-box {
+  height: 120px;
+  min-height: 120px;
+  position: absolute;
+  width: 200%;
+  z-index: 0;
+  overflow: visible;
+  bottom: 0;
+  left: 0;
+}
+
+.waves {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.waves .parallax > use {
+  animation: move-forever 40s cubic-bezier(0.3, 0.5, 0.6, 0.8) infinite;
+}
+
+.waves .parallax > use:nth-child(1) {
+  animation-delay: -2s;
+  animation-duration: 40s;
+  opacity: 0.7;
+}
+
+.waves .parallax > use:nth-child(2) {
+  animation-delay: -5s;
+  animation-duration: 45s;
+  opacity: 0.5;
+}
+
+.waves .parallax > use:nth-child(3) {
+  animation-delay: -8s;
+  animation-duration: 50s;
+  opacity: 0.3;
+}
+
+.waves .parallax > use:nth-child(4) {
+  animation-delay: -11s;
+  animation-duration: 55s;
+  opacity: 0.2;
+}
+
+@keyframes move-forever {
+  0% {
+    transform: translateX(-50px);
+  }
+  50% {
+    transform: translateX(50px);
+  }
+  100% {
+    transform: translateX(-50px);
+  }
+}
+
+/* 响应式优化 */
+@media (max-width: 768px) {
+  .waves-box {
+    height: 80px;
+    min-height: 80px;
+  }
+}
