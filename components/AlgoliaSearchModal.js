@@ -82,10 +82,9 @@ export default function AlgoliaSearchModal({ cRef }) {
     setIsLoading(true)
     try {
       const index = searchClient.initIndex(algoliaIndex)
-      const res = await index.search(query, { 
-        page: pageIndex, 
-        hitsPerPage: 10,
-        filters: 'lastEditedDate ISSET' // 确保搜索结果必须存在 lastEditedDate 字段
+      const res = await index.search(query, {
+        page: pageIndex,
+        hitsPerPage: 6
       })
 
       const { hits, nbHits, nbPages, processingTimeMS } = res
