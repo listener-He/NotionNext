@@ -82,7 +82,11 @@ export default function AlgoliaSearchModal({ cRef }) {
     setIsLoading(true)
     try {
       const index = searchClient.initIndex(algoliaIndex)
-      const res = await index.search(query, { page: pageIndex, hitsPerPage: 10 })
+      const res = await index.search(query, { 
+        page: pageIndex, 
+        hitsPerPage: 10,
+        filters: 'lastEditedDate ISSET' // 确保搜索结果必须存在 lastEditedDate 字段
+      })
 
       const { hits, nbHits, nbPages, processingTimeMS } = res
 
@@ -126,7 +130,7 @@ export default function AlgoliaSearchModal({ cRef }) {
   useEffect(() => {
     // 重置 activeIndex
     setActiveIndex(0)
-    performSearch(debouncedKeyword, page)
+    performSearch(debouncedKeyword, page).catch(console.error)
   }, [debouncedKeyword, page, performSearch])
 
   // 重置页码逻辑：当关键词改变时，重置回第一页
