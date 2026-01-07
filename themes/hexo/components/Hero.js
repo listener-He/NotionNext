@@ -180,8 +180,8 @@ const Hero = props => {
         className={`header-cover w-full  ${headerHeight} object-cover object-center ${backgroundFixed ? 'fixed' : ''} dark:hidden brightness-90 z-10`}
       />
 
-      {/* 波浪动画 */}
-        <Wave />
+      {/* 白天模式下-波浪动画 */}
+      {!isDarkMode && <Wave />}
     </header>
   )
 }
