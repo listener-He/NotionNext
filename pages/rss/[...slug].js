@@ -1,4 +1,3 @@
-
 /**
  * RSS 智能路由处理器
  *
@@ -23,23 +22,52 @@
  * - 传统服务器环境（文件系统完全支持）
  * - 静态文件缺失或过期的情况
  */
+import { CACHE_KEY_RSS } from '@/lib/cache/cache_keys'
+import { getOrSetDataWithCustomCache } from '@/lib/cache/cache_manager'
+import { generateRssFeed } from '@/lib/rss'
+import { getGlobalData } from '@/lib/db/getSiteData'
+
 
 // 缓存文件系统支持状态，避免重复检测
 let fileSystemSupported = null
+let lastCheckTime = null
+let fsObj = null;
+// RSS 生成缓存
+let rssFileCache = {
+  lastGeneratedTime: 0,
+  intervalMinutes: 10 // RSS缓存间隔（分钟
+}
+
+
+function getFs() {
+  if (fsObj) {
+    return fsObj
+  }
+  try {
+    fsObj = require('fs')
+  } catch (error) {
+    fsObj = null
+  }
+  return fsObj
+}
 
 /**
  * 检测文件系统是否支持
  * @returns {boolean} 是否支持文件系统访问
  */
 function checkFileSystemSupport() {
-  if (fileSystemSupported !== null) {
+  // 缓存检测结果，避免重复检测
+  const now = Date.now();
+  if (fileSystemSupported !== null && lastCheckTime && now - lastCheckTime < 60 * 1000) {
     return fileSystemSupported
   }
 
   try {
+    const fs = getFs()
     // 尝试访问 public 目录
-    const rssExists = require('fs').existsSync('./public/rss/feed.xml')
+    const rssExists = fs.existsSync('./public/rss/feed.xml')
     if (rssExists) {
+      fs.writeFileSync('./public/rss/check-write.log', now)
       fileSystemSupported = true
       console.log('[RSS] 文件系统支持检测: 支持')
     } else {
@@ -47,21 +75,73 @@ function checkFileSystemSupport() {
     }
   } catch (error) {
     fileSystemSupported = false
-    console.log('[RSS] 文件系统支持检测: 不支持，将使用 API 路由')
+    console.warn('[RSS] 文件系统支持检测: 不支持，将使用 API 路由')
   }
-
+  lastCheckTime = now
   return fileSystemSupported
 }
 
-export async function getServerSideProps({ params, req, res }) {
+export async function getServerSideProps({ params, ctx }) {
   const slug = params.slug.join('/')
 
   // 确定目标 API 路由
   let destination = '/api/rss'
+  let format = 'rss2'
   if (slug === 'atom.xml') {
     destination = '/api/rss?format=atom'
+    format = slug
   } else if (slug === 'feed.json') {
     destination = '/api/rss?format=json'
+    format = slug
+  }
+  const cacheKey = CACHE_KEY_RSS(format);
+  const now = Date.now();
+  if (checkFileSystemSupport()) {
+    if ( - rssFileCache.lastGeneratedTime < rssFileCache.intervalMinutes * 60 * 1000) {
+      // 文件存在且在缓存周期内, 让静态文件服务处理
+      return {}
+    }
+    // 使用缓存管理器获取或生成RSS内容
+    const content = await getOrSetDataWithCustomCache(
+      cacheKey,
+      60 * 120,
+      async () => {
+        console.log(`[RSS API] 🔄 生成新的RSS内容: ${format}`)
+        // 优化：只获取RSS需要的数据类型
+        const props = await getGlobalData({
+          from: 'rss-api',
+          dataTypes: ['allPages', 'siteInfo', 'NOTION_CONFIG', 'latestPosts']
+        })
+
+        if (!props || !props.latestPosts) {
+          throw new Error('Failed to fetch site data')
+        }
+
+        // 使用原有的 RSS 生成逻辑
+        const feed = await generateRssFeed(props)
+
+        if (!feed) {
+          throw new Error('Failed to generate RSS feed')
+        }
+
+        // 根据格式生成对应的RSS内容
+        switch (format) {
+          case 'atom.xml':
+            return feed.atom1()
+          case 'feed.json':
+            return feed.json1()
+          default:
+            return feed.rss2()
+        }
+      }
+    )
+    // 缓存
+    ctx.res.setHeader(
+      'Cache-Control',
+      'public, max-age=7200, stale-while-revalidate=59'
+    )
+    rssFileCache.lastGeneratedTime = now
+    return ctx.res.status(200).send(content)
   }
 
   return {

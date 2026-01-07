@@ -58,14 +58,17 @@ const locales = (function () {
     return
   }
 
+  // 删除 public/sitemap.xml 文件 ； 否则会和/pages/sitemap.xml.js 冲突。
   const sitemapPath = path.resolve(__dirname, 'public', 'sitemap.xml')
   if (fs.existsSync(sitemapPath)) {
     fs.unlinkSync(sitemapPath)
+    console.log('Deleted existing sitemap.xml from public directory')
   }
 
   const sitemap2Path = path.resolve(__dirname, 'sitemap.xml')
   if (fs.existsSync(sitemap2Path)) {
     fs.unlinkSync(sitemap2Path)
+    console.log('Deleted existing sitemap.xml from root directory')
   }
 
   const isProdBuild =
@@ -200,9 +203,6 @@ const nextConfig = {
         ...langsRewrites,
         { source: '/:path*.html', destination: '/:path*' },
         // RSS 路由重写：确保 RSS 请求始终走 API 路由
-        { source: '/rss/feed.xml', destination: '/api/rss' },
-        { source: '/rss/atom.xml', destination: '/api/rss?format=atom' },
-        { source: '/rss/feed.json', destination: '/api/rss?format=json' },
         { source: '/feed', destination: '/rss/feed.xml' },
         { source: '/rss', destination: '/rss/feed.xml' },
         { source: '/atom', destination: '/rss/atom.xml' }

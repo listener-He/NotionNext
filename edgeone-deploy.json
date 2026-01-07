@@ -19,14 +19,15 @@
         {
           "type": "path",
           "operator": "match",
-          "value": "/rss/feed.xml"
+          "value": "/rss"
         }
       ],
       "actions": [
         {
-          "type": "rewrite",
+          "type": "redirect",
           "parameters": {
-            "path": "/api/rss"
+            "path": "/rss/feed.xml",
+            "code": 301
           }
         }
       ]
@@ -38,14 +39,15 @@
         {
           "type": "path",
           "operator": "match",
-          "value": "/rss/atom.xml"
+          "value": "/atom"
         }
       ],
       "actions": [
         {
-          "type": "rewrite",
+          "type": "redirect",
           "parameters": {
-            "path": "/api/rss?format=atom"
+            "path": "/rss/atom.xml",
+            "code": 301
           }
         }
       ]
@@ -57,25 +59,6 @@
         {
           "type": "path",
           "operator": "match",
-          "value": "/rss/feed.json"
-        }
-      ],
-      "actions": [
-        {
-          "type": "rewrite",
-          "parameters": {
-            "path": "/api/rss?format=json"
-          }
-        }
-      ]
-    },
-    {
-      "name": "feed-redirect",
-      "priority": 90,
-      "conditions": [
-        {
-          "type": "path",
-          "operator": "match",
           "value": "/feed"
         }
       ],
@@ -83,7 +66,7 @@
         {
           "type": "redirect",
           "parameters": {
-            "url": "/rss/feed.xml",
+            "path": "/rss/feed.xml",
             "code": 301
           }
         }

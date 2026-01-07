@@ -3,16 +3,16 @@
   "trailingSlash": false,
   "rewrites": [
     {
-      "source": "/rss/feed.xml",
-      "destination": "/api/rss"
+      "source": "/feed",
+      "destination": "/rss/feed.xml"
     },
     {
-      "source": "/rss/atom.xml",
-      "destination": "/api/rss?format=atom"
+      "source": "/atom",
+      "destination": "/rss/atom.xml"
     },
     {
-      "source": "/rss/feed.json",
-      "destination": "/api/rss?format=json"
+      "source": "/rss",
+      "destination": "/rss/feed.json"
     }
   ],
   "headers": [

@@ -4,7 +4,7 @@ import { getGlobalData, getPostBlocks } from '@/lib/db/getSiteData'
 import { generateRobotsTxt } from '@/lib/robots.txt'
 import { DynamicLayout } from '@/themes/theme'
 import { generateRedirectJson } from '@/lib/redirect'
-import { checkDataFromAlgolia } from '@/lib/plugins/algolia'
+import { checkDataFromAlgolia, generateAlgoliaSearch } from '@/lib/plugins/algolia'
 import { getPreviewConfig } from '@/lib/performance.config'
 import { generateSitemap } from '@/lib/sitemap'
 
@@ -69,15 +69,14 @@ export async function getStaticProps(req) {
 
   // 生成robotTxt
   generateRobotsTxt(props)
-  // 生成Feed订阅
-  //generateRss(props)
+
   // 生成
   generateSitemap(props)
   // 检查数据是否需要从algolia删除
-  checkDataFromAlgolia(props)
+  checkDataFromAlgolia(props).catch(console.error)
   if (siteConfig('UUID_REDIRECT', false, props?.NOTION_CONFIG)) {
     // 生成重定向 JSON
-    generateRedirectJson(props)
+    generateRedirectJson(props).catch(console.error)
   }
 
   // 生成全文索引 - 仅在 yarn build 时执行 && process.env.npm_lifecycle_event === 'build'
