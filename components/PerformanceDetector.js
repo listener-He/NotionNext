@@ -174,7 +174,11 @@ async function detectGPUPerformance() {
   try {
     const canvas = document.createElement('canvas')
     const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl')
-
+    try {
+      document.removeChild(canvas)
+    } catch (e) {
+      // 忽略错误
+    }
     if (!gl) return 10 // 不支持WebGL，较低分数
 
     // 获取GPU信息

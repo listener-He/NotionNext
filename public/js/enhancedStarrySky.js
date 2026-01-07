@@ -118,7 +118,7 @@ function createEnhancedStarrySky() {
 
     reset() {
       // 根据深度层级调整大小和透明度
-      const depthScale = 0.3 + this.depth * 0.7;
+      const depthScale = 0.3 + this.depthLayer;
       this.size = Math.max(0.1, (0.3 + Math.random() * 1.8) * depthScale);
       this.baseOpacity = Math.max(0.05, Math.min(1, (0.15 + Math.random() * 0.7) * depthScale));
       this.blur = (1 - this.depth) * 2;
@@ -163,10 +163,10 @@ function createEnhancedStarrySky() {
       ctx.globalAlpha = Math.max(0, Math.min(1, depthOpacity));
 
       // 移除滤镜效果以提高性能
-      
+
       // 简化绘制：直接使用圆形代替径向渐变
       const coreSize = Math.max(0.1, this.size * (0.8 + this.depth * 0.4));
-      
+
       // 绘制核心
       ctx.fillStyle = this.colorHex;
       ctx.beginPath();
@@ -225,7 +225,7 @@ function createEnhancedStarrySky() {
       if (!this.isValid()) return;
 
       ctx.save();
-      
+
       // 简化流星绘制，移除滤镜和径向渐变
       const depthOpacity = this.opacity * (0.5 + this.depth * 0.5);
 
@@ -246,7 +246,7 @@ function createEnhancedStarrySky() {
       // 头部 - 简化为普通圆形
       ctx.globalAlpha = Math.max(0, Math.min(1, depthOpacity));
       const headSize = Math.max(0.1, this.size * (1.5 + this.depth));
-      
+
       ctx.fillStyle = this.color;
       ctx.beginPath();
       ctx.arc(this.x, this.y, headSize, 0, PI_2);
@@ -292,14 +292,14 @@ function createEnhancedStarrySky() {
       if (!this.isValid()) return;
 
       ctx.save();
-      
+
       // 移除滤镜效果以提高性能
-      
+
       // 简化星云绘制，使用普通圆形代替径向渐变
       const pulseOpacity = this.opacity + getFastSin(this.pulsePhase) * 0.05;
       const depthOpacity = pulseOpacity * (0.4 + this.depth * 0.6);
       ctx.globalAlpha = Math.max(0, Math.min(1, depthOpacity));
-      
+
       ctx.fillStyle = this.color;
       ctx.beginPath();
       ctx.arc(this.x, this.y, this.radius * 0.3, 0, PI_2); // 缩小星云大小以提高性能
@@ -348,9 +348,9 @@ function createEnhancedStarrySky() {
       if (!this.isValid()) return;
 
       ctx.save();
-      
+
       // 移除滤镜效果以提高性能
-      
+
       const pulseOpacity = this.baseOpacity + getFastSin(this.pulsePhase) * 0.1;
       ctx.globalAlpha = Math.max(0, Math.min(1, pulseOpacity * (0.3 + this.depth * 0.7)));
       ctx.fillStyle = config.colors.particles;
