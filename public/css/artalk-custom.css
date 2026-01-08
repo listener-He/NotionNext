@@ -8,6 +8,16 @@
   z-index: 1;
 }
 
+/* 输入框样式-外框 */
+.dark .atk-main-editor {
+  background: none !important;
+  border: none !important;
+}
+/* 输入框样式-内框 */
+.dark .atk-textarea-wrap {
+  --at-color-bg: none !important;
+}
+
 /* 评论列表样式 */
 .artalk .atk-comment-list .atk-comment {
   margin-bottom: 0.75rem;
