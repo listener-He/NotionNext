@@ -94,7 +94,7 @@ export async function getServerSideProps({ params, ctx }) {
     destination = '/api/rss?format=json'
     format = slug
   }
-  const cacheKey = CACHE_KEY_RSS(format);
+  const cacheKey = CACHE_KEY_RSS(format) + "-file";
   const now = Date.now();
   if (checkFileSystemSupport()) {
     if ( - rssFileCache.lastGeneratedTime < rssFileCache.intervalMinutes * 60 * 1000) {
