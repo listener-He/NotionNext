@@ -504,15 +504,26 @@ html.dark {
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
 }
 
-/* 卡片焦点渐变边框样式 */
+/* 卡片焦点渐变边框样式 - 赛伯朋克风格 */
 .card-focus-gradient {
-  transition: box-shadow 0.2s ease;
+  transition: all 0.2s ease;
+  position: relative;
 }
 
 .card-focus-gradient:focus-within {
-  box-shadow: 0 0 0 2px #000, 0 0 0 4px linear-gradient(135deg, #c2e9fb, #00cec9);
+  outline: 2px solid;
+  outline-color: #00cec9;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px linear-gradient(135deg, #c2e9fb, #00cec9), 0 0 15px rgba(194, 233, 251, 0.8);
+  transform: translateY(-2px);
+  z-index: 10;
 }
 
 .dark .card-focus-gradient:focus-within {
-  box-shadow: 0 0 0 2px #000, 0 0 0 4px linear-gradient(135deg, #c2e9fb, #00cec9);
+  outline: 2px solid;
+  outline-color: #c2e9fb;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px linear-gradient(135deg, #c2e9fb, #00cec9), 0 0 15px rgba(0, 206, 201, 0.8);
+  transform: translateY(-2px);
+  z-index: 10;
 }
