@@ -97,7 +97,7 @@ export async function getServerSideProps({ params, ctx }) {
   const cacheKey = CACHE_KEY_RSS(format) + "-file";
   const now = Date.now();
   if (checkFileSystemSupport()) {
-    if ( - rssFileCache.lastGeneratedTime < rssFileCache.intervalMinutes * 60 * 1000) {
+    if (now - rssFileCache.lastGeneratedTime < rssFileCache.intervalMinutes * 60 * 1000) {
       // 文件存在且在缓存周期内, 让静态文件服务处理
       return {}
     }
