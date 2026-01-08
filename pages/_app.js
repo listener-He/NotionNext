@@ -16,13 +16,23 @@ import BLOG from '@/blog.config'
 import ExternalPlugins from '@/components/ExternalPlugins'
 import SEO from '@/components/SEO'
 import DarkModeAutoSwitch from '@/components/DarkModeAutoSwitch'
-import { Bitter } from 'next/font/google'
 
-const bitter = Bitter({
-  subsets: ['latin'],
-  weight: ['300', '400', '700'],
-  display: 'swap'
-})
+// 根据是否在中国大陆优化启用情况选择字体加载方式
+const bitter = BLOG.CHINA_OPTIMIZATION_ENABLED
+  ? {} // 如果启用中国优化，使用CSS加载的字体，不需要额外配置
+  : (function() {
+      try {
+        const { Bitter } = require('next/font/google')
+        return Bitter({
+          subsets: ['latin'],
+          weight: ['300', '400', '700'],
+          display: 'swap'
+        })
+      } catch (e) {
+        // 如果无法加载Google字体，则返回空对象
+        return {}
+      }
+    })()
 
 /**
  * App挂载DOM 入口文件
@@ -52,7 +62,7 @@ const MyApp = ({ Component, pageProps }) => {
   )
 
   return (
-    <div className={bitter.className}>
+    <div className={bitter.className || BLOG?.FONT_STYLE || 'font-sans font-light'}>
       <GlobalContextProvider {...pageProps}>
         <DarkModeAutoSwitch />
         <GLayout {...pageProps}>
