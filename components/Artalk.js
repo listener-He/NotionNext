@@ -16,34 +16,39 @@ const Artalk = ({ siteInfo }) => {
   const site = siteConfig('TITLE')
 
   useEffect(() => {
-    initArtalk()
+    initArtalk().catch(console.error)
   }, [])
 
   const initArtalk = async () => {
-    await loadExternalResource(getCDNResourceSync(artalkCss), 'css')
-    const artalk = window?.Artalk?.init({
-      server: artalkServer,
-      el: '#artalk',
-      locale: artalkLocale,
-      site: site,
-      darkMode: document.documentElement.classList.contains('dark')
-    })
-
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        if (mutation.attributeName === 'class') {
-          const isDark = document.documentElement.classList.contains('dark')
-          artalk?.setDarkMode(isDark)
-        }
+    Promise.all([
+      loadExternalResource(getCDNResourceSync(artalkCss), 'css'),
+      // 加载自定义CSS
+      loadExternalResource('/css/artalk-custom.css', 'css')
+    ]).then(() => {
+      const artalk = window?.Artalk?.init({
+        server: artalkServer,
+        el: '#artalk',
+        locale: artalkLocale,
+        site: site,
+        darkMode: document.documentElement.classList.contains('dark')
       })
-    })
 
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ['class']
-    })
+      // const observer = new MutationObserver((mutations) => {
+      //   mutations.forEach((mutation) => {
+      //     if (mutation.attributeName === 'class') {
+      //       const isDark = document.documentElement.classList.contains('dark')
+      //       artalk?.setDarkMode(isDark)
+      //     }
+      //   })
+      // })
 
-    return () => observer.disconnect()
+      // observer.observe(document.documentElement, {
+      //   attributes: true,
+      //   attributeFilter: ['class']
+      // })
+      //
+      // return () => observer.disconnect()
+    })
   }
 
   return <div id="artalk"></div>
