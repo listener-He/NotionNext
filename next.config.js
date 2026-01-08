@@ -176,7 +176,14 @@ const nextConfig = {
   redirects: process.env.EXPORT
     ? undefined
     : async () => [
-      { source: '/feed', destination: '/rss/feed.xml', permanent: true }
+      { source: '/:path*.html', destination: '/:path*' },
+      // RSS 路由重写：确保 RSS 请求始终走 API 路由
+      { source: '/rss/feed.xml', destination: '/api/rss' },
+      { source: '/rss/atom.xml', destination: '/api/rss?format=atom' },
+      { source: '/rss/feed.json', destination: '/api/rss?format=json' },
+      { source: '/feed', destination: '/rss/feed.xml' },
+      { source: '/rss', destination: '/rss/feed.xml' },
+      { source: '/atom', destination: '/rss/atom.xml' }
     ],
 
   rewrites: process.env.EXPORT
