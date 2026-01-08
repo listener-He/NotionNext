@@ -71,18 +71,18 @@
   --text-secondary: #4b5563;
   --text-tertiary: #6b7280;
   --text-quaternary: #9ca3af;
-  
+
   /* 优化的背景颜色变量 */
-  --bg-primary: #ffffff;
-  --bg-secondary: #f9fafb;
-  --bg-tertiary: #f3f4f6;
-  
+  --bg-primary: #f3f4f6;
+  --bg-secondary: #a1c4fd;
+  --bg-tertiary: #c2e9fb;
+
   /* 深色模式下的文本颜色 */
   --text-primary-dark: #f9fafb;
   --text-secondary-dark: #d1d5db;
   --text-tertiary-dark: #9ca3af;
   --text-quaternary-dark: #6b7280;
-  
+
   /* 深色模式下的背景颜色 */
   --bg-primary-dark: #111827;
   --bg-secondary-dark: #1f2937;
