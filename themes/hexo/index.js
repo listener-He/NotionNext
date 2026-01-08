@@ -340,7 +340,7 @@ const LayoutSlug = props => {
               {/* 全屏按钮 */}
               <FullScreenButton />
               {/* Notion文章主体 */}
-              <section className='px-5 justify-center mx-auto max-w-2xl lg:max-w-full'>
+              <section className='justify-center mx-auto max-w-2xl lg:max-w-full'>
                 {post && (
                   BLOG.LAZY_LOAD_CONTENT ?
                   <LazyNotionPage post={post} /> :
