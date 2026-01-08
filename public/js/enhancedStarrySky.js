@@ -21,7 +21,7 @@ function createEnhancedStarrySky() {
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: -1; /* 通常背景应设为负层级或底层 */
+    z-index: 10;
     pointer-events: none;
     opacity: 0;
     transition: opacity 2s ease-in-out;
