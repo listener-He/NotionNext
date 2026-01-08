@@ -22,10 +22,6 @@
  * - 传统服务器环境（文件系统完全支持）
  * - 静态文件缺失或过期的情况
  */
-import { CACHE_KEY_RSS } from '@/lib/cache/cache_keys'
-import { getOrSetDataWithCustomCache } from '@/lib/cache/cache_manager'
-import { generateRssFeed } from '@/lib/rss'
-import { getGlobalData } from '@/lib/db/getSiteData'
 
 
 // 缓存文件系统支持状态，避免重复检测
@@ -86,62 +82,17 @@ export async function getServerSideProps({ params, ctx }) {
 
   // 确定目标 API 路由
   let destination = '/api/rss'
-  let format = 'rss2'
   if (slug === 'atom.xml') {
     destination = '/api/rss?format=atom'
-    format = slug
   } else if (slug === 'feed.json') {
     destination = '/api/rss?format=json'
-    format = slug
   }
-  const cacheKey = CACHE_KEY_RSS(format) + "-file";
   const now = Date.now();
   if (checkFileSystemSupport()) {
     if (now - rssFileCache.lastGeneratedTime < rssFileCache.intervalMinutes * 60 * 1000) {
       // 文件存在且在缓存周期内, 让静态文件服务处理
       return {}
     }
-    // 使用缓存管理器获取或生成RSS内容
-    const content = await getOrSetDataWithCustomCache(
-      cacheKey,
-      60 * 120,
-      async () => {
-        console.log(`[RSS API] 🔄 生成新的RSS内容: ${format}`)
-        // 优化：只获取RSS需要的数据类型
-        const props = await getGlobalData({
-          from: 'rss-api',
-          dataTypes: ['allPages', 'siteInfo', 'NOTION_CONFIG', 'latestPosts']
-        })
-
-        if (!props || !props.latestPosts) {
-          throw new Error('Failed to fetch site data')
-        }
-
-        // 使用原有的 RSS 生成逻辑
-        const feed = await generateRssFeed(props)
-
-        if (!feed) {
-          throw new Error('Failed to generate RSS feed')
-        }
-
-        // 根据格式生成对应的RSS内容
-        switch (format) {
-          case 'atom.xml':
-            return feed.atom1()
-          case 'feed.json':
-            return feed.json1()
-          default:
-            return feed.rss2()
-        }
-      }
-    )
-    // 缓存
-    ctx.res.setHeader(
-      'Cache-Control',
-      'public, max-age=7200, stale-while-revalidate=59'
-    )
-    rssFileCache.lastGeneratedTime = now
-    return ctx.res.status(200).send(content)
   }
 
   return {
