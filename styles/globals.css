@@ -493,3 +493,26 @@ html.dark {
     min-height: 80px;
   }
 }
+
+/* 卡片基础阴影样式 */
+.card-shadow {
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
+  transition: box-shadow 0.3s ease;
+}
+
+.card-shadow:hover {
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+}
+
+/* 卡片焦点渐变边框样式 */
+.card-focus-gradient {
+  transition: box-shadow 0.2s ease;
+}
+
+.card-focus-gradient:focus-within {
+  box-shadow: 0 0 0 2px #000, 0 0 0 4px linear-gradient(135deg, #c2e9fb, #00cec9);
+}
+
+.dark .card-focus-gradient:focus-within {
+  box-shadow: 0 0 0 2px #000, 0 0 0 4px linear-gradient(135deg, #c2e9fb, #00cec9);
+}
