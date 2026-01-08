@@ -336,9 +336,7 @@ const LayoutSlug = props => {
               itemType='https://schema.org/Movie'
               className='subpixel-antialiased overflow-y-hidden'>
               {/* 文章信息 - 包含标题、分类、标签、日期、阅读量等 */}
-              <section className='px-5 justify-center mx-auto max-w-2xl lg:max-w-full'>
-                <ArticleInfo post={post} />
-              </section>
+              <ArticleInfo post={post} />
               {/* 全屏按钮 */}
               <FullScreenButton />
               {/* Notion文章主体 */}

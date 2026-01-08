@@ -17,7 +17,7 @@ export default function ArticleInfo({ post, siteInfo }) {
   }
 
   return (
-    <div className='mb-8'>
+    <div className='mb-4'>
 
       {/* 文章元信息：发布日期、最后编辑日期、阅读量、字数等 */}
       <div className={`flex-wrap flex text-xs sm:text-sm justify-center mb-4 ${isDarkMode ? 'text-gray-100' : 'text-gray-700'} font-medium gap-4`}>
