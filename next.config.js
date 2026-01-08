@@ -115,7 +115,7 @@ const nextConfig = {
 
   output: process.env.EXPORT
     ? 'export'
-    : PLATFORM === 'vercel' && process.env.NEXT_BUILD_STANDALONE === 'true'
+    : process.env.NEXT_BUILD_STANDALONE === 'true' || process.env.BUILD_MODE === 'true'
       ? 'standalone'
       : undefined,
 
