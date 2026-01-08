@@ -16,7 +16,7 @@ const Sakura = () => {
         window.createSakura && window.createSakura()
     })
     return () => window.destroySakura && window.destroySakura()
-  }, [isLowEndDevice])
+  }, [isLowEndDevice, isDarkMode])
   return <></>
 }
 
