@@ -365,11 +365,11 @@ const LayoutSlug = props => {
             <div className='duration-200 overflow-x-auto glass-layer-soft px-3 rounded-xl'>
                <Comment frontMatter={post} />
             </div>
-            {/* 添加可访问性组件*/}
-            <Accessibility />
           </div>
         )}
       </div>
+      {/* 添加可访问性组件*/}
+      <Accessibility />
     </>
   )
 }
