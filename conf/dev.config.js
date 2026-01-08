@@ -9,7 +9,7 @@ module.exports = {
   BACKGROUND_DARK: '#000000', // use hex value, don't forget '#'
 
   // Redis 缓存数据库地址
-  REDIS_URL: process.env.REDIS_URL || '',
+  REDIS_URL: process.env.REDIS_CONNECTION_STRING || process.env.REDIS_URL || '',
 
   ENABLE_CACHE:
     process.env.ENABLE_CACHE ||
