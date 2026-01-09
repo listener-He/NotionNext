@@ -7,8 +7,8 @@ const StarrySky = () => {
   const { isLowEndDevice, details} = getDevicePerformance();
   const { isDarkMode } = useGlobal()
   useEffect(() => {
-    // 在低端设备或性能较差的设备上禁用星空动画
-    if (isLowEndDevice || !isDarkMode) {
+    // 在白天主题禁用星空动画
+    if (!isDarkMode) {
       return;
     }
 
@@ -20,8 +20,8 @@ const StarrySky = () => {
 
       try {
         const gpuScore = details?.gpu?.score ? parseInt(details.gpu.score) : 0;
-        // 有GPU且分数在 10 ～ 30之间加载原有的星空背景
-        if ( gpuScore >= 10 && gpuScore < 30 && isDarkMode && typeof window !== 'undefined') {
+        // 低端设备或GPU得分很差的, 且处于深色主题下
+        if ((isLowEndDevice || gpuScore <= 5) && isDarkMode && typeof window !== 'undefined') {
           loadExternalResource('/js/starrySky.js', 'js').then(() => {
             if (window.renderStarrySky) {
               window.renderStarrySky()
@@ -29,10 +29,10 @@ const StarrySky = () => {
           })
         }
         // 优化：仅在高端GPU设备上加载增强版星空背景
-        if (gpuScore >= 30 && isDarkMode && typeof window !== 'undefined') {
+        if (!isLowEndDevice && gpuScore >= 10 && isDarkMode && typeof window !== 'undefined') {
           loadExternalResource('/js/enhancedStarrySky.js', 'js').then(() => {
             if (window.createEnhancedStarrySky) {
-              window.createEnhancedStarrySky()
+              window.createEnhancedStarrySky(gpuScore)
             }
           })
         }

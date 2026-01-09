@@ -1,21 +1,23 @@
 /**
  * 增强版星空背景 - 重构优化版
  * 特性：高性能离屏渲染、星座连线、物理透视流星、查表法数学优化
+ * @param {number} gpuScore - GPU 分数
  */
-function createEnhancedStarrySky() {
+function createEnhancedStarrySky(gpuScore) {
   // 1. 单例模式检查：防止重复创建 Canvas
   const CANVS_ID = 'enhanced-starry-sky';
   const existingCanvas = document.getElementById(CANVS_ID);
   if (existingCanvas) {
     return window.destroyEnhancedStarrySky;
   }
-
+  // 判断是否有钱人
+  const rich = gpuScore >= 10;
   // 2. 基础配置参数
   const config = {
     amount: {
-      stars: 128,         // 星星数量
-      meteors: 7,         // 同时存在的流星数量
-      nebulae: 3,         // 星云数量
+      stars: rich ? 256 : 128,         // 星星数量
+      meteors: rich ? 12 : 7,         // 同时存在的流星数量
+      nebulae: rich ? 5 : 3,         // 星云数量
     },
     colors: {
       stars: ['#FFFFFF', '#C7D9FF', '#FFF6CC', '#FFDDCC'], // 冷暖色调混合
@@ -23,7 +25,10 @@ function createEnhancedStarrySky() {
       nebulae: [
         'rgba(72, 61, 139, 0.15)',  // 深岩蓝
         'rgba(30, 144, 255, 0.10)', // 道奇蓝
-        'rgba(199, 21, 133, 0.08)'  // 这种紫红色
+        'rgba(199, 21, 133, 0.08)',  // 这种紫红色
+        'rgba(100, 200, 255, 0.09)', // 浅蓝
+        'rgba(150, 80, 255, 0.1)' // 浅紫色
+
       ]
     },
     speed: {
@@ -206,7 +211,8 @@ function createEnhancedStarrySky() {
 
       // 角度：从右上/正上 向下掉落
       const angle = (Math.PI / 4) + (Math.random() - 0.5) * 0.5;
-      this.speed = (10 + Math.random() * 10) * (1 + this.z * 0.5) * config.speed.meteor;
+      const randomSpeed = Math.random() * 10;
+      this.speed = randomSpeed * (1 + this.z * 0.5) * config.speed.meteor;
 
       // 速度向量
       this.vx = Math.cos(angle) * this.speed;
