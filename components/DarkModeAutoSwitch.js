@@ -24,26 +24,26 @@ export default function DarkModeAutoSwitch() {
     if (appearance === 'dark') {
       return true
     }
-    
+
     if (appearance === 'light') {
       return false
     }
-    
+
     if (appearance === 'auto') {
       const now = new Date()
       const currentHour = now.getHours()
-      
+
       // 检查系统偏好
-      const systemPrefersDark = window.matchMedia && 
+      const systemPrefersDark = window.matchMedia &&
         window.matchMedia('(prefers-color-scheme: dark)').matches
-      
+
       // 检查时间范围
       const isNightTime = darkTime && Array.isArray(darkTime) && darkTime.length === 2 &&
         (currentHour >= darkTime[0] || currentHour < darkTime[1])
-      
+
       return systemPrefersDark || isNightTime
     }
-    
+
     return false
   }
 
@@ -60,22 +60,22 @@ export default function DarkModeAutoSwitch() {
       // 兼容不支持 requestIdleCallback 的浏览器
       setTimeout(() => {
         performThemeCheck()
-      }, 0)
+      }, 1000)
     }
   }
-  
+
   /**
    * 执行主题检查的实际逻辑
    */
   const performThemeCheck = () => {
-    const shouldBeDark = shouldBeDarkMode()
     const currentTime = Date.now()
-    
+
     // 避免频繁切换，至少间隔2分钟
     if (lastCheckRef.current && currentTime - lastCheckRef.current < 120000) {
       return
     }
-    
+    const shouldBeDark = shouldBeDarkMode()
+
     if (shouldBeDark !== isDarkMode) {
       console.log(`Auto switching theme: ${shouldBeDark ? 'dark' : 'light'} mode`)
       toggleDarkMode()
@@ -117,12 +117,12 @@ export default function DarkModeAutoSwitch() {
     // 初始检查
     checkAndToggleTheme()
 
-    // 设置定时检查（每5分钟检查一次，减少频率以改善性能）
-    intervalRef.current = setInterval(() => {
-      if (!handledRef.current) {
-        checkAndToggleTheme()
-      }
-    }, 300000) // 从600000改为300000(5分钟)，并优化执行方式
+    // // 设置定时检查（每5分钟检查一次，减少频率以改善性能）
+    // intervalRef.current = setInterval(() => {
+    //   if (!handledRef.current) {
+    //     checkAndToggleTheme()
+    //   }
+    // }, 300000) // 从600000改为300000(5分钟)，并优化执行方式
 
     // 监听系统主题变化
     mediaRef.current = window.matchMedia('(prefers-color-scheme: dark)')
@@ -135,16 +135,7 @@ export default function DarkModeAutoSwitch() {
     // 监听页面可见性变化，当页面重新可见时检查主题
     const handleVisibilityChange = () => {
       if (!document.hidden) {
-        // 页面可见时使用 requestIdleCallback 延迟检查
-        if ('requestIdleCallback' in window) {
-          window.requestIdleCallback(() => {
-            checkAndToggleTheme()
-          }, { timeout: 2000 })
-        } else {
-          setTimeout(() => {
-            checkAndToggleTheme()
-          }, 100)
-        }
+        checkAndToggleTheme()
       }
     }
     document.addEventListener('visibilitychange', handleVisibilityChange)
@@ -161,7 +152,7 @@ export default function DarkModeAutoSwitch() {
           mediaRef.current.removeListener(handleSystemThemeChange)
         }
       }
-      
+
       document.removeEventListener('visibilitychange', handleVisibilityChange)
     }
   }, [appearance, isDarkMode, darkTime])
@@ -180,26 +171,26 @@ export function getCurrentThemeMode(appearance = 'light', darkTime = [18, 6]) {
   if (appearance === 'dark') {
     return true
   }
-  
+
   if (appearance === 'light') {
     return false
   }
-  
+
   if (appearance === 'auto') {
     const now = new Date()
     const currentHour = now.getHours()
-    
+
     // 检查系统偏好（仅在浏览器环境中）
-    const systemPrefersDark = typeof window !== 'undefined' && 
-      window.matchMedia && 
+    const systemPrefersDark = typeof window !== 'undefined' &&
+      window.matchMedia &&
       window.matchMedia('(prefers-color-scheme: dark)').matches
-    
+
     // 检查时间范围
     const isNightTime = darkTime && Array.isArray(darkTime) && darkTime.length === 2 &&
       (currentHour >= darkTime[0] || currentHour < darkTime[1])
-    
+
     return systemPrefersDark || isNightTime
   }
-  
+
   return false
 }
