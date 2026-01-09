@@ -224,7 +224,7 @@ const extractLinksFromNotionPage = (post) => {
       }
     }
   })
-  
+
   // 按照名称排序，确保服务端和客户端渲染顺序一致
   return links.sort((a, b) => {
     const nameA = a.name || ''
@@ -239,13 +239,6 @@ const extractLinksFromNotionPage = (post) => {
  * @returns {JSX.Element}
  */
 const LinksPage = ({ post }) => {
-  // 使用客户端状态来避免服务端和客户端渲染不一致
-  const [isClient, setIsClient] = useState(false)
-
-  useEffect(() => {
-    setIsClient(true)
-  }, [])
-
   // 直接计算链接数据，避免状态管理导致的水合错误
   const links = post ? extractLinksFromNotionPage(post) : []
   const siteTitle = siteConfig('TITLE') || siteConfig('AUTHOR') || 'Honesty'
@@ -311,55 +304,56 @@ const LinksPage = ({ post }) => {
   }
 
   return (
-    <div className='min-h-screen bg-gradient-to-br from-slate-50/100 via-white to-blue-50/30 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900' id='article-wrapper'>
-      <div className='max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 xl:px-8'>
-        {/* 页面标题 */}
-        <div className='text-center py-8 sm:py-12 lg:py-16 mb-8 sm:mb-12'>
-          <div className='relative'>
-            {/* 标题背景装饰 */}
-            <div className='absolute inset-0 flex items-center justify-center'>
-              <div className='w-32 h-32 bg-gradient-to-r from-blue-400/20 to-purple-400/20 rounded-full blur-3xl'></div>
-            </div>
+    <>
+      <div className='min-h-screen bg-gradient-to-br' id='article-wrapper'>
+        <div className='max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 xl:px-8'>
+          {/* 页面标题 */}
+          <div className='text-center py-8 sm:py-12 lg:py-8 mb-4 sm:mb-6'>
+            <div className='relative'>
+              {/* 标题背景装饰 */}
+              <div className='absolute inset-0 flex items-center justify-center'>
+                <div className='w-32 h-32 bg-gradient-to-r from-blue-400/20 to-purple-400/20 rounded-full blur-3xl'></div>
+              </div>
 
-            <h1 className='relative text-3xl sm:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 dark:from-white dark:to-gray-200 bg-clip-text text-transparent mb-3 sm:mb-4'>
-              友情链接
-            </h1>
-            <p className='relative text-gray-600 dark:text-gray-300 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed px-4'>
-              发现更多优秀的博客和网站，一起分享知识与创意。
-            </p>
-          </div>
-        </div>
-
-        {links.length === 0 ? (
-          <div className='text-center py-20'>
-            <div className='text-gray-500 dark:text-gray-400 text-xl mb-4'>
-              暂无友情链接
+              <h1 className='relative text-3xl sm:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 dark:from-white dark:to-gray-200 bg-clip-text text-transparent mb-3 sm:mb-4'>
+                友情链接
+              </h1>
+              <p className='relative text-gray-600 dark:text-gray-300 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed px-4'>
+                发现更多优秀的博客和网站，一起分享知识与创意。
+              </p>
             </div>
-            <p className='text-gray-400 dark:text-gray-500'>
-              欢迎添加友链，一起分享知识与创意
-            </p>
           </div>
-        ) : (
-          <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-6'>
-            {links.map((link, index) => (
-              <Link
-                key={link.id || index}
-                href={link.url}
-                target='_blank'
-                rel='noopener noreferrer'
-                className='group block relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:scale-[1.05] border border-gray-100 dark:border-gray-700 hover:border-blue-400 dark:hover:border-blue-500 glass-layer-soft'
-              >
+
+          {links.length === 0 ? (
+            <div className='text-center py-20'>
+              <div className='text-gray-500 dark:text-gray-400 text-xl mb-4'>
+                暂无友情链接
+              </div>
+              <p className='text-gray-400 dark:text-gray-500'>
+                欢迎添加友链，一起分享知识与创意
+              </p>
+            </div>
+          ) : (
+            <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-6'>
+              {links.map((link, index) => (
+                <Link
+                  key={link.id || index}
+                  href={link.url}
+                  target='_blank'
+                  rel='noopener noreferrer'
+                  className='group block relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:scale-[1.05] border border-gray-100 dark:border-gray-700 hover:border-blue-400 dark:hover:border-blue-500 glass-layer-soft'
+                >
                   <div className="w-full h-full">
-                     {/* 背景装饰层 */}
-                     <div className='absolute inset-0 bg-gradient-to-br from-blue-50/50 via-purple-50/30 to-pink-50/50 dark:from-blue-900/20 dark:via-purple-900/10 dark:to-pink-900/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500' />
-  
+                    {/* 背景装饰层 */}
+                    <div className='absolute inset-0 bg-gradient-to-br from-blue-50/50 via-purple-50/30 to-pink-50/50 dark:from-blue-900/20 dark:via-purple-900/10 dark:to-pink-900/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500' />
+
                     {/* 卡片内容 - 左右布局 (使用row-reverse实现peer选择器逻辑: Content为DOM前置peer, Image为后置) */}
                     <div className='relative flex flex-row-reverse items-stretch min-h-[28px]'>
-                      
+
                       {/* 右侧内容区域 - Visual Right (DOM First) */}
                       <div className='flex-1 relative z-10 p-1 flex flex-col justify-between min-w-0 h-full peer/right transition-all duration-500 overflow-hidden'>
                         {/* 右侧背景图层 - 优先使用cover或avatar */}
-                        <div 
+                        <div
                           className='absolute inset-0 bg-cover bg-center opacity-10 group-hover:opacity-20 transition-opacity duration-500'
                           style={{
                             backgroundImage: `url(${link.cover || link.avatar || ''})`
@@ -396,11 +390,11 @@ const LinksPage = ({ post }) => {
                           </div>
                         )}
                       </div>
- 
+
                       {/* 左侧图片区域 - Visual Left (DOM Second) */}
                       <div className='flex-shrink-0 w-[30%] relative z-10 overflow-hidden transition-all duration-500 ease-out hover:w-[70%] peer-hover/right:w-[10%]'
                            style={{
-                             clipPath: 'polygon(0 0, 90% 0, 100% 50%, 90% 100%, 0 100%)' 
+                             clipPath: 'polygon(0 0, 90% 0, 100% 50%, 90% 100%, 0 100%)'
                            }}>
                         {/* 图片优先级：封面图 > 头像 > 默认渐变 */}
                         {link.backgroundImage ? (
@@ -418,187 +412,173 @@ const LinksPage = ({ post }) => {
                         ) : (
                           <div className='absolute inset-0 bg-gradient-to-br from-blue-400 via-purple-500 to-pink-500' />
                         )}
-                        
+
                         {/* 遮罩层，让文字更清晰 */}
                         <div className='absolute inset-0 bg-black/10 hover:bg-transparent transition-colors duration-300' />
                       </div>
                     </div>
                   </div>
-              </Link>
-            ))}
-          </div>
-        )}
-
-        {/* 申请条件和规范说明 */}
-        <div className='rounded-2xl shadow-lg p-6 mt-12 mb-8 border border-gray-150 dark:border-gray-700 glass-layer-soft'>
-          <h2 className='text-2xl font-bold text-gray-800 dark:text-white mb-6 pb-2 border-b border-gray-200 dark:border-gray-700'>申请友链</h2>
-
-          <div className='grid grid-cols-1 md:grid-cols-2 gap-8'>
-            {/* 申请条件 */}
-            <div>
-              <h3 className='text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4 flex items-center'>
-                <svg className='w-6 h-6 mr-2 text-blue-500' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
-                  <path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z'></path>
-                </svg>
-                申请条件
-              </h3>
-              <ul className='space-y-3'>
-                <li className='flex items-start'>
-                  <span className='text-blue-500 mr-2 mt-1'>•</span>
-                  <span className='text-gray-700 dark:text-gray-300 text-xs leading-relaxed'>网站内容符合中国大陆法律法规</span>
-                </li>
-                <li className='flex items-start'>
-                  <span className='text-blue-500 mr-2 mt-1'>•</span>
-                  <span className='text-gray-700 dark:text-gray-300 text-xs leading-relaxed'>原创内容占比较高，有自己的独特见解</span>
-                </li>
-                <li className='flex items-start'>
-                  <span className='text-blue-500 mr-2 mt-1'>•</span>
-                  <span className='text-gray-700 dark:text-gray-300 text-xs leading-relaxed'>网站稳定运行，有一定的更新频率</span>
-                </li>
-                <li className='flex items-start'>
-                  <span className='text-blue-500 mr-2 mt-1'>•</span>
-                  <span className='text-gray-700 dark:text-gray-300 text-xs leading-relaxed'>网站设计美观，内容质量较高</span>
-                </li>
-              </ul>
+                </Link>
+              ))}
             </div>
+          )}
 
-            {/* 申请规范 */}
-            <div>
-              <h3 className='text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4 flex items-center'>
-                <svg className='w-6 h-6 mr-2 text-blue-500' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
-                  <path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z'></path>
-                </svg>
-                申请规范
-              </h3>
-              <ul className='space-y-3'>
-                <li className='flex items-start'>
-                  <span className='text-blue-500 mr-2 mt-1'>•</span>
-                  <div>
-                    <span className='text-gray-700 dark:text-gray-300 text-xs'>站点名称：</span>
-                    <span className='text-gray-900 dark:text-white text-xs font-medium'>{siteTitle}</span>
-                  </div>
-                </li>
-                <li className='flex items-start'>
-                  <span className='text-blue-500 mr-2 mt-1'>•</span>
-                  <div>
-                    <span className='text-gray-700 dark:text-gray-300 text-xs'>站点链接：</span>
-                    <span className='text-gray-900 dark:text-white text-xs font-medium'>{siteLink}</span>
-                  </div>
-                </li>
-                <li className='flex items-start'>
-                  <span className='text-blue-500 mr-2 mt-1'>•</span>
-                  <div>
-                    <span className='text-gray-700 dark:text-gray-300 text-xs'>简介：</span>
-                    <span className='text-gray-900 dark:text-white text-xs font-medium'>{siteDescription}</span>
-                  </div>
-                </li>
-                <li className='flex items-start'>
-                  <span className='text-blue-500 mr-2 mt-1'>•</span>
-                  <div className='break-all'>
-                    <span className='text-gray-700 dark:text-gray-300 text-xs'>头像地址：</span>
-                    <span className='text-gray-900 dark:text-white text-xs font-medium'>{siteAvatar}</span>
-                  </div>
-                </li>
-              </ul>
+          {/* 申请条件和规范说明 */}
+          <div className='rounded-2xl shadow-lg p-6 mt-12 mb-8 border border-gray-150 dark:border-gray-700 glass-layer-soft'>
+            <h2 className='text-2xl font-bold text-gray-800 dark:text-white mb-6 pb-2 border-b border-gray-200 dark:border-gray-700'>申请友链</h2>
 
-              {/* 复制图标和选项 */}
-              <div className='mt-4 relative group'>
-                <div className='flex items-center text-gray-700 dark:text-gray-300'>
-                  <span className='text-base'>复制以上信息：</span>
-                  <div className='ml-2 relative top-1'>
-                    <button
-                      onClick={(e) => {
-                        e.preventDefault(); // 阻止默认事件，避免影响页面跳转
-                        copyToClipboard('text');
-                      }}
-                      className='text-gray-600 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 transition-colors duration-300'>
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" />
-                        <path d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z" />
-                      </svg>
-                    </button>
+            <div className='grid grid-cols-1 md:grid-cols-2 gap-8'>
+              {/* 申请条件 */}
+              <div>
+                <h3 className='text-ms font-semibold text-gray-800 dark:text-gray-200 mb-4 flex items-center'>
+                  <svg className='w-6 h-6 mr-2 text-blue-500' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                    <path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z'></path>
+                  </svg>
+                  申请条件
+                </h3>
+                <ul className='space-y-3'>
+                  <li className='flex items-start'>
+                    <span className='text-blue-500 mr-2 mt-1'>•</span>
+                    <span className='text-gray-700 dark:text-gray-300 text-xs leading-relaxed'>网站内容符合中国大陆法律法规</span>
+                  </li>
+                  <li className='flex items-start'>
+                    <span className='text-blue-500 mr-2 mt-1'>•</span>
+                    <span className='text-gray-700 dark:text-gray-300 text-xs leading-relaxed'>原创内容占比较高，有自己的独特见解</span>
+                  </li>
+                  <li className='flex items-start'>
+                    <span className='text-blue-500 mr-2 mt-1'>•</span>
+                    <span className='text-gray-700 dark:text-gray-300 text-xs leading-relaxed'>网站稳定运行，有一定的更新频率</span>
+                  </li>
+                  <li className='flex items-start'>
+                    <span className='text-blue-500 mr-2 mt-1'>•</span>
+                    <span className='text-gray-700 dark:text-gray-300 text-xs leading-relaxed'>网站设计美观，内容质量较高</span>
+                  </li>
+                </ul>
+              </div>
 
-                    {/* 格式选项弹出框 */}
-                    <div className='absolute left-0 mt-2 w-48 origin-top-left bg-white dark:bg-gray-800 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-10'>
-                      <div className='py-1'>
-                        <button
-                          onClick={(e) => copyToClipboard('text')}
-                          className='block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'>
-                          文本
-                        </button>
-                        <button
-                          onClick={(e) => copyToClipboard('json')}
-                          className='block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'>
-                          JSON
-                        </button>
-                        <button
-                          onClick={(e) => copyToClipboard('markdown')}
-                          className='block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'>
-                          Markdown
-                        </button>
-                        <button
-                          onClick={(e) => copyToClipboard('yaml')}
-                          className='block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'>
-                          Yaml
-                        </button>
+              {/* 申请规范 */}
+              <div>
+                <h3 className='text-ms font-semibold text-gray-800 dark:text-gray-200 mb-4 flex items-center'>
+                  <svg className='w-6 h-6 mr-2 text-blue-500' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                    <path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z'></path>
+                  </svg>
+                  申请规范
+                </h3>
+                <ul className='space-y-3'>
+                  <li className='flex items-start'>
+                    <span className='text-blue-500 mr-2 mt-1'>•</span>
+                    <div>
+                      <span className='text-gray-700 dark:text-gray-300 text-xs'>站点名称：</span>
+                      <span className='text-gray-900 dark:text-white text-xs font-medium'>{siteTitle}</span>
+                    </div>
+                  </li>
+                  <li className='flex items-start'>
+                    <span className='text-blue-500 mr-2 mt-1'>•</span>
+                    <div>
+                      <span className='text-gray-700 dark:text-gray-300 text-xs'>站点链接：</span>
+                      <span className='text-gray-900 dark:text-white text-xs font-medium'>{siteLink}</span>
+                    </div>
+                  </li>
+                  <li className='flex items-start'>
+                    <span className='text-blue-500 mr-2 mt-1'>•</span>
+                    <div>
+                      <span className='text-gray-700 dark:text-gray-300 text-xs'>简介：</span>
+                      <span className='text-gray-900 dark:text-white text-xs font-medium'>{siteDescription}</span>
+                    </div>
+                  </li>
+                  <li className='flex items-start'>
+                    <span className='text-blue-500 mr-2 mt-1'>•</span>
+                    <div className='break-all'>
+                      <span className='text-gray-700 dark:text-gray-300 text-xs'>头像地址：</span>
+                      <span className='text-gray-900 dark:text-white text-xs font-medium'>{siteAvatar}</span>
+                    </div>
+                  </li>
+                </ul>
+
+                {/* 复制图标和选项 */}
+                <div className='mt-4 relative group'>
+                  <div className='flex items-center text-gray-700 dark:text-gray-300'>
+                    <span className='text-base'>复制以上信息：</span>
+                    <div className='ml-2 relative top-1'>
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault(); // 阻止默认事件，避免影响页面跳转
+                          copyToClipboard('text');
+                        }}
+                        className='text-gray-600 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 transition-colors duration-300'>
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                          <path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" />
+                          <path d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z" />
+                        </svg>
+                      </button>
+
+                      {/* 格式选项弹出框 */}
+                      <div className='absolute left-0 mt-2 w-48 origin-top-left bg-white dark:bg-gray-800 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-10'>
+                        <div className='py-1'>
+                          <button
+                            onClick={(e) => copyToClipboard('text')}
+                            className='block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'>
+                            文本
+                          </button>
+                          <button
+                            onClick={(e) => copyToClipboard('json')}
+                            className='block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'>
+                            JSON
+                          </button>
+                          <button
+                            onClick={(e) => copyToClipboard('markdown')}
+                            className='block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'>
+                            Markdown
+                          </button>
+                          <button
+                            onClick={(e) => copyToClipboard('yaml')}
+                            className='block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'>
+                            Yaml
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <div className='mt-8 pt-6 border-t border-gray-200 dark:border-gray-700 text-center'>
-            <p className='text-gray-600 dark:text-gray-400 text-sm'>
-              如果您满足这些条件，并愿意与本站建立友链，请在评论区留下贵站信息。我期待与您建立友好的互联网连接！如果暂时不符合条件，我会通过邮件或留言通知您，并期待未来有机会交朋友！。
-            </p>
+            <div className='mt-8 pt-6 border-t border-gray-200 dark:border-gray-700 text-center'>
+              <p className='text-gray-600 dark:text-gray-400 text-sm'>
+                如果您满足这些条件，并愿意与本站建立友链，请在评论区留下贵站信息。我期待与您建立友好的互联网连接！如果暂时不符合条件，我会通过邮件或留言通知您，并期待未来有机会交朋友！。
+              </p>
+
+              {/* 免责声明 */}
+              <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700 text-left max-w-3xl mx-auto">
+                <p className="text-gray-500 dark:text-gray-400 text-xs leading-relaxed">
+                  <strong>💡免责声明</strong><br/>
+                  本博客遵守中华人民共和国相关法律。本页内容仅作为方便学习而产生的快速链接的链接方式，对与友情链接中存在的链接、好文推荐链接等均为其他网站。我本人能力有限无法逐个甄别每篇文章的每个字，并无法获知是否在收录后原作者是否对链接增加了违反法律甚至其他破坏用户计算机等行为。因为部分友链网站甚至没有做备案、域名并未做实名认证等，所以友链网站均可能存在风险，请你须知。<br/><br/>
+
+                  所以在我力所能及的情况下，我会包括但不限于：<br/>
+                  1. 针对收录的博客中的绝大多数内容通过标题来鉴别是否存在有风险的内容<br/>
+                  2. 在收录的友链好文推荐中检查是否存在风险内容<br/>
+                  但是你在访问的时候，仍然无法避免，包括但不限于：<br/>
+                  1. 作者更换了超链接的指向，替换成了其他内容<br/>
+                  2. 作者的服务器被恶意攻击、劫持、被注入恶意内容<br/>
+                  3. 作者的域名到期，被不法分子用作他用<br/>
+                  4. 作者修改了文章内容，增加钓鱼网站、广告等无效信息<br/>
+                  5. 不完善的隐私保护对用户的隐私造成了侵害、泄漏<br/>
+                  如果你发现其中包含违反中华人民共和国法律的内容，请及时联系和举报。该友链会被拉黑。<br/><br/>
+
+                  如果因为从本页跳转给你造成了损失，深表歉意，并且建议用户如果发现存在问题在本页面进行回复。通常会很快处理。
+                </p>
+              </div>
+            </div>
           </div>
-        </div>
-        {/* 评论区域 */}
-        <div className='mt-12 sm:mt-16 lg:mt-20 rounded-2xl shadow-lg p-4 sm:p-6 lg:p-8 glass-layer-soft'>
-          <Comment frontMatter={post} />
+          {/* 评论区域 */}
+          <div className='mt-12 sm:mt-16 lg:mt-20 rounded-2xl shadow-lg p-4 sm:p-6 lg:p-8 glass-layer-soft'>
+            <Comment frontMatter={post} />
+          </div>
         </div>
       </div>
       {/* 确保Notification组件渲染 */}
       <Notification />
-      {/* CSS动画定义 */}
-      <style jsx>{`
-        @keyframes fadeInUp {
-          from {
-            opacity: 0;
-            transform: translateY(30px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        
-        
-        /* 自定义滚动条 */
-        ::-webkit-scrollbar {
-          width: 6px;
-        }
-        
-        ::-webkit-scrollbar-track {
-          background: transparent;
-        }
-        
-        ::-webkit-scrollbar-thumb {
-          background: rgba(156, 163, 175, 0.5);
-          border-radius: 3px;
-        }
-        
-        ::-webkit-scrollbar-thumb:hover {
-          background: rgba(156, 163, 175, 0.8);
-        }
-        
-
-        
-
-      `}</style>
-    </div>
+    </>
   )
 }
 
