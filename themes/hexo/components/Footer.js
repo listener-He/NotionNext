@@ -14,7 +14,7 @@ const Footer = ({ title }) => {
 
   return (
     <footer style={{zIndex: 0}} className='relative z-10 flex-shrink-0 justify-center text-center m-auto w-full leading-6 text-gray-700 dark:text-gray-300 text-sm p-6 glass-layer-strong rounded-t-2xl'>
-      <div className='justify-center items-center gap-1 pt-1 mt-1 border-t border-gray-200 dark:border-gray-700'>
+      <div className='justify-center items-center gap-1 pt-1 mt-1 mx-auto'>
         {siteConfig('ADSENSE_GOOGLE_ID') &&
           <AdSlot type='show' slotId={siteConfig('ADSENSE_GOOGLE_SHOW_FOOTER')} />
         }
