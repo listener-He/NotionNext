@@ -21,7 +21,7 @@ import { initGoogleAdsense } from '@/components/GoogleAdsense'
  */
 const ExternalPlugin = props => {
   // 读取自Notion的配置
-  const { NOTION_CONFIG } = props
+  const { NOTION_CONFIG, post, page } = props
   const { lang } = useGlobal()
   const DISABLE_PLUGIN = siteConfig('DISABLE_PLUGIN', null, NOTION_CONFIG)
   const THEME_SWITCH = siteConfig('THEME_SWITCH', null, NOTION_CONFIG)
@@ -31,6 +31,8 @@ const ExternalPlugin = props => {
     null,
     NOTION_CONFIG
   )
+  // 是否详情页面
+  const IS_DETAIL_VIEW = page || post
   const ANALYTICS_VERCEL = siteConfig('ANALYTICS_VERCEL', null, NOTION_CONFIG)
   const ANALYTICS_BUSUANZI_ENABLE = siteConfig(
     'ANALYTICS_BUSUANZI_ENABLE',
@@ -345,7 +347,7 @@ const ExternalPlugin = props => {
       )}
 
       {/* Artalk */}
-      {COMMENT_ARTALK_SERVER && (
+      {IS_DETAIL_VIEW && COMMENT_ARTALK_SERVER && (
         <Script src={COMMENT_ARTALK_JS} strategy='afterInteractive' />
       )}
 
