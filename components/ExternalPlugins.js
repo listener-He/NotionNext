@@ -12,6 +12,7 @@ import Script from 'next/script'
 import WebWhiz from './Webwhiz'
 import { useGlobal } from '@/lib/global'
 import IconFont from './IconFont'
+import { initGoogleAdsense } from '@/components/GoogleAdsense'
 
 /**
  * 各种插件脚本
@@ -37,8 +38,6 @@ const ExternalPlugin = props => {
     NOTION_CONFIG
   )
   const ADSENSE_GOOGLE_ID = siteConfig('ADSENSE_GOOGLE_ID', null, NOTION_CONFIG)
-  const FACEBOOK_APP_ID = siteConfig('FACEBOOK_APP_ID', null, NOTION_CONFIG)
-  const FACEBOOK_PAGE_ID = siteConfig('FACEBOOK_PAGE_ID', null, NOTION_CONFIG)
   const FIREWORKS = siteConfig('FIREWORKS', null, NOTION_CONFIG)
   const SAKURA = siteConfig('SAKURA', null, NOTION_CONFIG)
   const STARRY_SKY = siteConfig('STARRY_SKY', null, NOTION_CONFIG)
@@ -169,6 +168,12 @@ const ExternalPlugin = props => {
 
   const router = useRouter()
   useEffect(() => {
+    // 异步渲染谷歌广告
+    if (ADSENSE_GOOGLE_ID) {
+      setTimeout(() => {
+        initGoogleAdsense(ADSENSE_GOOGLE_ID)
+      }, 3000)
+    }
     // 映射url（关键功能，不延迟）
     const timer = setTimeout(() => {
       convertInnerUrl({ allPages: props?.allNavPages, lang: lang })
@@ -221,26 +226,7 @@ const ExternalPlugin = props => {
       {ENABLE_AOS && <AosAnimation />}
       {COZE_BOT_ID && <Coze />}
 
-      {/* 谷歌广告 */}
-      {ADSENSE_GOOGLE_ID && (
-        <Script
-          strategy='afterInteractive' // 改为 afterInteractive 以减少阻塞
-          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_GOOGLE_ID}`}
-          crossOrigin='anonymous'
-          onLoad={() => {
-            try {
-              // 检查是否已经初始化过，避免重复推送
-              if (!window.adsbygoogle || !window.adsbygoogle.loaded) {
-                window.adsbygoogle = window.adsbygoogle || [];
-                // 不再自动推送，而是由广告组件本身控制
-                window.adsbygoogle.loaded = true;
-              }
-            } catch (e) {
-              console.error('Google Adsense Error:', e)
-            }
-          }}
-        />
-      )}
+
 
       {/* 51.LA 统计 */}
       {ANALYTICS_51LA_ID && ANALYTICS_51LA_CK && (
@@ -250,10 +236,13 @@ const ExternalPlugin = props => {
             src='//sdk.51.la/js-sdk-pro.min.js'
             strategy='lazyOnload'
             onLoad={() => {
-              window.LA.init({
-                id: ANALYTICS_51LA_ID,
-                ck: ANALYTICS_51LA_CK
-              })
+              try {
+                window.LA.init({
+                  id: ANALYTICS_51LA_ID,
+                  ck: ANALYTICS_51LA_CK
+                })
+              } catch (e) {
+              }
             }}
           />
         </>
