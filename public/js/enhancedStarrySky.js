@@ -11,13 +11,13 @@ function createEnhancedStarrySky(gpuScore) {
     return window.destroyEnhancedStarrySky;
   }
   // 判断是否有钱人
-  const rich = gpuScore >= 10;
+  const rich = gpuScore > 10;
   // 2. 基础配置参数
   const config = {
     amount: {
-      stars: rich ? 256 : 128,         // 星星数量
+      stars: rich ? 128 : 64,         // 星星数量
       meteors: rich ? 12 : 7,         // 同时存在的流星数量
-      nebulae: rich ? 5 : 3,         // 星云数量
+      nebulae: rich ? 7 : 4,         // 星云数量
     },
     colors: {
       stars: ['#FFFFFF', '#C7D9FF', '#FFF6CC', '#FFDDCC'], // 冷暖色调混合
