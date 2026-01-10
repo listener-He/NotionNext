@@ -1,6 +1,5 @@
 import { siteConfig } from '@/lib/config'
 import { loadExternalResource } from '@/lib/utils'
-import { getCDNResourceSync } from '@/lib/utils/cdn'
 import { useEffect } from 'react'
 
 /**
@@ -8,34 +7,44 @@ import { useEffect } from 'react'
  * @returns
  */
 export default function Coze() {
-  const cozeSrc = getCDNResourceSync(siteConfig(
+  const cozeSrc = siteConfig(
     'COZE_SRC_URL',
-    'https://lf-cdn.coze.cn/obj/unpkg/flow-platform/chat-app-sdk/0.1.0-beta.6/libs/cn/index.js'
-  ))
-  const title = siteConfig('COZE_TITLE', 'NotionNext助手')
+    'https://lf-cdn.coze.cn/obj/unpkg/flow-platform/chat-app-sdk/1.2.0-beta.19/libs/cn/index.js'
+  )
+  const title = siteConfig('COZE_TITLE', 'Honesty')
   const botId = siteConfig('COZE_BOT_ID')
+  const token = siteConfig('COZE_BOT_TOKEN')
 
   const loadCoze = async () => {
-    await loadExternalResource(cozeSrc)
-    const CozeWebSDK = window?.CozeWebSDK
-    if (CozeWebSDK) {
-      const cozeClient = new CozeWebSDK.WebChatClient({
-        config: {
-          bot_id: botId
-        },
-        componentProps: {
-          title: title
-        }
-      })
-      console.log('coze', cozeClient)
-    }
+    await loadExternalResource(cozeSrc).then(() => {
+      if (window?.CozeWebSDK) {
+        new CozeWebSDK.WebChatClient({
+          config: {
+            bot_id: botId,
+          },
+          componentProps: {
+            title: title,
+          },
+          auth: {
+            type: 'token',
+            token: token,
+            onRefreshToken: function () {
+              return token
+            }
+          }
+        });
+      }
+
+    })
   }
 
   useEffect(() => {
     if (!botId) {
       return
     }
-    loadCoze()
+    loadCoze().catch(e => {
+      console.error('load coze error', e)
+    })
   }, [])
   return <></>
 }

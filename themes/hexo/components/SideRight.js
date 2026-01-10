@@ -11,6 +11,7 @@ import CategoryGroup from './CategoryGroup'
 import { InfoCard } from './InfoCard'
 import LatestPostsGroup from './LatestPostsGroup'
 import TagGroups from './TagGroups'
+import { AdSlot } from '@/components/GoogleAdsense'
 
 const HexoRecentComments = dynamic(() => import('./HexoRecentComments'))
 const FaceBookPage = dynamic(
@@ -43,8 +44,6 @@ export default function SideRight(props) {
     showTag,
     rightAreaSlot,
     notice,
-    className,
-    tagCount
   } = props
 
   const { locale } = useGlobal()
@@ -98,6 +97,12 @@ export default function SideRight(props) {
 
         {siteConfig('COMMENT_WALINE_SERVER_URL') &&
           siteConfig('COMMENT_WALINE_RECENT') && <HexoRecentComments />}
+        {/* Google Adsense 广告 - 位于其他模块下方 */}
+        {post && (post.type === 'Post' || post.type === 'Page') && siteConfig('ADSENSE_GOOGLE_ID') &&
+          <Card>
+            <AdSlot type='show' />
+          </Card>
+        }
 
         {rightAreaSlot}
         <FaceBookPage />

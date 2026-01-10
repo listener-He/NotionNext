@@ -2,8 +2,8 @@ import { useEffect, useRef, useState } from 'react'
 
 /**
  * 可拖拽组件
- * @param {children} 渲染的子元素
- * @param {stick} 是否要吸附
+ * @param children 渲染的子元素
+ * @param stick 是否要吸附
  * @returns
  */
 export const Draggable = ({ children, stick }) => {
