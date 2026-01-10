@@ -1,7 +1,6 @@
 import busuanzi from '@/lib/plugins/busuanzi'
 import { useRouter } from 'next/router'
 import { useGlobal } from '@/lib/global'
-// import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 
 let path = ''
