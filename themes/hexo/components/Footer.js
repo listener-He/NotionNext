@@ -14,6 +14,11 @@ const Footer = ({ title }) => {
 
   return (
     <footer style={{zIndex: 0}} className='relative z-10 flex-shrink-0 justify-center text-center m-auto w-full leading-6 text-gray-700 dark:text-gray-300 text-sm p-6 glass-layer-strong rounded-t-2xl'>
+      <div className='justify-center items-center gap-1 pt-1 mt-1 border-t border-gray-200 dark:border-gray-700'>
+        {siteConfig('ADSENSE_GOOGLE_ID') &&
+          <AdSlot type='show' slotId={siteConfig('ADSENSE_GOOGLE_SHOW_FOOTER')} />
+        }
+      </div>
       <div className="max-w-screen-xl mx-auto">
         <div className="flex flex-col md:flex-row justify-center items-center text-xs">
           <div className="flex flex-col md:flex-row items-center">
@@ -132,11 +137,6 @@ const Footer = ({ title }) => {
         <a title="无聊湾 🥱 The Boring Bay" href="https://boringbay.com" target="_blank" className="transition-transform hover:scale-105">
           <LazyImage height={18} width={60} src="https://boringbay.com/api/badge/blog.hehouhui.cn"></LazyImage>
         </a>
-      </div>
-      <div className='flex justify-center items-center gap-1 flex-wrap pt-1 mt-1 border-t border-gray-200 dark:border-gray-700'>
-        {siteConfig('ADSENSE_GOOGLE_ID') &&
-          <AdSlot type='show' slotId={siteConfig('ADSENSE_GOOGLE_SHOW_FOOTER')} />
-        }
       </div>
     </footer>
   )

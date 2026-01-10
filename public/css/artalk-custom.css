@@ -116,8 +116,6 @@
 .artalk .atk-comment .atk-expand-btn {
   z-index: 100 !important;
   border: none;
-  padding: 20px 0 0 0;
-  margin-top: -20px;
 }
 
 .dark .artalk .atk-comment .atk-expand-btn {
