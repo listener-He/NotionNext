@@ -225,14 +225,8 @@ const SEO = props => {
 
       {/* DNS预取和预连接 */}
       <link rel='dns-prefetch' href={getCDNResourceSync('//fonts.googleapis.com', 'google-fonts')} />
-      <link rel='dns-prefetch' href='//www.google-analytics.com' />
-      <link rel='dns-prefetch' href='//www.googletagmanager.com' />
       <link rel='preconnect' href={getCDNResourceSync('https://fonts.gstatic.com', 'google-fonts')} crossOrigin='anonymous' />
-
-      {/* 预加载关键资源 */}
-      {/* 注释掉不存在的字体预加载，避免控制台警告 */}
-      {/* <link rel='preload' href='/fonts/inter-var.woff2' as='font' type='font/woff2' crossOrigin='anonymous' /> */}
-
+      
       {children}
     </Head>
   )

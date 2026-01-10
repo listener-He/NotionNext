@@ -177,6 +177,7 @@ const nextConfig = {
     ? undefined
     : async () => [
       { source: '/:path*.html', destination: '/:path*', permanent: false},
+      { source: '/.well-known/:path*.txt', destination: '/well-known/:path*.txt', permanent: true},
       // RSS 路由重写：确保 RSS 请求始终走 API 路由
       { source: '/rss/feed.xml', destination: '/api/rss' , permanent: true},
       { source: '/rss/atom.xml', destination: '/api/rss?format=atom' , permanent: true},

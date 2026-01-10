@@ -415,7 +415,7 @@ const ExternalPlugin = props => {
         <>
           <Script
             src={getCDNResourceSync(`https://www.googletagmanager.com/gtag/js?id=${ANALYTICS_GOOGLE_ID}`)}
-            strategy='afterInteractive'
+            strategy='lazyOnload'
             onLoad={() => {
               window.dataLayer = window.dataLayer || [];
               function gtag(){dataLayer.push(arguments);}
