@@ -3,6 +3,7 @@ import BeiAnSite from '@/components/BeiAnSite'
 import PoweredBy from '@/components/PoweredBy'
 import { siteConfig } from '@/lib/config'
 import LazyImage from '@/components/LazyImage'
+import { AdSlot } from '@/components/GoogleAdsense'
 
 const Footer = ({ title }) => {
   const d = new Date()
@@ -131,6 +132,11 @@ const Footer = ({ title }) => {
         <a title="无聊湾 🥱 The Boring Bay" href="https://boringbay.com" target="_blank" className="transition-transform hover:scale-105">
           <LazyImage height={18} width={60} src="https://boringbay.com/api/badge/blog.hehouhui.cn"></LazyImage>
         </a>
+      </div>
+      <div className='flex justify-center items-center gap-1 flex-wrap pt-1 mt-1 border-t border-gray-200 dark:border-gray-700'>
+        {siteConfig('ADSENSE_GOOGLE_ID') &&
+          <AdSlot type='show' slotId={siteConfig('ADSENSE_GOOGLE_SHOW_FOOTER')} />
+        }
       </div>
     </footer>
   )

@@ -71,7 +71,7 @@ export const initGoogleAdsense = ADSENSE_GOOGLE_ID => {
       if (window.adsbygoogle && !window.adsbygoogle.initialized) {
         // 标记为已初始化
         window.adsbygoogle.initialized = true
-        
+
         // 页面加载完成后加载一次广告
         const ads = document.querySelectorAll('ins.adsbygoogle')
         if (ads.length > 0) {
@@ -117,7 +117,7 @@ export const initGoogleAdsense = ADSENSE_GOOGLE_ID => {
  * 修改下面广告单元中的 data-ad-slot data-ad-format data-ad-layout-key(如果有)
  * 添加 可以在本地调试
  */
-const AdSlot = ({ type = 'show' }) => {
+const AdSlot = ({ type = 'show', slotId = null }) => {
   const ADSENSE_GOOGLE_ID = siteConfig('ADSENSE_GOOGLE_ID')
   const ADSENSE_GOOGLE_TEST = siteConfig('ADSENSE_GOOGLE_TEST')
   if (!ADSENSE_GOOGLE_ID) {
@@ -133,7 +133,7 @@ const AdSlot = ({ type = 'show' }) => {
         data-ad-format='fluid'
         data-adtest={ADSENSE_GOOGLE_TEST ? 'on' : 'off'}
         data-ad-client={ADSENSE_GOOGLE_ID}
-        data-ad-slot={siteConfig('ADSENSE_GOOGLE_SLOT_IN_ARTICLE')}></ins>
+        data-ad-slot={slotId || siteConfig('ADSENSE_GOOGLE_SLOT_IN_ARTICLE')}></ins>
     )
   }
 
@@ -147,7 +147,7 @@ const AdSlot = ({ type = 'show' }) => {
         style={{ display: 'block' }}
         data-adtest={ADSENSE_GOOGLE_TEST ? 'on' : 'off'}
         data-ad-client={ADSENSE_GOOGLE_ID}
-        data-ad-slot={siteConfig('ADSENSE_GOOGLE_SLOT_FLOW')}></ins>
+        data-ad-slot={slotId || siteConfig('ADSENSE_GOOGLE_SLOT_FLOW')}></ins>
     )
   }
 
@@ -160,7 +160,7 @@ const AdSlot = ({ type = 'show' }) => {
         data-ad-format='autorelaxed'
         data-adtest={ADSENSE_GOOGLE_TEST ? 'on' : 'off'}
         data-ad-client={ADSENSE_GOOGLE_ID}
-        data-ad-slot={siteConfig('ADSENSE_GOOGLE_SLOT_NATIVE')}></ins>
+        data-ad-slot={slotId || siteConfig('ADSENSE_GOOGLE_SLOT_NATIVE')}></ins>
     )
   }
 
@@ -171,7 +171,7 @@ const AdSlot = ({ type = 'show' }) => {
       style={{ display: 'block' }}
       data-ad-client={ADSENSE_GOOGLE_ID}
       data-adtest={ADSENSE_GOOGLE_TEST ? 'on' : 'off'}
-      data-ad-slot={siteConfig('ADSENSE_GOOGLE_SLOT_AUTO')}
+      data-ad-slot={slotId || siteConfig('ADSENSE_GOOGLE_SLOT_AUTO')}
       data-ad-format='auto'
       data-full-width-responsive='true'></ins>
   )
