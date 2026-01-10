@@ -17,9 +17,9 @@ const Style = () => {
             --theme-color: ${themeColor};
         }
 
-        // 底色 - 极致清新纯净
+        // 底色 - 极致清新纯净 (Apple Style Gray)
         #theme-hexo body {
-            background-color: #FFFFFF;
+            background-color: #F9FAFB;
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             -webkit-font-smoothing: antialiased;
             color: #1F2937;
@@ -197,13 +197,15 @@ const Style = () => {
         
         /* Card Shadows - Diffused & Soft */
         #theme-hexo .card-shadow {
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
-            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+            border: 1px solid rgba(0,0,0,0.02);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         #theme-hexo .card-shadow:hover {
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
-            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.04), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+            transform: translateY(-2px);
+            border-color: rgba(0,0,0,0.04);
         }
 
     `}</style>

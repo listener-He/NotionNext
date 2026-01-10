@@ -146,10 +146,9 @@ module.exports = {
         },
         '.card-base': {
           borderRadius: theme('borderRadius.xl'),
-          boxShadow: theme('boxShadow.elevation-sm'),
-          backgroundColor: 'rgba(255, 255, 255, 0.8)', // Higher opacity for clean look
-          backdropFilter: 'blur(20px)', // Stronger blur
-          border: '1px solid rgba(255, 255, 255, 0.8)'
+          boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.02)',
+          backgroundColor: '#FFFFFF', // Pure White for sharp contrast
+          border: '1px solid rgba(0, 0, 0, 0.02)' // Extremely subtle border
         },
         '.ellipsis': {
           overflow: 'hidden',
@@ -158,7 +157,7 @@ module.exports = {
         },
         // Crystal Clear Gradients - Subtle & Airy
         '.bg-day-gradient': {
-          backgroundImage: 'linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%)', // Pure White -> Very Light Slate
+          backgroundImage: 'linear-gradient(180deg, #FFFFFF 0%, #F9FAFB 100%)', // Pure White -> Gray-50
           backgroundSize: '100% 100%' // Static for HD feel
         },
         '.bg-night-gradient': {

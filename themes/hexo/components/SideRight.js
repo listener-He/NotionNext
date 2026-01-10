@@ -57,7 +57,7 @@ export default function SideRight(props) {
     <div
       id='sideRight'
       className={` lg:w-80 lg:pt-8 ${siteConfig('LAYOUT_SIDEBAR_REVERSE') ? 'lg:pr-8 lg:pl-0' : 'lg:pl-8 lg:pr-0'} ${post ? 'lg:pt-4' : 'lg:pt-4'}`}>
-      <div className={`sticky ${(post && post.toc) ? '' : 'top-8'} space-y-4 bg-transparent`}>
+      <div className={`sticky ${(post && post.toc) ? 'top-2' : 'top-8'} space-y-4 bg-transparent`}>
         {post && post.toc && post.toc.length > 1 && (
           <Card>
             <Catalog toc={post.toc} />
