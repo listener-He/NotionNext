@@ -3,8 +3,6 @@ import LazyImage from '@/components/LazyImage'
 import { getTextContent } from 'notion-utils'
 import { siteConfig } from '@/lib/config'
 import Comment from '@/components/Comment'
-import useNotification from '@/components/Notification'
-import { useEffect, useState } from 'react'
 
 // 全局标签颜色映射，确保相同标签使用相同颜色
 const tagColorMap = new Map()
@@ -245,7 +243,6 @@ const LinksPage = ({ post }) => {
   const siteLink = siteConfig('LINK') || 'https://www.hehouhui.cn'
   const siteDescription = siteConfig('BIO') || '请提供一句简洁的介绍'
   const siteAvatar = 'https://www.hehouhui.cn/images/avatar.jpeg'
-  const { showNotification, Notification } = useNotification()
 
   // 生成友链信息的不同格式
   const generateFriendLinksData = (format) => {
@@ -292,12 +289,12 @@ const LinksPage = ({ post }) => {
         const data = generateFriendLinksData(format)
         await navigator.clipboard.writeText(data)
         // 确保在客户端环境才调用通知
-        showNotification(`${format.toUpperCase()} 已复制到剪贴板！`)
+        alert(`${format.toUpperCase()} 已复制到剪贴板！`)
         return false
       } catch (err) {
         console.error('复制失败:', err)
         // 确保在客户端环境才调用通知
-        showNotification('复制失败，请手动复制')
+        alert('复制失败，请手动复制')
         return false
       }
     }
@@ -576,8 +573,6 @@ const LinksPage = ({ post }) => {
           </div>
         </div>
       </div>
-      {/* 确保Notification组件渲染 */}
-      <Notification />
     </>
   )
 }
