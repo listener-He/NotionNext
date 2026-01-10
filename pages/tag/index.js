@@ -10,7 +10,6 @@ import { useRouter } from 'next/router'
  * @returns
  */
 const TagIndex = props => {
-  const router = useRouter()
   const theme = siteConfig('THEME', BLOG.THEME, props.NOTION_CONFIG)
   return <DynamicLayout theme={theme} layoutName='LayoutTagIndex' {...props} />
 }
@@ -20,10 +19,10 @@ export async function getStaticProps(req) {
 
   const from = 'tag-index-props'
   // 优化：只获取标签首页需要的数据类型
-  const props = await getGlobalData({ 
-    from, 
+  const props = await getGlobalData({
+    from,
     locale,
-    dataTypes: ['siteInfo', 'tagOptions', 'NOTION_CONFIG', 'latestPosts'] 
+    dataTypes: ['siteInfo', 'tagOptions', 'NOTION_CONFIG', 'latestPosts']
   })
   delete props.allPages
   delete props.allNavPages

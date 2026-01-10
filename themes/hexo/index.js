@@ -41,6 +41,7 @@ import ArticleInfo from './components/ArticleInfo'
 import BLOG from '@/blog.config'
 import FullScreenButton from '@/components/FullScreenButton'
 import Accessibility from '@/components/Accessibility'
+import { AdSlot } from '@/components/GoogleAdsense'
 
 // 使用 useMemo 优化动态导入
 const AlgoliaSearchModal = dynamic(
@@ -470,6 +471,11 @@ const LayoutTagIndex = props => {
             </div>
           ))}
         </div>
+        {/* 谷歌多重广告 */}
+        {siteConfig('ADSENSE_GOOGLE_ID') && <AdSlot type='native' />}
+      </Card>
+      <Card>
+
       </Card>
     </div>
   )

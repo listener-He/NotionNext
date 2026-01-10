@@ -34,13 +34,13 @@ const SEO = props => {
     image?.startsWith('http')
       ? image
       : `${LINK}${image?.startsWith('/') ? image : `/${image}`}`
-  const TITLE = siteConfig('TITLE')
+  const TITLE = siteConfig('TITLE', 'Honesty')
   const title = meta?.title || TITLE
   const description = meta?.description || `${siteInfo?.description}`
   const type = meta?.type || 'website'
   const lang = siteConfig('LANG').replace('-', '_') // Facebook OpenGraph 要 zh_CN 這樣的格式才抓得到語言
   const category = meta?.category || KEYWORDS // section 主要是像是 category 這樣的分類，Facebook 用這個來抓連結的分類
-  const favicon = siteConfig('BLOG_FAVICON')
+  const favicon = siteConfig('BLOG_FAVICON', 'https://www.hehouhui.cn/images/avatar.jpeg')
   const BACKGROUND_DARK = siteConfig('BACKGROUND_DARK', '', NOTION_CONFIG)
 
   const SEO_BAIDU_SITE_VERIFICATION = siteConfig(
@@ -226,7 +226,7 @@ const SEO = props => {
       {/* DNS预取和预连接 */}
       <link rel='dns-prefetch' href={getCDNResourceSync('//fonts.googleapis.com', 'google-fonts')} />
       <link rel='preconnect' href={getCDNResourceSync('https://fonts.gstatic.com', 'google-fonts')} crossOrigin='anonymous' />
-      
+
       {children}
     </Head>
   )
