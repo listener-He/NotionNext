@@ -71,7 +71,7 @@ export default function SideRight(props) {
         {/* Google Adsense 广告  */}
         {siteConfig('ADSENSE_GOOGLE_ID') &&
           <Card>
-            <AdSlot type='show' styleCustomize={{height: '280px'}}/>
+            <AdSlot type='show' styleCustomize={{height: '272px'}}/>
           </Card>
         }
 
