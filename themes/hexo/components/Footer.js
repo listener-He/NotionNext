@@ -11,12 +11,16 @@ const Footer = ({ title }) => {
   const since = siteConfig('SINCE')
   const copyrightDate =
     parseInt(since) < currentYear ? since + '-' + currentYear : currentYear
-
+  const googleId = siteConfig('ADSENSE_GOOGLE_ID');
+  const GOOGLE_SHOW_FOOTER = siteConfig('ADSENSE_GOOGLE_SHOW_FOOTER')
   return (
     <footer style={{zIndex: 0}} className='relative z-10 flex-shrink-0 justify-center text-center m-auto w-full leading-6 text-gray-700 dark:text-gray-300 text-sm p-6 glass-layer-strong rounded-t-2xl'>
       <div className='justify-center items-center gap-1 pt-1 mt-1 mx-auto'>
-        {siteConfig('ADSENSE_GOOGLE_ID') &&
-          <AdSlot type='show' slotId={siteConfig('ADSENSE_GOOGLE_SHOW_FOOTER')} />
+        {googleId && GOOGLE_SHOW_FOOTER &&
+          <ins className="adsbygoogle"
+          style="display:inline-block;width:728px;height:90px"
+          data-ad-client={googleId}
+          data-ad-slot={GOOGLE_SHOW_FOOTER}></ins>
         }
       </div>
       <div className="max-w-screen-xl mx-auto">
