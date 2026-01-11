@@ -4,7 +4,7 @@ import { getGlobalData, getPostBlocks } from '@/lib/db/getSiteData'
 import { generateRobotsTxt } from '@/lib/robots.txt'
 import { DynamicLayout } from '@/themes/theme'
 import { generateRedirectJson } from '@/lib/redirect'
-import { checkDataFromAlgolia, generateAlgoliaSearch } from '@/lib/plugins/algolia'
+import { checkDataFromAlgolia } from '@/lib/plugins/algolia'
 import { getPreviewConfig } from '@/lib/performance.config'
 import { generateSitemap } from '@/lib/sitemap'
 
