@@ -15,7 +15,7 @@ function requestAd(ads) {
   if (adsbygoogle && ads.length > 0) {
     const observerOptions = {
       root: null, // use the viewport as the root
-      threshold: 0.7 // element is considered visible when 70% visible
+      threshold: 0.3 // element is considered visible when 70% visible
     }
 
     const observer = new IntersectionObserver(entries => {
