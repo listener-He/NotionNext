@@ -104,21 +104,21 @@ const Hero = props => {
           {/*)}*/}
 
           {/* 站点欢迎语 - 仅在非黑暗模式下显示打字机效果 */}
-          {!isHalfScreenDarkMode && (
+          {!isDarkMode && (
             <div className='mt-6 h-12 items-center text-center font-bold text-3xl md:text-5xl tracking-widest drop-shadow-sm font-serif text-white'>
               <span id='typed' className="bg-clip-text text-transparent bg-gradient-to-r from-white to-cyan-400" />
             </div>
           )}
 
           {/* 首页导航大按钮 */}
-          {showNavButtons && (
+          {!isDarkMode && showNavButtons && (
             <div className="mt-8">
               <NavButtonGroup {...props} />
             </div>
           )}
         </div>
 
-        {siteInfo?.pageCover && (
+        {!isDarkMode && siteInfo?.pageCover && (
           <LazyImage
             id='header-cover'
             alt={siteInfo?.title}
@@ -147,14 +147,14 @@ const Hero = props => {
         {/*)}*/}
 
         {/* 站点欢迎语 - 仅在非黑暗模式下显示打字机效果 */}
-        {!isHalfScreenDarkMode && (
+        {!isDarkMode && (
           <div className='mt-6 h-12 items-center text-center font-medium text-2xl tracking-wider drop-shadow-sm font-serif italic text-white/90'>
             <span id='typed' />
           </div>
         )}
 
         {/* 首页导航大按钮 */}
-        {showNavButtons && (
+        {!isDarkMode && showNavButtons && (
           <div className="mt-8">
              <NavButtonGroup {...props} />
           </div>
@@ -173,12 +173,13 @@ const Hero = props => {
         )}
       </div>
 
-      <LazyImage
+      {!isDarkMode && <LazyImage
         id='header-cover'
         alt={siteInfo?.title}
         src={siteInfo?.pageCover}
         className={`header-cover w-full  ${headerHeight} object-cover object-center ${backgroundFixed ? 'fixed' : ''} dark:hidden brightness-90 z-10`}
-      />
+      />}
+
 
       {/* 白天模式下-波浪动画 */}
       {!isDarkMode && <Wave />}
