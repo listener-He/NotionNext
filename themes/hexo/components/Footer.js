@@ -3,7 +3,6 @@ import BeiAnSite from '@/components/BeiAnSite'
 import PoweredBy from '@/components/PoweredBy'
 import { siteConfig } from '@/lib/config'
 import LazyImage from '@/components/LazyImage'
-import { AdSlot } from '@/components/GoogleAdsense'
 
 const Footer = ({ title }) => {
   const d = new Date()
