@@ -68,6 +68,12 @@ export default function SideRight(props) {
         {siteConfig('HEXO_WIDGET_ANALYTICS', null, CONFIG) && (
           <AnalyticsCard {...props} />
         )}
+        {/* Google Adsense 广告  */}
+        {siteConfig('ADSENSE_GOOGLE_ID') &&
+          <Card>
+            <AdSlot type='show' styleCustomize={{height: '280px'}}/>
+          </Card>
+        }
 
         {showCategory && (
           <Card>
@@ -97,12 +103,6 @@ export default function SideRight(props) {
 
         {siteConfig('COMMENT_WALINE_SERVER_URL') &&
           siteConfig('COMMENT_WALINE_RECENT') && <HexoRecentComments />}
-        {/* Google Adsense 广告 - 位于其他模块下方 */}
-        {post && (post.type === 'Post' || post.type === 'Page') && siteConfig('ADSENSE_GOOGLE_ID') &&
-          <Card>
-            <AdSlot type='show' />
-          </Card>
-        }
 
         {rightAreaSlot}
         <FaceBookPage />
