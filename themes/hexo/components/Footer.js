@@ -3,6 +3,7 @@ import BeiAnSite from '@/components/BeiAnSite'
 import PoweredBy from '@/components/PoweredBy'
 import { siteConfig } from '@/lib/config'
 import LazyImage from '@/components/LazyImage'
+import { AdSlot } from '@/components/GoogleAdsense'
 
 const Footer = ({ title }) => {
   const d = new Date()
@@ -10,16 +11,13 @@ const Footer = ({ title }) => {
   const since = siteConfig('SINCE')
   const copyrightDate =
     parseInt(since) < currentYear ? since + '-' + currentYear : currentYear
-  const googleId = siteConfig('ADSENSE_GOOGLE_ID');
   const GOOGLE_SHOW_FOOTER = siteConfig('ADSENSE_GOOGLE_SHOW_FOOTER')
   return (
     <footer style={{zIndex: 0}} className='relative z-10 flex-shrink-0 justify-center text-center m-auto w-full leading-6 text-gray-700 dark:text-gray-300 text-sm p-6 glass-layer-strong rounded-t-2xl'>
       <div className='justify-center items-center gap-1 pt-1 mt-1 mx-auto'>
-        {googleId && GOOGLE_SHOW_FOOTER &&
-          <ins className="adsbygoogle"
-          style="display:inline-block;width:728px;height:90px"
-          data-ad-client={googleId}
-          data-ad-slot={GOOGLE_SHOW_FOOTER}></ins>
+        {GOOGLE_SHOW_FOOTER &&
+          <AdSlot type='show' slotId={GOOGLE_SHOW_FOOTER} styleCustomize={{display: 'inline-block', width: '728px', height: '90px'}}>
+          </AdSlot>
         }
       </div>
       <div className="max-w-screen-xl mx-auto">

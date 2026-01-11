@@ -117,18 +117,29 @@ export const initGoogleAdsense = ADSENSE_GOOGLE_ID => {
  * 修改下面广告单元中的 data-ad-slot data-ad-format data-ad-layout-key(如果有)
  * 添加 可以在本地调试
  */
-const AdSlot = ({ type = 'show', slotId = null }) => {
+const AdSlot = ({ type = 'show', slotId = null, styleCustomize = {} }) => {
   const ADSENSE_GOOGLE_ID = siteConfig('ADSENSE_GOOGLE_ID')
   const ADSENSE_GOOGLE_TEST = siteConfig('ADSENSE_GOOGLE_TEST')
   if (!ADSENSE_GOOGLE_ID) {
     return null
+  }
+  let insStyle = {
+    display: 'block',
+  }
+  if (type === 'native' || type === 'adsbygoogle') {
+    insStyle.textAlign = 'center'
+  }
+  if (styleCustomize) {
+    for (const key in styleCustomize) {
+      insStyle[key] = styleCustomize[key]
+    }
   }
   // 文章内嵌广告
   if (type === 'in-article') {
     return (
       <ins
         className='adsbygoogle'
-        style={{ display: 'block', textAlign: 'center' }}
+        style={insStyle}
         data-ad-layout='in-article'
         data-ad-format='fluid'
         data-adtest={ADSENSE_GOOGLE_TEST ? 'on' : 'off'}
@@ -144,7 +155,7 @@ const AdSlot = ({ type = 'show', slotId = null }) => {
         className='adsbygoogle'
         data-ad-format='fluid'
         data-ad-layout-key='-5j+cz+30-f7+bf'
-        style={{ display: 'block' }}
+        style={insStyle}
         data-adtest={ADSENSE_GOOGLE_TEST ? 'on' : 'off'}
         data-ad-client={ADSENSE_GOOGLE_ID}
         data-ad-slot={slotId || siteConfig('ADSENSE_GOOGLE_SLOT_FLOW')}></ins>
@@ -156,7 +167,7 @@ const AdSlot = ({ type = 'show', slotId = null }) => {
     return (
       <ins
         className='adsbygoogle'
-        style={{ display: 'block', textAlign: 'center' }}
+        style={insStyle}
         data-ad-format='autorelaxed'
         data-adtest={ADSENSE_GOOGLE_TEST ? 'on' : 'off'}
         data-ad-client={ADSENSE_GOOGLE_ID}
@@ -168,7 +179,7 @@ const AdSlot = ({ type = 'show', slotId = null }) => {
   return (
     <ins
       className='adsbygoogle'
-      style={{ display: 'block' }}
+      style={insStyle}
       data-ad-client={ADSENSE_GOOGLE_ID}
       data-adtest={ADSENSE_GOOGLE_TEST ? 'on' : 'off'}
       data-ad-slot={slotId || siteConfig('ADSENSE_GOOGLE_SLOT_AUTO')}
