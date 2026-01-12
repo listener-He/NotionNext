@@ -2,6 +2,7 @@ import QrCode from '@/components/QrCode'
 import { siteConfig } from '@/lib/config'
 import { useRef, useState } from 'react'
 import { handleEmailClick } from '@/lib/plugins/mailEncrypt'
+import LazyImage from '@/components/LazyImage'
 
 /**
  * 社交联系方式按钮组
@@ -135,8 +136,7 @@ const SocialButton = () => {
             rel='noreferrer'
             title={'小红书'}
             href={CONTACT_XIAOHONGSHU}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            <LazyImage
               className='transform hover:scale-125 duration-150 w-6'
               src='/svg/xiaohongshu.svg'
               alt='小红书'
@@ -149,8 +149,7 @@ const SocialButton = () => {
             rel='noreferrer'
             title={'知识星球'}
             href={CONTACT_ZHISHIXINGQIU}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            <LazyImage
               className='transform hover:scale-125 duration-150 w-6'
               src='/svg/zhishixingqiu.svg'
               alt='知识星球'

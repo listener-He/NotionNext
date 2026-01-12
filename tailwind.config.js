@@ -59,6 +59,44 @@ module.exports = {
         xl: '24px'
       },
       colors: {
+        // Design System: Semantic Colors
+        primary: {
+          DEFAULT: '#38BDF8', // Sky Blue 400
+          50: '#f0f9ff',
+          100: '#e0f2fe',
+          200: '#bae6fd',
+          300: '#7dd3fc',
+          400: '#38bdf8',
+          500: '#0ea5e9',
+          600: '#0284c7',
+          700: '#0369a1',
+          800: '#075985',
+          900: '#0c4a6e',
+        },
+        secondary: {
+          DEFAULT: '#64748B', // Slate 500
+          50: '#f8fafc',
+          100: '#f1f5f9',
+          200: '#e2e8f0',
+          300: '#cbd5e1',
+          400: '#94a3b8',
+          500: '#64748b',
+          600: '#475569',
+          700: '#334155',
+          800: '#1e293b',
+          900: '#0f172a',
+        },
+        neutral: {
+          DEFAULT: '#64748B',
+          light: '#E5E7EB',
+          dark: '#1F2937'
+        },
+        success: '#10B981', // Emerald 500
+        warning: '#FBBF24', // Amber 400
+        error: '#EF4444', // Red 500
+        info: '#3B82F6', // Blue 500
+
+        // Legacy/Theme Support
         day: {
           DEFAULT: '#FFFFFF' // Pure White
         },
@@ -86,12 +124,10 @@ module.exports = {
           7: '#CBD5E1',
           8: '#E2E8F0'
         },
-        primary: '#38BDF8', // Sky Blue
+        // Mappings for compatibility
         'blue-dark': '#0EA5E9',
-        secondary: '#64748B', // Slate
         'body-color': '#374151',
         'body-secondary': '#6B7280',
-        warning: '#FBBF24',
         stroke: '#E2E8F0',
         'gray-1': '#F8FAFC',
         'gray-2': '#F1F5F9',

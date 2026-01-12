@@ -13,7 +13,7 @@ const Footer = ({ title }) => {
     parseInt(since) < currentYear ? since + '-' + currentYear : currentYear
   const GOOGLE_SHOW_FOOTER = siteConfig('ADSENSE_GOOGLE_SHOW_FOOTER')
   return (
-    <footer style={{zIndex: 0}} className='relative z-10 flex-shrink-0 justify-center text-center m-auto w-full leading-6 text-gray-700 dark:text-gray-300 text-sm p-6 glass-layer-strong rounded-t-2xl'>
+    <footer style={{zIndex: 0}} className='relative z-10 flex-shrink-0 justify-center text-center m-auto w-full leading-6 text-neutral-500 dark:text-neutral-400 text-sm p-6 glass-layer-strong rounded-t-2xl'>
       <div className='justify-center items-center gap-1 pt-1 mt-1 mx-auto'>
         {GOOGLE_SHOW_FOOTER &&
           <AdSlot type='show' slotId={GOOGLE_SHOW_FOOTER} styleCustomize={{display: 'inline-block', width: '728px', height: '90px'}}>
@@ -26,10 +26,10 @@ const Footer = ({ title }) => {
             <span>Copyright&nbsp;</span>
             <i className='fas fa-copyright' />
             <span className="ml-1">{`${copyrightDate}`}</span>
-            <i className='mx-1 animate-pulse fas fa-heart' />
+            <i className='mx-1 animate-pulse fas fa-heart text-error' />
             <a
               href={siteConfig('LINK')}
-              className='underline font-medium hover:text-gray-900 dark:hover:text-gray-100 transition-colors'>
+              className='underline font-medium hover:text-primary transition-colors'>
               {siteConfig('AUTHOR')}
             </a>
             <span className="ml-1">All rights reserved.</span>
@@ -52,7 +52,7 @@ const Footer = ({ title }) => {
         </div>
 
         {(title || siteConfig('BIO')) && (
-          <p className='text-xs pt-1 text-gray-500 dark:text-gray-400'>
+          <p className='text-xs pt-1 text-neutral-400 dark:text-neutral-500'>
             {title} {siteConfig('BIO') && <>|</>} {siteConfig('BIO')}
           </p>
         )}
@@ -62,7 +62,7 @@ const Footer = ({ title }) => {
         </div>
       </div>
 
-      <div className='flex justify-center items-center gap-1 flex-wrap pt-1 mt-1 border-t border-gray-200 dark:border-gray-700'>
+      <div className='flex justify-center items-center gap-1 flex-wrap pt-1 mt-1 border-t border-neutral-200 dark:border-neutral-700'>
         <a href="https://blogscn.fun/random.html" title="BLOGS·CN" target="_blank"
            className="transition-transform hover:scale-105">
           <LazyImage src="https://photo.xiangming.site/img/blogscn.png" alt="本站已加入BLOGS·CN"
@@ -97,12 +97,6 @@ const Footer = ({ title }) => {
                      width={60} />
         </a>
         &nbsp;
-        {/*<LazyImage src='https://blog-file.hehouhui.cn/20250724094940374.png' width={15} height={15} alt='萌20257012号'/>*/}
-        {/*<a href="https://icp.gov.moe/?keyword=20257012" target="_blank">萌20257012号</a>*/}
-        {/*&nbsp;*/}
-        {/*<LazyImage src="https://icp.redcha.cn/static/picture/icplogoi.png" width={20} height={20} alt="茶图标"/>*/}
-        {/*<a href="https://icp.redcha.cn/beian/ICP-2025080099.html">茶2025080099号</a>*/}
-        {/* &nbsp;*/}
         <a href="https://bloginc.cn/18872.html">
           <div style={{
             display: 'inline-flex',

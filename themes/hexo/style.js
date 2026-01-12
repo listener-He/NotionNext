@@ -19,15 +19,15 @@ const Style = () => {
 
         // 底色 - 极致清新纯净 (Apple Style Gray)
         #theme-hexo body {
-            background-color: #F9FAFB;
+            background-color: var(--color-bg-base);
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             -webkit-font-smoothing: antialiased;
-            color: #1F2937;
+            color: var(--color-text-primary);
         }
 
         .dark #theme-hexo body {
-            background-color: #020617;
-            color: #F3F4F6;
+            background-color: var(--color-bg-base);
+            color: var(--color-text-primary);
         }
 
         /* 菜单下划线动画 - 极细极简 */
@@ -68,7 +68,7 @@ const Style = () => {
         }
 
         ::-webkit-scrollbar-thumb {
-            background-color: rgba(148, 163, 184, 0.2);
+            background-color: var(--color-neutral-300);
             border-radius: 10px;
             transition: background-color 0.3s;
         }
@@ -95,13 +95,13 @@ const Style = () => {
             line-height: 1.8;
             font-size: 1.05rem;
             letter-spacing: 0.015em;
-            color: #374151;
+            color: var(--color-text-primary);
             font-weight: 400;
             font-family: 'Inter', 'Noto Sans SC', sans-serif;
         }
 
         .dark #theme-hexo .article-content {
-            color: #CBD5E1;
+            color: var(--color-text-secondary);
         }
 
         #theme-hexo .article-content h1,
@@ -113,12 +113,12 @@ const Style = () => {
             letter-spacing: -0.025em;
             margin-top: 3rem;
             margin-bottom: 1.5rem;
-            color: #111827;
+            color: var(--color-text-primary);
         }
 
         .dark #theme-hexo .article-content h1,
         .dark #theme-hexo .article-content .notion-h1 {
-            color: #F9FAFB;
+            color: var(--color-text-primary);
         }
         
         #theme-hexo .article-content h2,
@@ -129,12 +129,12 @@ const Style = () => {
             letter-spacing: -0.02em;
             margin-top: 2.5rem;
             margin-bottom: 1.25rem;
-            color: #1F2937;
+            color: var(--color-text-primary);
         }
 
         .dark #theme-hexo .article-content h2,
         .dark #theme-hexo .article-content .notion-h2 {
-            color: #F3F4F6;
+            color: var(--color-text-primary);
         }
 
         /* 选中态优化 - 晶莹蓝 */
@@ -145,8 +145,8 @@ const Style = () => {
         
         /* 目录样式优化 - 极简高清 */
         #theme-hexo .catalog-item {
-            border-left: 1px solid rgba(226, 232, 240, 0.5);
-            color: #64748B;
+            border-left: 1px solid var(--color-border);
+            color: var(--color-text-secondary);
             transition: all 0.3s ease;
             padding: 6px 16px;
             font-size: 0.8rem;
@@ -154,18 +154,18 @@ const Style = () => {
         }
         
         .dark #theme-hexo .catalog-item {
-            border-left: 1px solid rgba(30, 41, 59, 0.5);
-            color: #94A3B8;
+            border-left: 1px solid var(--color-border);
+            color: var(--color-text-secondary);
         }
         
         #theme-hexo .catalog-item:hover {
             color: var(--theme-color);
-            background: rgba(56, 189, 248, 0.03);
+            background: var(--color-primary-50);
         }
         
         #theme-hexo .catalog-item-active {
             color: var(--theme-color);
-            background: rgba(56, 189, 248, 0.06);
+            background: var(--color-primary-100);
             border-left: 2px solid var(--theme-color);
             font-weight: 600;
         }
@@ -178,7 +178,7 @@ const Style = () => {
         }
         
         .dark .reading-progress-bar {
-            background: linear-gradient(90deg, transparent 0%, #38BDF8 100%);
+            background: linear-gradient(90deg, transparent 0%, var(--theme-color) 100%);
         }
 
         /* Override Tailwind Colors to Sky Blue */
@@ -197,15 +197,15 @@ const Style = () => {
         
         /* Card Shadows - Diffused & Soft */
         #theme-hexo .card-shadow {
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
-            border: 1px solid rgba(0,0,0,0.02);
+            box-shadow: var(--shadow-elevation-sm);
+            border: 1px solid var(--color-border);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         #theme-hexo .card-shadow:hover {
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.04), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+            box-shadow: var(--shadow-elevation-md);
             transform: translateY(-2px);
-            border-color: rgba(0,0,0,0.04);
+            border-color: var(--color-neutral-300);
         }
 
     `}</style>

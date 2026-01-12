@@ -70,7 +70,7 @@ const SearchInput = props => {
         type="text"
         aria-label={locale.SEARCH.ARTICLES}
         className={
-          'outline-none w-full text-sm pl-5 rounded-lg transition focus:shadow-lg focus:ring-2 focus:ring-indigo-500 dark:text-gray-300 font-light leading-10 text-black bg-gray-100 dark:bg-gray-500'
+          'outline-none w-full text-sm pl-5 rounded-lg transition focus:shadow-lg focus:ring-2 focus:ring-primary-400 dark:text-gray-300 font-light leading-10 text-black bg-neutral-100 dark:bg-neutral-800'
         }
         onKeyUp={handleKeyUp}
         onCompositionStart={lockSearchInput}
@@ -86,7 +86,7 @@ const SearchInput = props => {
         onClick={handleSearch}
       >
         <i
-          className={`hover:text-black transform duration-200 text-gray-500 dark:text-gray-200 cursor-pointer fas ${
+          className={`hover:text-black transform duration-200 text-neutral-500 dark:text-neutral-200 cursor-pointer fas ${
             onLoading ? 'fa-spinner animate-spin' : 'fa-search'
           }`}
         />
@@ -95,7 +95,7 @@ const SearchInput = props => {
       {showClean && (
         <div className="-ml-12 cursor-pointer float-right items-center justify-center py-2">
           <i
-            className="hover:text-black transform duration-200 text-gray-400 dark:text-gray-300 cursor-pointer fas fa-times"
+            className="hover:text-black transform duration-200 text-neutral-400 dark:text-neutral-300 cursor-pointer fas fa-times"
             onClick={cleanSearch}
           />
         </div>

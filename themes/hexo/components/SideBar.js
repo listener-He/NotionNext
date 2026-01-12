@@ -24,7 +24,7 @@ const SideBar = props => {
             }}
             className='justify-center items-center flex hover:rotate-6 transition-transform duration-500 cursor-pointer mb-4'>
             {/* 头像 */}
-            <div className="rounded-full border-2 border-white/50 dark:border-gray-700/50 shadow-elevation-md p-1 bg-white/20 dark:bg-black/20 backdrop-blur-sm">
+            <div className="rounded-full border-2 border-white/50 dark:border-neutral-800 shadow-elevation-md p-1 bg-white/20 dark:bg-black/20 backdrop-blur-sm">
                 <LazyImage
                   src={siteInfo?.icon}
                   className='rounded-full'

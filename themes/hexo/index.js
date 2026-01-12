@@ -115,10 +115,10 @@ const LayoutBase = props => {
           show={!onLoading}
           appear={true}
           enter='transition ease-in-out duration-300 transform order-first'
-          enterFrom='opacity-0 -translate-y-4'
-          enterTo='opacity-100'
+          enterFrom='opacity-0 translate-y-4'
+          enterTo='opacity-100 translate-y-0'
           leave='transition ease-in-out duration-200 transform'
-          leaveFrom='opacity-100'
+          leaveFrom='opacity-100 translate-y-0'
           leaveTo='opacity-0 translate-y-4'
           unmount={false}>
           {post ? (
@@ -147,10 +147,10 @@ const LayoutBase = props => {
                 appear={true}
                 enter='transition ease-in-out duration-300 transform order-first'
                 enterFrom='opacity-0 translate-y-4'
-                enterTo='opacity-100'
+                enterTo='opacity-100 translate-y-0'
                 leave='transition ease-in-out duration-200 transform'
                 leaveFrom='opacity-100 translate-y-0'
-                leaveTo='opacity-0 -translate-y-4'
+                leaveTo='opacity-0 translate-y-4'
                 unmount={false}>
                 {/* 主区上部嵌入 */}
                 {slotTop}
@@ -436,7 +436,7 @@ const LayoutCategoryIndex = props => {
                 legacyBehavior>
                 <div
                   className={
-                    ' duration-300 dark:hover:text-white px-5 cursor-pointer py-2 hover:text-indigo-400'
+                    ' duration-300 dark:hover:text-white px-5 cursor-pointer py-2 hover:text-primary-400'
                   }>
                   <i className='mr-4 fas fa-folder' /> {category.name}(
                   {category.count})

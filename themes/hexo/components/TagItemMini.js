@@ -6,10 +6,10 @@ const TagItemMini = ({ tag, selected = false }) => {
   const name = tag?.name || ''
 
   const gradient = getAccessibleGradient(name, isDarkMode)
-  const borderColor = isDarkMode ? 'rgba(255,255,255,0.18)' : 'rgba(0,0,0,0.12)'
+  const borderColor = isDarkMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.04)'
   const style = {
     backgroundImage: selected ? undefined : gradient,
-    backgroundColor: selected ? (isDarkMode ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.82)') : undefined,
+    backgroundColor: selected ? 'var(--color-primary-500)' : undefined,
     border: `1px solid ${borderColor}`
   }
 
@@ -19,12 +19,12 @@ const TagItemMini = ({ tag, selected = false }) => {
       href={selected ? '/' : `/tag/${encodeURIComponent(tag.name)}`}
       passHref
       className={`cursor-pointer inline-block rounded-md duration-300 ease-standard
-        mr-2 mb-2 py-xs px-sm text-xs whitespace-nowrap 
-        ${selected ? 'text-white dark:text-white hover:opacity-90' : `${isDarkMode ? 'text-white' : 'text-gray-900'} hover:opacity-95`}
-        shadow-sm hover:shadow-md glass-layer-soft`}
+        mr-2 mb-2 py-xs px-sm text-xs whitespace-nowrap transform transition-all hover:scale-105 active:scale-95
+        ${selected ? 'text-white dark:text-white hover:opacity-90 shadow-elevation-sm' : `${isDarkMode ? 'text-neutral-100' : 'text-neutral-900'} hover:opacity-95 shadow-elevation-xs`}
+        glass-layer-soft`}
       style={style}>
 
-      <div className='font-medium'>{selected && <i className='mr-1 fa-tag'/>} {tag.name + (tag.count ? `(${tag.count})` : '')} </div>
+      <div className='font-medium'>{selected && <i className='mr-1 fas fa-tag'/>} {tag.name + (tag.count ? `(${tag.count})` : '')} </div>
 
     </SmartLink>
   );
@@ -34,9 +34,9 @@ export default TagItemMini
 
 function getAccessibleGradient(text, isDark) {
   const hue = hashHue(text)
-  const s = isDark ? 55 : 35
-  const l1 = isDark ? 38 : 90
-  const l2 = isDark ? 22 : 80
+  const s = isDark ? 45 : 30
+  const l1 = isDark ? 28 : 98
+  const l2 = isDark ? 18 : 92
   const c1 = `hsl(${hue} ${s}% ${l1}%)`
   const c2 = `hsl(${(hue + 20) % 360} ${s}% ${l2}%)`
   return `linear-gradient(135deg, ${c1} 0%, ${c2} 100%)`
