@@ -62,6 +62,21 @@ export default async function handler(req, res) {
           dataTypes: ['allPages', 'siteInfo', 'NOTION_CONFIG', 'latestPosts']
         })
 
+        // Add detailed debugging for RSS generation failure
+        if (!props) {
+           throw new Error('getGlobalData returned null/undefined');
+        }
+        
+        // Debugging: Log post count
+        const postCount = props.latestPosts?.length || 0;
+        console.log(`[RSS API] 获取到文章数量: ${postCount}`);
+        
+        if (postCount === 0) {
+           console.warn('[RSS API] ⚠️ 警告: latestPosts 为空，可能是 Notion 数据获取失败或没有已发布的文章');
+           // You might want to try to fetch again without 'latestPosts' optimization if it failed? 
+           // Or just proceed (it will return empty feed)
+        }
+
         if (!props || !props.latestPosts) {
           throw new Error('Failed to fetch site data')
         }

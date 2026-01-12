@@ -211,14 +211,14 @@ module.exports = {
           whiteSpace: 'nowrap'
         },
         // Modern Aurora Gradient (Day) - Enhanced for visibility
-        '.bg-aurora-gradient': {
-          background: 'linear-gradient(-45deg, #FFEFD5, #E0F7FA, #E1F5FE, #F3E5F5)', // Peach -> Cyan -> Sky -> Lavender
+        '.bg-day-gradient': {
+          background: 'linear-gradient(-45deg, #F0F9FF, #E0F2FE, #E0F7FA, #CCFBF1)', // Sky -> Cyan -> Teal
           backgroundSize: '400% 400%',
           animation: 'gradient-shift 15s ease infinite',
         },
         // Modern Nebula Gradient (Night)
-        '.bg-nebula-gradient': {
-          background: 'linear-gradient(-45deg, #0f172a, #1e1b4b, #3b0764, #020617)',
+        '.bg-night-gradient': {
+          background: 'linear-gradient(-45deg, #020617, #0F172A, #1E3A8A, #020617)', // Deep Black -> Slate -> Deep Blue
           backgroundSize: '400% 400%',
           animation: 'gradient-shift 15s ease infinite',
         },

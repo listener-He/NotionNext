@@ -60,7 +60,6 @@ html.dark {
 
 html {
   overflow-x: hidden;
-  background-color: var(--color-bg-base);
   color: var(--color-text-primary);
 }
 
@@ -79,27 +78,22 @@ html {
 }
 
 /* Top-Tier Mesh Gradient Class */
-.bg-aurora-gradient {
-  background-color: #FDFBF7; /* Warm Off-White Base */
+.bg-day-gradient {
+  background-color: #FDFBF7; /* Soft Warm Gray/White Base */
   background-image: 
-    radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
-    radial-gradient(at 50% 0%, hsla(225,39%,30%,1) 0, transparent 50%), 
-    radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%);
-  /* Override for Day Mode */
-  background-image: 
-    radial-gradient(circle at 15% 50%, rgba(255, 209, 193, 0.4) 0%, transparent 50%), /* Peach */
-    radial-gradient(circle at 85% 30%, rgba(199, 210, 254, 0.4) 0%, transparent 50%), /* Periwinkle */
-    radial-gradient(circle at 50% 80%, rgba(251, 207, 232, 0.3) 0%, transparent 50%); /* Pale Rose */
-  background-size: 150% 150%;
-  animation: aurora-shift 20s ease-in-out infinite alternate;
+    radial-gradient(at 10% 10%, rgba(243, 244, 246, 0.8) 0%, transparent 60%), /* Subtle Gray-White */
+    radial-gradient(at 90% 90%, rgba(224, 242, 254, 0.3) 0%, transparent 50%), /* Very Light Sky */
+    radial-gradient(at 50% 50%, rgba(238, 242, 255, 0.3) 0%, transparent 60%); /* Faint Indigo */
+  background-size: 180% 180%;
+  animation: aurora-shift 30s ease-in-out infinite alternate;
 }
 
-.dark .bg-nebula-gradient {
-  background-color: #020617;
+.dark .bg-night-gradient {
+  background-color: #020617; /* Deepest Black */
   background-image: 
-    radial-gradient(circle at 20% 50%, rgba(76, 29, 149, 0.3) 0%, transparent 50%), 
-    radial-gradient(circle at 80% 0%, rgba(30, 58, 138, 0.3) 0%, transparent 50%),
-    radial-gradient(circle at 50% 100%, rgba(15, 23, 42, 0.8) 0%, transparent 50%);
+    radial-gradient(circle at 20% 50%, rgba(30, 58, 138, 0.3) 0%, transparent 50%), /* Blue 900 */
+    radial-gradient(circle at 80% 0%, rgba(15, 23, 42, 0.6) 0%, transparent 50%), /* Slate 900 */
+    radial-gradient(circle at 50% 100%, rgba(2, 6, 23, 0.8) 0%, transparent 50%); /* Base */
   background-size: 150% 150%;
   animation: aurora-shift 25s ease-in-out infinite alternate;
 }

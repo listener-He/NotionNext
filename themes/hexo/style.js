@@ -18,18 +18,8 @@ const Style = () => {
         }
 
         // 底色 - 极致清新纯净 (Apple Style Gray)
-        #theme-hexo body {
-            background-color: var(--color-bg-base);
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            -webkit-font-smoothing: antialiased;
-            color: var(--color-text-primary);
-        }
-
-        .dark #theme-hexo body {
-            background-color: var(--color-bg-base);
-            color: var(--color-text-primary);
-        }
-
+        /* Cleaned up legacy body selector */
+        
         /* 菜单下划线动画 - 极细极简 */
         #theme-hexo .menu-link {
             text-decoration: none;

@@ -16,7 +16,7 @@ const SideBar = props => {
   const router = useRouter()
   return (
     <div id='side-bar' className="relative w-full glass-morphism dark:glass-morphism-dark rounded-xl overflow-hidden shadow-elevation-lg">
-      <div className='h-52 w-full flex justify-center items-center bg-aurora-gradient dark:bg-nebula-gradient bg-noise'>
+      <div className='h-52 w-full flex justify-center items-center bg-day-gradient dark:bg-night-gradient bg-noise'>
         <div className='flex flex-col items-center relative z-10'>
           <div
             onClick={() => {

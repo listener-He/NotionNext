@@ -17,18 +17,18 @@ const Wave = () => {
             id="gentle-wave"
             d="M0,60 C150,120 450,0 600,60 C750,120 1050,0 1200,60 V120 H0 Z"
           />
-          {/* Day Mode Liquid Gradient - Matches Aurora Palette */}
+          {/* Day Mode Liquid Gradient - Matches Modern Soft Palette */}
           <linearGradient id="wave-liquid-day" x1="0%" y1="0%" x2="100%" y2="0%">
-             <stop offset="0%" stopColor="#FFD1C1" /> {/* Peach */}
-             <stop offset="50%" stopColor="#C7D2FE" /> {/* Periwinkle */}
-             <stop offset="100%" stopColor="#FBCFE8" /> {/* Rose */}
+             <stop offset="0%" stopColor="#F3F4F6" /> {/* Soft Gray */}
+             <stop offset="50%" stopColor="#E0F2FE" /> {/* Very Light Sky */}
+             <stop offset="100%" stopColor="#EEF2FF" /> {/* Faint Indigo */}
           </linearGradient>
 
-           {/* Night Mode Liquid Gradient - Matches Nebula Palette */}
+           {/* Night Mode Liquid Gradient - Matches Deep Space Palette */}
           <linearGradient id="wave-liquid-night" x1="0%" y1="0%" x2="100%" y2="0%">
-             <stop offset="0%" stopColor="#312E81" /> {/* Indigo 900 */}
-             <stop offset="50%" stopColor="#4C1D95" /> {/* Violet 900 */}
-             <stop offset="100%" stopColor="#1E3A8A" /> {/* Blue 900 */}
+             <stop offset="0%" stopColor="#1E3A8A" /> {/* Blue 900 */}
+             <stop offset="50%" stopColor="#0F172A" /> {/* Slate 900 */}
+             <stop offset="100%" stopColor="#020617" /> {/* Black */}
           </linearGradient>
         </defs>
         <g className="parallax">
@@ -56,9 +56,9 @@ const Wave = () => {
           {/* Layer 4: Content Transition (Solid White or Page Background) */}
           <g className="wave-layer layer-4">
              {/* Note: We use the base background color here to blend seamlessy with the content area below */}
-            <use href="#gentle-wave" x="0" y="7" className="fill-[#F8FAFC] dark:fill-[#020617]" />
-            <use href="#gentle-wave" x="-1200" y="7" className="fill-[#F8FAFC] dark:fill-[#020617]" />
-            <use href="#gentle-wave" x="1200" y="7" className="fill-[#F8FAFC] dark:fill-[#020617]" />
+            <use href="#gentle-wave" x="0" y="7" className="fill-[#FDFBF7] dark:fill-[#020617]" />
+            <use href="#gentle-wave" x="-1200" y="7" className="fill-[#FDFBF7] dark:fill-[#020617]" />
+            <use href="#gentle-wave" x="1200" y="7" className="fill-[#FDFBF7] dark:fill-[#020617]" />
           </g>
         </g>
       </svg>
