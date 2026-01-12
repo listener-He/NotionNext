@@ -22,7 +22,7 @@ export const BlogPostCardInfo = ({
 }) => {
   const { isDarkMode } = useGlobal()
   return (
-    <div ref={containerRef} className="flex flex-col justify-between h-full bg-transparent overflow-hidden">
+    <div ref={containerRef} className="flex flex-col justify-between h-full bg-transparent">
       <div>
         <header className="relative py-2 bg-transparent">
           <div className={`flex ${showPreview ? 'justify-center' : 'justify-start'} items-start bg-transparent`}>
@@ -42,7 +42,7 @@ export const BlogPostCardInfo = ({
               <SmartLink
                 href={`/archive#${formatDateFmt(post?.publishDate, 'yyyy-MM')}`}
                 passHref
-                className={`absolute top-0 ${dateAlign === 'left' ? 'left-0' : 'right-0'} text-xs leading-5 text-secondary dark:text-gray-400 whitespace-nowrap`}>
+                className={`absolute -top-4 ${dateAlign === 'left' ? 'left-0' : 'right-0'} text-xs leading-5 text-secondary dark:text-gray-400 whitespace-nowrap`}>
                 <i className='far fa-calendar-alt mr-1' />
                 {post?.publishDay || post.lastEditedDay}
               </SmartLink>

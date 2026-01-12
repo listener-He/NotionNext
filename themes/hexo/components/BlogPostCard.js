@@ -133,7 +133,7 @@ const BlogPostCard = ({ index, post, showSummary, siteInfo }) => {
                 showPageCover={showPageCover}
                 showPreview={!showSummary}
                 showSummary={showSummary}
-                dateAlign={showPageCover && HEXO_POST_LIST_IMG_CROSSOVER && index % 2 === 1 ? 'right' : 'left'}
+                dateAlign={showPageCover && HEXO_POST_LIST_IMG_CROSSOVER && index % 2 === 1 ? 'left' : 'right'}
                 containerRef={infoRef}
             />
             ) : (
