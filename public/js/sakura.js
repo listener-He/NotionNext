@@ -127,7 +127,8 @@ function createSakura() {
     document.getElementsByTagName('body')[0].appendChild(canvas)
     cxt = canvas.getContext('2d')
     var sakuraList = new SakuraList()
-    for (var i = 0; i < 32; i++) {
+    const maxSize = 32 + Math.random() * 10;
+    for (var i = 0; i < maxSize; i++) {
       var sakura,
         randomX,
         randomY,
