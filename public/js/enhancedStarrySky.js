@@ -15,7 +15,7 @@ function createEnhancedStarrySky(gpuScore) {
   // 2. 基础配置参数
   const config = {
     amount: {
-      stars: rich ? 128 : 64,         // 星星数量
+      stars: rich ? 160 : 128,         // 星星数量
       meteors: rich ? 12 : 7,         // 同时存在的流星数量
       nebulae: rich ? 7 : 4,         // 星云数量
     },
