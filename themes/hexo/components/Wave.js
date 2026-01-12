@@ -19,32 +19,32 @@ const Wave = () => {
           />
         </defs>
         <g className="parallax">
-          {/* Layer 1: 最底层，透明度极低，移动慢 */}
+          {/* Layer 1: White, lowest opacity */}
           <g className="wave-layer layer-1">
-            <use href="#gentle-wave" x="0" y="0" className="fill-white/10 dark:fill-[#020617]/10" />
-            <use href="#gentle-wave" x="-1200" y="0" className="fill-white/10 dark:fill-[#020617]/10" />
-            <use href="#gentle-wave" x="1200" y="0" className="fill-white/10 dark:fill-[#020617]/10" />
+            <use href="#gentle-wave" x="0" y="0" className="fill-white/30 dark:fill-white/5" />
+            <use href="#gentle-wave" x="-1200" y="0" className="fill-white/30 dark:fill-white/5" />
+            <use href="#gentle-wave" x="1200" y="0" className="fill-white/30 dark:fill-white/5" />
           </g>
           
           {/* Layer 2 */}
           <g className="wave-layer layer-2">
-            <use href="#gentle-wave" x="0" y="3" className="fill-white/20 dark:fill-[#020617]/20" />
-            <use href="#gentle-wave" x="-1200" y="3" className="fill-white/20 dark:fill-[#020617]/20" />
-            <use href="#gentle-wave" x="1200" y="3" className="fill-white/20 dark:fill-[#020617]/20" />
+            <use href="#gentle-wave" x="0" y="3" className="fill-white/50 dark:fill-white/10" />
+            <use href="#gentle-wave" x="-1200" y="3" className="fill-white/50 dark:fill-white/10" />
+            <use href="#gentle-wave" x="1200" y="3" className="fill-white/50 dark:fill-white/10" />
           </g>
 
           {/* Layer 3 */}
           <g className="wave-layer layer-3">
-            <use href="#gentle-wave" x="0" y="5" className="fill-white/40 dark:fill-[#020617]/40" />
-            <use href="#gentle-wave" x="-1200" y="5" className="fill-white/40 dark:fill-[#020617]/40" />
-            <use href="#gentle-wave" x="1200" y="5" className="fill-white/40 dark:fill-[#020617]/40" />
+            <use href="#gentle-wave" x="0" y="5" className="fill-white/70 dark:fill-white/20" />
+            <use href="#gentle-wave" x="-1200" y="5" className="fill-white/70 dark:fill-white/20" />
+            <use href="#gentle-wave" x="1200" y="5" className="fill-white/70 dark:fill-white/20" />
           </g>
 
-          {/* Layer 4: 最顶层，不透明，与下方内容背景色一致 */}
+          {/* Layer 4: Solid White to match content background */}
           <g className="wave-layer layer-4">
-            <use href="#gentle-wave" x="0" y="7" className="fill-white dark:fill-[#020617]" />
-            <use href="#gentle-wave" x="-1200" y="7" className="fill-white dark:fill-[#020617]" />
-            <use href="#gentle-wave" x="1200" y="7" className="fill-white dark:fill-[#020617]" />
+            <use href="#gentle-wave" x="0" y="7" className="fill-white dark:fill-[#0F172A]" />
+            <use href="#gentle-wave" x="-1200" y="7" className="fill-white dark:fill-[#0F172A]" />
+            <use href="#gentle-wave" x="1200" y="7" className="fill-white dark:fill-[#0F172A]" />
           </g>
         </g>
       </svg>

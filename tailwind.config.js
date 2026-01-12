@@ -14,8 +14,8 @@ module.exports = {
     'dark:text-gray-300',
     'border-gray-200',
     'dark:border-gray-600',
-    'bg-day-gradient',
-    'bg-night-gradient',
+    'bg-aurora-gradient',
+    'bg-nebula-gradient',
     'tag-badge-day',
     'tag-badge-night'
   ],
@@ -85,6 +85,20 @@ module.exports = {
           700: '#334155',
           800: '#1e293b',
           900: '#0f172a',
+        },
+        // Modern Aurora Palette
+        aurora: {
+          pink: '#FFF1F2', // Rose 50
+          peach: '#FFEDD5', // Orange 100
+          sky: '#E0F2FE',   // Sky 100
+          lavender: '#F3E8FF' // Purple 100
+        },
+        // Modern Nebula Palette
+        nebula: {
+          dark: '#0F172A',  // Slate 900
+          void: '#020617',  // Slate 950
+          purple: '#3B0764', // Purple 950
+          indigo: '#1E1B4B'  // Indigo 950
         },
         neutral: {
           DEFAULT: '#64748B',
@@ -163,10 +177,15 @@ module.exports = {
         'bg-pulse': {
           '0%, 100%': { filter: 'saturate(100%)' },
           '50%': { filter: 'saturate(110%)' }
+        },
+        'gradient-shift': {
+          '0%, 100%': { backgroundPosition: '0% 50%' },
+          '50%': { backgroundPosition: '100% 50%' },
         }
       },
       animation: {
-        'bg-pulse': 'bg-pulse 6s ease-in-out infinite'
+        'bg-pulse': 'bg-pulse 6s ease-in-out infinite',
+        'gradient-slow': 'gradient-shift 15s ease infinite',
       }
     }
   },
@@ -191,14 +210,17 @@ module.exports = {
           textOverflow: 'ellipsis',
           whiteSpace: 'nowrap'
         },
-        // Crystal Clear Gradients - Subtle & Airy
-        '.bg-day-gradient': {
-          backgroundImage: 'linear-gradient(180deg, #FFFFFF 0%, #F9FAFB 100%)', // Pure White -> Gray-50
-          backgroundSize: '100% 100%' // Static for HD feel
+        // Modern Aurora Gradient (Day) - Enhanced for visibility
+        '.bg-aurora-gradient': {
+          background: 'linear-gradient(-45deg, #FFEFD5, #E0F7FA, #E1F5FE, #F3E5F5)', // Peach -> Cyan -> Sky -> Lavender
+          backgroundSize: '400% 400%',
+          animation: 'gradient-shift 15s ease infinite',
         },
-        '.bg-night-gradient': {
-          backgroundImage: 'linear-gradient(180deg, #020617 0%, #0F172A 100%)', // Deep Space -> Slate
-          backgroundSize: '100% 100%'
+        // Modern Nebula Gradient (Night)
+        '.bg-nebula-gradient': {
+          background: 'linear-gradient(-45deg, #0f172a, #1e1b4b, #3b0764, #020617)',
+          backgroundSize: '400% 400%',
+          animation: 'gradient-shift 15s ease infinite',
         },
         '.tag-badge-day': {
           backgroundColor: '#F0F9FF', // Sky tint
@@ -212,15 +234,18 @@ module.exports = {
           borderRadius: theme('borderRadius.sm'),
           border: '1px solid #1E293B'
         },
+        // Glassmorphism 2.0
         '.glass-morphism': {
-          background: 'rgba(255, 255, 255, 0.7)',
-          backdropFilter: 'blur(20px)',
-          border: '1px solid rgba(255, 255, 255, 0.5)'
+          background: 'rgba(255, 255, 255, 0.65)',
+          backdropFilter: 'blur(16px) saturate(180%)',
+          border: '1px solid rgba(255, 255, 255, 0.6)',
+          boxShadow: '0 4px 30px rgba(0, 0, 0, 0.03)',
         },
         '.glass-morphism-dark': {
-          background: 'rgba(2, 6, 23, 0.7)',
-          backdropFilter: 'blur(20px)',
-          border: '1px solid rgba(255, 255, 255, 0.05)'
+          background: 'rgba(15, 23, 42, 0.6)',
+          backdropFilter: 'blur(16px) saturate(180%)',
+          border: '1px solid rgba(255, 255, 255, 0.08)',
+          boxShadow: '0 4px 30px rgba(0, 0, 0, 0.3)',
         }
       }
       addUtilities(newUtilities, ['responsive'])

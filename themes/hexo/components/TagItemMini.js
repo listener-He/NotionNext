@@ -19,7 +19,7 @@ const TagItemMini = ({ tag, selected = false }) => {
       href={selected ? '/' : `/tag/${encodeURIComponent(tag.name)}`}
       passHref
       className={`cursor-pointer inline-block rounded-md duration-300 ease-standard
-        mr-2 mb-2 py-xs px-sm text-xs whitespace-nowrap transform transition-all hover:scale-105 active:scale-95
+        mr-2 mb-2 py-xs px-sm text-xs whitespace-nowrap transform transition-all hover:scale-105 active:scale-95 hover:shadow-elevation-md
         ${selected ? 'text-white dark:text-white hover:opacity-90 shadow-elevation-sm' : `${isDarkMode ? 'text-neutral-100' : 'text-neutral-900'} hover:opacity-95 shadow-elevation-xs`}
         glass-layer-soft`}
       style={style}>

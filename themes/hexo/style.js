@@ -104,13 +104,14 @@ const Style = () => {
             color: var(--color-text-secondary);
         }
 
+        /* Modern Typography: Serif Headings */
         #theme-hexo .article-content h1,
         #theme-hexo .article-content .notion-h1 {
-            font-family: 'Inter', 'Noto Sans SC', sans-serif; /* 换回无衬线，更现代HD */
+            font-family: 'Playfair Display', 'Noto Serif SC', serif;
             font-size: 2.5rem;
             line-height: 1.2;
-            font-weight: 800;
-            letter-spacing: -0.025em;
+            font-weight: 700;
+            letter-spacing: -0.01em;
             margin-top: 3rem;
             margin-bottom: 1.5rem;
             color: var(--color-text-primary);
@@ -123,10 +124,11 @@ const Style = () => {
         
         #theme-hexo .article-content h2,
         #theme-hexo .article-content .notion-h2 {
+            font-family: 'Playfair Display', 'Noto Serif SC', serif;
             font-size: 1.875rem;
             line-height: 1.3;
-            font-weight: 700;
-            letter-spacing: -0.02em;
+            font-weight: 600;
+            letter-spacing: -0.01em;
             margin-top: 2.5rem;
             margin-bottom: 1.25rem;
             color: var(--color-text-primary);
