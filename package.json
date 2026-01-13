@@ -63,6 +63,7 @@
     "next": "^15.5.0",
     "notion-client": "7.7.1",
     "notion-utils": "7.7.1",
+    "prismjs": "^1.30.0",
     "react": "^18.3.0",
     "react-dom": "^18.3.0",
     "react-facebook": "^10.0.1",
@@ -108,5 +109,6 @@
   "sideEffects": [
     "*.css",
     "*.scss"
-  ]
+  ],
+  "packageManager": "yarn@3.2.3+sha512.f26f951f67de0c6a33ee381e5ff364709c87e70eb5e65c694e4facde3512f1fa80b8679e6ba31ce7d340fbb46f08dd683af9457e240f25a204be7427940d767e"
 }

@@ -26,7 +26,7 @@ const PrismMac = () => {
   const router = useRouter()
   const { isDarkMode } = useGlobal()
   const codeMacBar = siteConfig('CODE_MAC_BAR')
-  const prismjsAutoLoader = siteConfig('PRISM_JS_AUTO_LOADER')
+  const prismjsAutoLoader = siteConfig('PRISM_JS_AUTO_LOADER', 'https://cdn.jsdelivr.net/npm/prismjs/plugins/autoloader/prism-autoloader.min.js')
   const prismjsPath = siteConfig('PRISM_JS_PATH')
 
   const prismThemeSwitch = siteConfig('PRISM_THEME_SWITCH')

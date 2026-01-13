@@ -326,11 +326,11 @@ const LayoutSlug = props => {
 
   return (
     <>
-      <div className='w-full lg:hover:shadow rounded-t-xl lg:rounded-xl lg:px-2 lg:py-4 glass-layer-strong article'>
+      <div className='w-full lg:hover:shadow rounded-t-xl lg:rounded-xl px-4 sm:px-6 lg:px-2 lg:py-4 glass-layer-strong article'> {/* 修改：增加移动端边距 px-4 sm:px-6 */}
         {lock && <ArticleLock validPassword={validPassword} />}
 
         {!lock && post && (
-          <div className='overflow-x-auto flex-grow mx-auto md:w-full md:px-5 '>
+          <div className='overflow-x-auto flex-grow mx-auto md:w-full px-3 sm:px-4 '> {/* 修改：增加移动端边距 px-3 sm:px-4 */}
             <article
               id='article-wrapper'
               itemScope
