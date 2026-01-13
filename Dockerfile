@@ -1,13 +1,11 @@
 ARG NOTION_PAGE_ID
 ARG NEXT_PUBLIC_THEME
 
-FROM node:22 AS base
+FROM node:24-alpine AS base
 
 # 1. Install dependencies only when needed
 FROM base AS deps
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    python3 make g++ pkg-config libpixman-1-dev libcairo2-dev \
-    && rm -rf /var/lib/apt/lists/*
+RUN apk add --no-cache python3 make g++ pkgconfig pixman-dev cairo-dev
 WORKDIR /app
 COPY package.json ./
 RUN yarn install --frozen-lockfile
@@ -30,9 +28,6 @@ ENV NODE_ENV=production
 WORKDIR /app
 
 COPY --from=builder /app/public ./public
-
-# Automatically leverage output traces to reduce image size
-# https://nextjs.org/docs/advanced-features/output-file-tracing
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 
