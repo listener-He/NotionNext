@@ -5,7 +5,6 @@ import Document, { Head, Html, Main, NextScript } from 'next/document'
 const darkModeScript = `
 (function() {
   try {
-    const darkMode = localStorage.getItem('darkMode')
     const defaultAppearance = '${BLOG.APPEARANCE || 'auto'}'
     
     let shouldBeDark = false
@@ -30,29 +29,27 @@ const darkModeScript = `
           // 检查系统偏好
           const prefersDark = window.matchMedia && 
             window.matchMedia('(prefers-color-scheme: dark)').matches
-          
-          // 检查是否在深色模式时间范围内
-          const date = new Date()
-          const hours = date.getHours()
-          const darkTimeStart = ${BLOG.APPEARANCE_DARK_TIME ? BLOG.APPEARANCE_DARK_TIME[0] : 18}
-          const darkTimeEnd = ${BLOG.APPEARANCE_DARK_TIME ? BLOG.APPEARANCE_DARK_TIME[1] : 6}
-          const isNightTime = hours >= darkTimeStart || hours < darkTimeEnd
-          
-          shouldBeDark = prefersDark || isNightTime
+          shouldBeDark = prefersDark
         }
       }
     }
     
     // 立即设置 html 元素的类，避免闪烁
     const htmlElement = document.documentElement
-    htmlElement.classList.remove('light', 'dark')
-    htmlElement.classList.add(shouldBeDark ? 'dark' : 'light')
+    if (shouldBeDark) {
+       htmlElement.classList.add('dark')
+       htmlElement.classList.remove('light')
+    } else {
+       htmlElement.classList.add('light')
+       htmlElement.classList.remove('dark')
+    }
     
     // 设置一个标记，表示主题已经预设
     window.__THEME_PRELOADED__ = true
     window.__INITIAL_DARK_MODE__ = shouldBeDark
     
   } catch (error) {
+     console.log('System theme init dark or light mode error', error)
     // 出错时使用默认浅色模式
     document.documentElement.classList.add('light')
     window.__THEME_PRELOADED__ = false
