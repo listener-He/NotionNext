@@ -210,9 +210,27 @@ module.exports = {
           textOverflow: 'ellipsis',
           whiteSpace: 'nowrap'
         },
-        // Modern Gradient Placeholders (Defined in globals.css)
-        '.bg-day-gradient': {},
-        '.bg-night-gradient': {},
+        '.bg-day-gradient': {
+          backgroundColor: '#F9FAFB', // Cool Gray-50 Base
+          backgroundImage: `
+            radial-gradient(at 0% 0%, rgba(224, 242, 254, 0.5) 0%, transparent 50%),
+            radial-gradient(at 100% 0%, rgba(243, 232, 255, 0.4) 0%, transparent 50%),
+            radial-gradient(at 50% 100%, rgba(240, 253, 250, 0.5) 0%, transparent 50%),
+            radial-gradient(at 50% 50%, rgba(255, 255, 255, 0.6) 0%, transparent 60%)
+          `,
+          backgroundSize: '180% 180%',
+          animation: 'aurora-shift 30s ease-in-out infinite alternate'
+        },
+        '.bg-night-gradient': {
+          backgroundColor: '#020617', // Deep Black
+          backgroundImage: `
+            radial-gradient(circle at 20% 50%, rgba(15, 23, 42, 0.8) 0%, transparent 50%),
+            radial-gradient(circle at 80% 0%, rgba(30, 58, 138, 0.4) 0%, transparent 50%),
+            radial-gradient(circle at 50% 100%, rgba(2, 6, 23, 0.9) 0%, transparent 50%)
+          `,
+          backgroundSize: '150% 150%',
+          animation: 'aurora-shift 30s ease-in-out infinite alternate'
+        },
         '.tag-badge-day': {
           backgroundColor: '#F0F9FF', // Sky tint
           color: '#0369A1',
