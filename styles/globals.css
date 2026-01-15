@@ -78,7 +78,7 @@ html {
 }
 
 /* Top-Tier Mesh Gradient Class: "Ethereal Breath" */
-.bg-day-gradient {
+.night .bg-day-gradient {
   background-color: #F8FAFC; /* Cool Gray-50 Base */
   background-image:
     radial-gradient(at 0% 0%, rgba(224, 242, 254, 0.5) 0%, transparent 50%),   /* Cool Blue (Sky-100) */
