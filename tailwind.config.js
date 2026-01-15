@@ -210,18 +210,9 @@ module.exports = {
           textOverflow: 'ellipsis',
           whiteSpace: 'nowrap'
         },
-        // Modern Aurora Gradient (Day) - Enhanced for visibility
-        '.bg-day-gradient': {
-          background: 'linear-gradient(-45deg, #F0F9FF, #E0F2FE, #E0F7FA, #CCFBF1)', // Sky -> Cyan -> Teal
-          backgroundSize: '400% 400%',
-          animation: 'gradient-shift 15s ease infinite',
-        },
-        // Modern Nebula Gradient (Night)
-        '.bg-night-gradient': {
-          background: 'linear-gradient(-45deg, #020617, #0F172A, #1E3A8A, #020617)', // Deep Black -> Slate -> Deep Blue
-          backgroundSize: '400% 400%',
-          animation: 'gradient-shift 15s ease infinite',
-        },
+        // Modern Gradient Placeholders (Defined in globals.css)
+        '.bg-day-gradient': {},
+        '.bg-night-gradient': {},
         '.tag-badge-day': {
           backgroundColor: '#F0F9FF', // Sky tint
           color: '#0369A1',

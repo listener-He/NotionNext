@@ -17,18 +17,19 @@ const Wave = () => {
             id="gentle-wave"
             d="M0,60 C150,120 450,0 600,60 C750,120 1050,0 1200,60 V120 H0 Z"
           />
-          {/* Day Mode Liquid Gradient - Matches Modern Soft Palette */}
+          {/* Day Mode Liquid Gradient - Matches Ethereal Breath Palette EXACTLY */}
           <linearGradient id="wave-liquid-day" x1="0%" y1="0%" x2="100%" y2="0%">
-             <stop offset="0%" stopColor="#F3F4F6" /> {/* Soft Gray */}
-             <stop offset="50%" stopColor="#E0F2FE" /> {/* Very Light Sky */}
-             <stop offset="100%" stopColor="#EEF2FF" /> {/* Faint Indigo */}
+             {/* Matching globals.css radial gradient stops: Sky-100 -> Purple-100 -> Teal-50 */}
+             <stop offset="0%" stopColor="#E0F2FE" /> {/* Cool Blue */}
+             <stop offset="50%" stopColor="#F3E8FF" /> {/* Neutral Lavender */}
+             <stop offset="100%" stopColor="#F0FDFA" /> {/* Warm Mint */}
           </linearGradient>
 
            {/* Night Mode Liquid Gradient - Matches Deep Space Palette */}
           <linearGradient id="wave-liquid-night" x1="0%" y1="0%" x2="100%" y2="0%">
-             <stop offset="0%" stopColor="#1E3A8A" /> {/* Blue 900 */}
-             <stop offset="50%" stopColor="#0F172A" /> {/* Slate 900 */}
-             <stop offset="100%" stopColor="#020617" /> {/* Black */}
+             <stop offset="0%" stopColor="#0F172A" /> {/* Slate 900 */}
+             <stop offset="50%" stopColor="#1E3A8A" /> {/* Deep Blue */}
+             <stop offset="100%" stopColor="#020617" /> {/* Void */}
           </linearGradient>
         </defs>
         <g className="parallax">
@@ -38,7 +39,7 @@ const Wave = () => {
             <use href="#gentle-wave" x="-1200" y="0" className="fill-[url(#wave-liquid-day)] dark:fill-[url(#wave-liquid-night)] opacity-30" />
             <use href="#gentle-wave" x="1200" y="0" className="fill-[url(#wave-liquid-day)] dark:fill-[url(#wave-liquid-night)] opacity-30" />
           </g>
-          
+
           {/* Layer 2: Frosted Glass Effect (Semi-transparent White) */}
           <g className="wave-layer layer-2">
             <use href="#gentle-wave" x="0" y="3" className="fill-white/40 dark:fill-white/10" />
@@ -53,12 +54,12 @@ const Wave = () => {
             <use href="#gentle-wave" x="1200" y="5" className="fill-white/70 dark:fill-white/20" />
           </g>
 
-          {/* Layer 4: Content Transition (Solid White or Page Background) */}
+          {/* Layer 4: Content Transition - Transparent to Blend */}
           <g className="wave-layer layer-4">
-             {/* Note: We use the base background color here to blend seamlessy with the content area below */}
-            <use href="#gentle-wave" x="0" y="7" className="fill-[#FDFBF7] dark:fill-[#020617]" />
-            <use href="#gentle-wave" x="-1200" y="7" className="fill-[#FDFBF7] dark:fill-[#020617]" />
-            <use href="#gentle-wave" x="1200" y="7" className="fill-[#FDFBF7] dark:fill-[#020617]" />
+             {/* Use opacity 0.6 to allow background gradient to bleed through, eliminating the 'cut' */}
+            <use href="#gentle-wave" x="0" y="7" className="fill-[#F8FAFC] dark:fill-[#020617] opacity-60" />
+            <use href="#gentle-wave" x="-1200" y="7" className="fill-[#F8FAFC] dark:fill-[#020617] opacity-60" />
+            <use href="#gentle-wave" x="1200" y="7" className="fill-[#F8FAFC] dark:fill-[#020617] opacity-60" />
           </g>
         </g>
       </svg>

@@ -17,9 +17,6 @@ const Style = () => {
             --theme-color: ${themeColor};
         }
 
-        // 底色 - 极致清新纯净 (Apple Style Gray)
-        /* Cleaned up legacy body selector */
-        
         /* 菜单下划线动画 - 极细极简 */
         #theme-hexo .menu-link {
             text-decoration: none;

@@ -25,16 +25,6 @@ const SideBarDrawer = ({ children, isOpen, onOpen, onClose, className }) => {
     } else {
       onClose && onClose()
     }
-    const sideBarDrawer = window.document.getElementById('sidebar-drawer')
-    const sideBarDrawerBackground = window.document.getElementById('sidebar-drawer-background')
-
-    if (showStatus) {
-      sideBarDrawer?.classList.replace('-mr-72', 'mr-0')
-      sideBarDrawerBackground?.classList.replace('hidden', 'block')
-    } else {
-      sideBarDrawer?.classList.replace('mr-0', '-mr-72')
-      sideBarDrawerBackground?.classList.replace('block', 'hidden')
-    }
   }
 
   return <div id='sidebar-wrapper' className={' block lg:hidden top-0 ' + className }>

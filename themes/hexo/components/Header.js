@@ -33,13 +33,13 @@ const Header = props => {
   const showSearchButton = siteConfig('HEXO_MENU_SEARCH', false, CONFIG)
   const showRandomButton = siteConfig('HEXO_MENU_RANDOM', false, CONFIG)
 
-  const toggleMenuOpen = () => {
-    changeShow(!isOpen)
-  }
+  const toggleMenuOpen = useCallback(() => {
+    changeShow(prev => !prev)
+  }, [])
 
-  const toggleSideBarClose = () => {
+  const toggleSideBarClose = useCallback(() => {
     changeShow(false)
-  }
+  }, [])
 
   // 监听滚动
   useEffect(() => {
