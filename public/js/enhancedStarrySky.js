@@ -12,10 +12,11 @@ function createEnhancedStarrySky(gpuScore) {
   }
   // 判断是否有钱人
   const rich = gpuScore > 10;
+  const isMobile = window.innerWidth && window.innerWidth < 800;
   // 2. 基础配置参数
   const config = {
     amount: {
-      stars: rich ? 160 : 128,         // 星星数量
+      stars: isMobile ? 84 : rich ? 160 : 128,         // 星星数量
       meteors: rich ? 12 : 7,         // 同时存在的流星数量
       nebulae: rich ? 7 : 4,         // 星云数量
     },
