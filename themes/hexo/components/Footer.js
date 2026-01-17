@@ -57,7 +57,15 @@ const Footer = ({ title }) => {
           </p>
         )}
 
-        <div className="pt-1">
+        <div className="justify-center flex items-center mt-1">
+          <p className='text-xs'>本站由</p>
+          <a href="https://www.upyun.com/?utm_source=lianmeng&utm_medium=referral" target="_blank" className="flex items-center">
+            <LazyImage className="align-middle" src="/images/upyun.png" height={35} width={50} alt="又拍云"/>
+          </a>
+          <p className='text-xs'>提供CDN加速和云存储服务</p>
+        </div>
+
+        <div className="mt-1">
           <PoweredBy className='justify-center' />
         </div>
       </div>
