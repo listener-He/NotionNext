@@ -7,7 +7,7 @@
 const idSakura = 'canvas_sakura'
 function createSakura() {
   // 屏幕宽度小于800px时不显示
-  if (window.width && window.width < 800) {
+  if (window.innerWidth && window.innerWidth < 800) {
      return
   }
   var stop, staticx
