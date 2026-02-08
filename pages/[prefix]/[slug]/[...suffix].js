@@ -1,6 +1,6 @@
 import BLOG from '@/blog.config'
 import { siteConfig } from '@/lib/config'
-import { getGlobalData, getPost } from '@/lib/db/getSiteData'
+import { fetchGlobalAllData, resolvePostProps } from '@/lib/db/SiteDataApi'
 import { checkSlugHasMorThanTwoSlash, processPostData } from '@/lib/utils/post'
 import { idToUuid } from 'notion-utils'
 import Slug from '..'
@@ -28,8 +28,7 @@ export async function getStaticPaths() {
   }
 
   const from = 'slug-paths'
-  const { allPages } = await getGlobalData({ from })
-  // 添加空值检查
+  const { allPages } = await fetchGlobalAllData({ from })
   const paths = allPages
     ?.filter(row => checkSlugHasMorThanTwoSlash(row))
     .map(row => ({
@@ -54,9 +53,15 @@ export async function getStaticProps({
   params: { prefix, slug, suffix },
   locale
 }) {
+  const props = await resolvePostProps({
+    prefix,
+    slug,
+    suffix,
+    locale,
+  })
   const fullSlug = prefix + '/' + slug + '/' + suffix.join('/')
   const from = `slug-props-${fullSlug}`
-  const props = await getGlobalData({ from, locale })
+  //const props = await getGlobalData({ from, locale })
 
   // 在列表内查找文章
   // 添加额外检查确保 allPages 存在且为数组
@@ -98,10 +103,10 @@ export async function getStaticProps({
     revalidate: process.env.EXPORT
       ? undefined
       : siteConfig(
-          'NEXT_REVALIDATE_SECOND',
-          BLOG.NEXT_REVALIDATE_SECOND,
-          props.NOTION_CONFIG
-        )
+        'NEXT_REVALIDATE_SECOND',
+        BLOG.NEXT_REVALIDATE_SECOND,
+        props.NOTION_CONFIG
+      )
   }
 }
 
