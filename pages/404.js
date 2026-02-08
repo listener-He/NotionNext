@@ -1,6 +1,6 @@
 import BLOG from '@/blog.config'
 import { siteConfig } from '@/lib/config'
-import { getGlobalData } from '@/lib/db/getSiteData'
+import { fetchGlobalAllData } from '@/lib/db/SiteDataApi'
 import { DynamicLayout } from '@/themes/theme'
 
 /**
@@ -16,12 +16,8 @@ const NoFound = props => {
 export async function getStaticProps(req) {
   const { locale } = req
 
-  // 优化：只获取404页面需要的数据类型
-  const props = (await getGlobalData({ 
-    from: '404', 
-    locale,
-    dataTypes: ['siteInfo', 'NOTION_CONFIG'] 
-  })) || {}
+  const props = (await fetchGlobalAllData({ from: '404', locale })) || {}
+  return { props }
   return {
         props,
         revalidate: process.env.EXPORT

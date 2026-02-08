@@ -2,31 +2,24 @@ import BLOG from '@/blog.config'
 import { siteConfig } from '@/lib/config'
 import { fetchGlobalAllData } from '@/lib/db/SiteDataApi'
 import { DynamicLayout } from '@/themes/theme'
-import { useRouter } from 'next/router'
 
 /**
- * 标签首页
+ * 注册
  * @param {*} props
  * @returns
  */
-const TagIndex = props => {
+const SignUp = props => {
   const theme = siteConfig('THEME', BLOG.THEME, props.NOTION_CONFIG)
-  return <DynamicLayout theme={theme} layoutName='LayoutTagIndex' {...props} />
+  return <DynamicLayout theme={theme} layoutName='LayoutSignUp' {...props} />
 }
 
 export async function getStaticProps(req) {
   const { locale } = req
 
-  const from = 'tag-index-props'
+  const from = 'SignIn'
   const props = await fetchGlobalAllData({ from, locale })
-  // 优化：只获取标签首页需要的数据类型
-  // const props = await getGlobalData({
-  //   from,
-  //   locale,
-  //   dataTypes: ['siteInfo', 'tagOptions', 'NOTION_CONFIG', 'latestPosts']
-  // })
+
   delete props.allPages
-  delete props.allNavPages
   return {
     props,
     revalidate: process.env.EXPORT
@@ -35,8 +28,21 @@ export async function getStaticProps(req) {
           'NEXT_REVALIDATE_SECOND',
           BLOG.NEXT_REVALIDATE_SECOND,
           props.NOTION_CONFIG
-        ) * 6
+        )
   }
 }
 
-export default TagIndex
+/**
+ * catch-all route for clerk
+ * @returns
+ */
+export function getStaticPaths() {
+  return {
+    paths: [
+      { params: { index: [] } }, // 使 /sign-up 路径可访问
+      { params: { index: ['sign-up'] } } // 明确 sign-up 生成路径
+    ],
+    fallback: 'blocking' // 使用 'blocking' 模式让未生成的路径也能正确响应
+  }
+}
+export default SignUp

@@ -1,6 +1,6 @@
 import BLOG from '@/blog.config'
 import { siteConfig } from '@/lib/config'
-import { getGlobalData } from '@/lib/db/getSiteData'
+import { fetchGlobalAllData } from '@/lib/db/SiteDataApi'
 import { DynamicLayout } from '@/themes/theme'
 import { leanListPost } from '@/lib/utils/leanPost'
 
@@ -17,11 +17,12 @@ export default function Category(props) {
 
 export async function getStaticProps({ params: { category, page } }) {
   const from = 'category-page-props'
+  let props = await fetchGlobalAllData({ from })
   // 优化：只获取分类分页页面需要的数据类型
-  let props = await getGlobalData({ 
-    from,
-    dataTypes: ['allPages', 'NOTION_CONFIG', 'siteInfo'] 
-  })
+  // let props = await getGlobalData({
+  //   from,
+  //   dataTypes: ['allPages', 'NOTION_CONFIG', 'siteInfo']
+  // })
 
   // 过滤状态类型
   props.posts = props.allPages
@@ -60,12 +61,16 @@ export async function getStaticProps({ params: { category, page } }) {
 }
 
 export async function getStaticPaths() {
-  const from = 'category-page-paths'
-  // 优化：只获取分类分页路径生成需要的数据类型
-  const { categoryOptions, allPages } = await getGlobalData({ 
-    from,
-    dataTypes: ['allPages', 'categoryOptions'] 
-  })
+  const from = 'category-paths'
+  const { categoryOptions, allPages, NOTION_CONFIG } = await fetchGlobalAllData({
+     from
+    })
+  // const from = 'category-page-paths'
+  // // 优化：只获取分类分页路径生成需要的数据类型
+  // const { categoryOptions, allPages } = await getGlobalData({
+  //   from,
+  //   dataTypes: ['allPages', 'categoryOptions']
+  // })
 
   const paths = []
 

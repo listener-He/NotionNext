@@ -2,11 +2,11 @@ import BLOG from '@/blog.config'
 import useNotification from '@/components/Notification'
 import OpenWrite from '@/components/OpenWrite'
 import { siteConfig } from '@/lib/config'
-import { getGlobalData, getPost } from '@/lib/db/getSiteData'
+import { fetchGlobalAllData, resolvePostProps } from '@/lib/db/SiteDataApi'
 import { useGlobal } from '@/lib/global'
-import { getPageTableOfContents } from '@/lib/notion/getPageTableOfContents'
-import { getPasswordQuery } from '@/lib/password'
-import { checkSlugHasNoSlash, processPostData } from '@/lib/utils/post'
+import { getPageTableOfContents } from '@/lib/db/notion/getPageTableOfContents'
+import { getPasswordQuery } from '@/lib/utils/password'
+import { checkSlugHasMorThanTwoSlash, checkSlugHasNoSlash, processPostData } from '@/lib/utils/post'
 import { DynamicLayout } from '@/themes/theme'
 import md5 from 'js-md5'
 import { useRouter } from 'next/router'
@@ -107,12 +107,12 @@ export async function getStaticPaths() {
   }
 
   const from = 'slug-paths'
+  const { allPages } = await fetchGlobalAllData({ from })
   // 优化：只获取路径生成需要的数据类型
-  const { allPages } = await getGlobalData({
-    from,
-    dataTypes: ['allPages']
-  })
-  // 添加空值检查
+  // const { allPages } = await getGlobalData({
+  //   from,
+  //   dataTypes: ['allPages']
+  // })
   const paths = allPages
     ?.filter(row => checkSlugHasNoSlash(row))
     .map(row => ({ params: { prefix: row.slug } }))
@@ -123,13 +123,18 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params: { prefix }, locale }) {
+
   let fullSlug = prefix
   const from = `slug-props-${fullSlug}`
   // 优化：只获取文章页需要的数据类型
-  const props = await getGlobalData({
-    from,
+  // const props = await getGlobalData({
+  //   from,
+  //   locale,
+  //   dataTypes: ['allPages', 'NOTION_CONFIG', 'siteInfo', 'latestPosts']
+  // })
+  const props = await resolvePostProps({
+    prefix,
     locale,
-    dataTypes: ['allPages', 'NOTION_CONFIG', 'siteInfo', 'latestPosts']
   })
   if (siteConfig('PSEUDO_STATIC', false, props.NOTION_CONFIG)) {
     if (!fullSlug.endsWith('.html')) {

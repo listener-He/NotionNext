@@ -1,5 +1,5 @@
 // pages/sitemap.xml.js
-import { getGlobalData } from '@/lib/db/getSiteData'
+import { fetchGlobalAllData } from '@/lib/db/SiteDataApi'
 import axios from 'axios'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
@@ -27,11 +27,12 @@ const UI = props => {
  */
 export const getServerSideProps = async ctx => {
   const from = `auth`
+  const props = await fetchGlobalAllData({ from })
   // 优化：只获取认证页面需要的数据类型
-  const props = await getGlobalData({ 
-    from,
-    dataTypes: ['siteInfo', 'NOTION_CONFIG'] 
-  })
+  // const props = await getGlobalData({
+  //   from,
+  //   dataTypes: ['siteInfo', 'NOTION_CONFIG']
+  // })
   delete props.allPages
   const code = ctx.query.code
 

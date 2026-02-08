@@ -2,9 +2,9 @@ import BLOG from '@/blog.config'
 import { getDataFromCache } from '@/lib/cache/cache_manager'
 import { CACHE_KEY_PAGE_BLOCK } from '@/lib/cache/cache_keys'
 import { siteConfig } from '@/lib/config'
-import { getGlobalData } from '@/lib/db/getSiteData'
+import { fetchGlobalAllData } from '@/lib/db/SiteDataApi'
 import { DynamicLayout } from '@/themes/theme'
-import { getPageContentText } from '@/lib/notion/getPageContentText'
+import { getPageContentText } from '@/lib/db/notion/getPageContentText'
 import { leanListPost } from '@/lib/utils/leanPost'
 
 const Index = props => {
@@ -18,7 +18,7 @@ const Index = props => {
  * @returns
  */
 export async function getStaticProps({ params: { keyword }, locale }) {
-  const props = await getGlobalData({
+  const props = await fetchGlobalAllData({
     from: 'search-props',
     locale
   })

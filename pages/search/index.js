@@ -1,6 +1,6 @@
 import BLOG from '@/blog.config'
 import { siteConfig } from '@/lib/config'
-import { getGlobalData } from '@/lib/db/getSiteData'
+import { fetchGlobalAllData } from '@/lib/db/SiteDataApi'
 import { DynamicLayout } from '@/themes/theme'
 import { useRouter } from 'next/router'
 import { leanListPost } from '@/lib/utils/leanPost'
@@ -40,12 +40,17 @@ const Search = props => {
  * 浏览器前端搜索
  */
 export async function getStaticProps({ locale }) {
-  // 优化：只获取搜索页需要的数据类型
-  const props = await getGlobalData({
+  const props = await fetchGlobalAllData({
     from: 'search-props',
     locale,
     dataTypes: ['allPages', 'tagOptions', 'latestPosts']
   })
+  // // 优化：只获取搜索页需要的数据类型
+  // const props = await getGlobalData({
+  //   from: 'search-props',
+  //   locale,
+  //   dataTypes: ['allPages', 'tagOptions', 'latestPosts']
+  // })
   const { allPages } = props
   props.posts = allPages?.filter(
     page => page.type === 'Post' && page.status === 'Published'

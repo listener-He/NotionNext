@@ -1,6 +1,6 @@
 import BLOG from '@/blog.config'
 import { siteConfig } from '@/lib/config'
-import { getGlobalData } from '@/lib/db/getSiteData'
+import { fetchGlobalAllData } from '@/lib/db/SiteDataApi'
 import { DynamicLayout } from '@/themes/theme'
 import { leanListPost } from '@/lib/utils/leanPost'
 
@@ -16,13 +16,13 @@ export default function Category(props) {
 
 export async function getStaticProps({ params: { category }, locale }) {
   const from = 'category-props'
+  let props = await fetchGlobalAllData({ from, locale })
   // 优化：只获取分类页需要的数据类型
-  let props = await getGlobalData({ 
-    from, 
-    locale,
-    dataTypes: ['allPages'] // 分类页只需要文章数据
-  })
-
+  // let props = await getGlobalData({
+  //   from,
+  //   locale,
+  //   dataTypes: ['allPages'] // 分类页只需要文章数据
+  // })
   // 过滤状态
   props.posts = props.allPages?.filter(
     page => page.type === 'Post' && page.status === 'Published'
@@ -64,11 +64,12 @@ export async function getStaticProps({ params: { category }, locale }) {
 
 export async function getStaticPaths() {
   const from = 'category-paths'
+  const { categoryOptions } = await fetchGlobalAllData({ from })
   // 优化：只获取分类相关的数据
-  const { categoryOptions } = await getGlobalData({ 
-    from,
-    dataTypes: ['categoryOptions'] 
-  })
+  // const { categoryOptions } = await getGlobalData({
+  //   from,
+  //   dataTypes: ['categoryOptions']
+  // })
   return {
     paths: Object.keys(categoryOptions).map(category => ({
       params: { category: categoryOptions[category]?.name }

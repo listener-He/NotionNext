@@ -1,9 +1,8 @@
 import BLOG from '@/blog.config'
 import { siteConfig } from '@/lib/config'
-import { getGlobalData, getPost } from '@/lib/db/getSiteData'
-import { checkSlugHasOneSlash, processPostData } from '@/lib/utils/post'
-import { idToUuid } from 'notion-utils'
+import { fetchGlobalAllData, resolvePostProps } from '@/lib/db/SiteDataApi'
 import Slug from '..'
+import { checkSlugHasOneSlash } from '@/lib/utils/post'
 import { calculatePostCacheTime } from '@/lib/cache/cache_coefficient'
 
 /**
@@ -25,12 +24,12 @@ export async function getStaticPaths() {
   }
 
   const from = 'slug-paths'
+  const { allPages } = await fetchGlobalAllData({ from })
   // 优化：只获取路径生成需要的数据类型
-  const { allPages } = await getGlobalData({
-    from,
-    dataTypes: ['allPages']
-  })
-
+  // const { allPages } = await getGlobalData({
+  //   from,
+  //   dataTypes: ['allPages']
+  // })
   // 根据slug中的 / 分割成prefix和slug两个字段 ; 例如 article/test
   // 最终用户可以通过  [domain]/[prefix]/[slug] 路径访问，即这里的 [domain]/article/test
   // 添加空值检查
@@ -51,14 +50,20 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params: { prefix, slug }, locale }) {
-  const fullSlug = prefix + '/' + slug
-  const from = `slug-props-${fullSlug}`
-  // 优化：只获取文章页需要的数据类型
-  const props = await getGlobalData({
-    from,
+  const props = await resolvePostProps({
+    prefix,
+    slug,
     locale,
-    dataTypes: ['allPages', 'NOTION_CONFIG', 'siteInfo', 'latestPosts']
   })
+
+  // const fullSlug = prefix + '/' + slug
+  // const from = `slug-props-${fullSlug}`
+  // // 优化：只获取文章页需要的数据类型
+  // const props = await getGlobalData({
+  //   from,
+  //   locale,
+  //   dataTypes: ['allPages', 'NOTION_CONFIG', 'siteInfo', 'latestPosts']
+  // })
 
   // 在列表内查找文章
   // 添加额外检查确保 allPages 存在且为数组

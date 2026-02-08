@@ -1,6 +1,6 @@
 import BLOG from '@/blog.config'
 import { siteConfig } from '@/lib/config'
-import { getGlobalData } from '@/lib/db/getSiteData'
+import { fetchGlobalAllData } from '@/lib/db/SiteDataApi'
 import { DynamicLayout } from '@/themes/theme'
 
 /**
@@ -16,12 +16,13 @@ export default function Category(props) {
 }
 
 export async function getStaticProps({ locale }) {
+  const props = await fetchGlobalAllData({ from: 'category-index-props', locale })
   // 优化：只获取分类首页需要的数据类型
-  const props = await getGlobalData({ 
-    from: 'category-index-props', 
-    locale,
-    dataTypes: ['siteInfo', 'categoryOptions', 'NOTION_CONFIG', 'latestPosts'] 
-  })
+  // const props = await getGlobalData({
+  //   from: 'category-index-props',
+  //   locale,
+  //   dataTypes: ['siteInfo', 'categoryOptions', 'NOTION_CONFIG', 'latestPosts']
+  // })
   delete props.allPages
   delete props.allNavPages
   delete props.tagOptions

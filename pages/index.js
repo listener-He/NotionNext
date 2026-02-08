@@ -1,9 +1,11 @@
 import BLOG from '@/blog.config'
 import { siteConfig } from '@/lib/config'
-import { getGlobalData, getPostBlocks } from '@/lib/db/getSiteData'
-import { generateRobotsTxt } from '@/lib/robots.txt'
+import { fetchGlobalAllData, getPostBlocks } from '@/lib/db/SiteDataApi'
+import { generateRobotsTxt } from '@/lib/utils/robots.txt'
+import { generateRss } from '@/lib/utils/rss'
+import { generateSitemapXml } from '@/lib/utils/sitemap.xml'
 import { DynamicLayout } from '@/themes/theme'
-import { generateRedirectJson } from '@/lib/redirect'
+import { generateRedirectJson } from '@/lib/utils/redirect'
 import { checkDataFromAlgolia } from '@/lib/plugins/algolia'
 import { getPreviewConfig } from '@/lib/performance.config'
 import { generateSitemap } from '@/lib/sitemap'
@@ -25,12 +27,13 @@ const Index = props => {
 export async function getStaticProps(req) {
   const { locale } = req
   const from = 'index'
+  const props = await fetchGlobalAllData({ from, locale })
   // 优化：只获取首页需要的数据类型
-  const props = await getGlobalData({
-    from,
-    locale,
-    dataTypes: ['allPages', 'siteInfo', 'tagOptions', 'categoryOptions', 'NOTION_CONFIG', 'latestPosts']
-  })
+  // const props = await getGlobalData({
+  //   from,
+  //   locale,
+  //   dataTypes: ['allPages', 'siteInfo', 'tagOptions', 'categoryOptions', 'NOTION_CONFIG', 'latestPosts']
+  // })
   const POST_PREVIEW_LINES = siteConfig(
     'POST_PREVIEW_LINES',
     12,

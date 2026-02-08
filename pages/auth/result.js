@@ -1,5 +1,5 @@
 // pages/sitemap.xml.js
-import { getGlobalData } from '@/lib/db/getSiteData'
+import { fetchGlobalAllData } from '@/lib/db/SiteDataApi'
 import { useRouter } from 'next/router'
 import Slug from '../[prefix]'
 
@@ -9,12 +9,12 @@ import Slug from '../[prefix]'
  */
 export const getStaticProps = async () => {
   const from = `auth`
+  const props = await fetchGlobalAllData({ from })
   // 优化：只获取认证结果页面需要的数据类型
-  const props = await getGlobalData({ 
-    from,
-    dataTypes: ['siteInfo', 'NOTION_CONFIG'] 
-  })
-
+  // const props = await getGlobalData({
+  //   from,
+  //   dataTypes: ['siteInfo', 'NOTION_CONFIG']
+  // })
   delete props.allPages
   return {
     props

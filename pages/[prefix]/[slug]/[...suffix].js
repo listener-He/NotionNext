@@ -1,6 +1,6 @@
 import BLOG from '@/blog.config'
 import { siteConfig } from '@/lib/config'
-import { getGlobalData, getPost } from '@/lib/db/getSiteData'
+import { fetchGlobalAllData, resolvePostProps } from '@/lib/db/SiteDataApi'
 import { checkSlugHasMorThanTwoSlash, processPostData } from '@/lib/utils/post'
 import { idToUuid } from 'notion-utils'
 import Slug from '..'
@@ -29,12 +29,7 @@ export async function getStaticPaths() {
   }
 
   const from = 'slug-paths'
-  // 优化：只获取路径生成需要的数据类型
-  const { allPages } = await getGlobalData({
-    from,
-    dataTypes: ['allPages']
-  })
-  // 添加空值检查
+  const { allPages } = await fetchGlobalAllData({ from })
   const paths = allPages
     ?.filter(row => checkSlugHasMorThanTwoSlash(row))
     .map(row => ({
@@ -59,14 +54,21 @@ export async function getStaticProps({
   params: { prefix, slug, suffix },
   locale
 }) {
+  const props = await resolvePostProps({
+    prefix,
+    slug,
+    suffix,
+    locale,
+  })
   const fullSlug = prefix + '/' + slug + '/' + suffix.join('/')
   const from = `slug-props-${fullSlug}`
+  //const props = await getGlobalData({ from, locale })
   // 优化：只获取文章页需要的数据类型
-  const props = await getGlobalData({
-    from,
-    locale,
-    dataTypes: ['allPages', 'NOTION_CONFIG', 'siteInfo', 'latestPosts']
-  })
+  // const props = await getGlobalData({
+  //   from,
+  //   locale,
+  //   dataTypes: ['allPages', 'NOTION_CONFIG', 'siteInfo', 'latestPosts']
+  // })
 
   // 在列表内查找文章
   // 添加额外检查确保 allPages 存在且为数组
@@ -111,7 +113,6 @@ export async function getStaticProps({
       await processPostData(props, from)
     }
   }
-
   // 处理推荐文章和前后文章的逻辑，只保留基础信息（如果启用了懒加载）
   if (props.post && BLOG.LAZY_LOAD_CONTENT) {
     const allPosts = props.allPages?.filter(
@@ -164,10 +165,10 @@ export async function getStaticProps({
   let revalidate = process.env.EXPORT
     ? undefined
     : siteConfig(
-        'NEXT_REVALIDATE_SECOND',
-        BLOG.NEXT_REVALIDATE_SECOND,
-        props.NOTION_CONFIG
-      )
+      'NEXT_REVALIDATE_SECOND',
+      BLOG.NEXT_REVALIDATE_SECOND,
+      props.NOTION_CONFIG
+    )
 
   // 如果是文章页面，根据最后更新时间计算缓存时间
   if (props?.post?.lastEditedDate) {
