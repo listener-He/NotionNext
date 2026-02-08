@@ -1,4 +1,4 @@
-import { getGlobalData } from '@/lib/db/getSiteData'
+import { fetchGlobalAllData } from '@/lib/db/SiteDataApi'
 
 /**
  * 微信小程序 - 获取标签列表API
@@ -12,7 +12,7 @@ export default async function handler(req, res) {
 
   try {
     // 优化：只获取小程序标签API需要的数据类型
-    const globalData = await getGlobalData({
+    const globalData = await fetchGlobalAllData({
       from: 'miniprogram-tags',
       dataTypes: ['allPages', 'tagOptions']
     })

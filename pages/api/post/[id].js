@@ -1,4 +1,4 @@
-import { getPost } from '@/lib/db/getSiteData'
+import { getPost } from '@/lib/db/SiteDataApi'
 import { processPostData } from '@/lib/utils/post'
 
 export default async function handler(req, res) {

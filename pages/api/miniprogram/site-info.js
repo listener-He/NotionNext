@@ -1,4 +1,4 @@
-import { getGlobalData } from '@/lib/db/getSiteData'
+import { fetchGlobalAllData } from '@/lib/db/SiteDataApi'
 import BLOG from '@/blog.config'
 
 /**
@@ -14,7 +14,7 @@ export default async function handler(req, res) {
 
   try {
     // 优化：只获取小程序站点信息API需要的数据类型
-    const globalData = await getGlobalData({
+    const globalData = await fetchGlobalAllData({
       from: 'miniprogram-site-info',
       dataTypes: ['allPages', 'siteInfo', 'categoryOptions', 'tagOptions', 'latestPosts', 'NOTION_CONFIG']
     })

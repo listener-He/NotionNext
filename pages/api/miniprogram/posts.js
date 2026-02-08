@@ -1,4 +1,4 @@
-import { getGlobalData } from '@/lib/db/getSiteData'
+import { fetchGlobalAllData } from '@/lib/db/SiteDataApi'
 
 /**
  * 微信小程序 - 获取文章列表API
@@ -34,7 +34,7 @@ export default async function handler(req, res) {
     const pageSizeNum = Math.min(50, Math.max(1, parseInt(pageSize) || 10))
 
     // 优化：只获取小程序文章API需要的数据类型
-    const globalData = await getGlobalData({
+    const globalData = await fetchGlobalAllData({
       from: 'miniprogram-posts',
       dataTypes: ['allPages']
     })

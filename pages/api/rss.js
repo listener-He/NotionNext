@@ -1,5 +1,5 @@
-import { getGlobalData } from '@/lib/db/getSiteData'
-import { generateRssFeed } from '@/lib/rss'
+import { fetchGlobalAllData } from '@/lib/db/SiteDataApi'
+import { generateRssFeed } from '@/lib/utils/rss'
 import { getOrSetDataWithCustomCache } from '@/lib/cache/cache_manager'
 import { CACHE_KEY_RSS } from '@/lib/cache/cache_keys'
 import { gzip } from 'zlib'
@@ -57,7 +57,7 @@ export default async function handler(req, res) {
         console.log(`[RSS API] 🔄 生成新的RSS内容: ${format || 'rss2'}`)
 
         // 优化：只获取RSS需要的数据类型
-        const props = await getGlobalData({
+        const props = await fetchGlobalAllData({
           from: 'rss-api',
           dataTypes: ['allPages', 'siteInfo', 'NOTION_CONFIG', 'latestPosts']
         })
@@ -66,14 +66,14 @@ export default async function handler(req, res) {
         if (!props) {
            throw new Error('getGlobalData returned null/undefined');
         }
-        
+
         // Debugging: Log post count
         const postCount = props.latestPosts?.length || 0;
         console.log(`[RSS API] 获取到文章数量: ${postCount}`);
-        
+
         if (postCount === 0) {
            console.warn('[RSS API] ⚠️ 警告: latestPosts 为空，可能是 Notion 数据获取失败或没有已发布的文章');
-           // You might want to try to fetch again without 'latestPosts' optimization if it failed? 
+           // You might want to try to fetch again without 'latestPosts' optimization if it failed?
            // Or just proceed (it will return empty feed)
         }
 

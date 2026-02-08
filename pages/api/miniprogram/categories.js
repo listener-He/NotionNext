@@ -1,4 +1,4 @@
-import { getGlobalData } from '@/lib/db/getSiteData'
+import { fetchGlobalAllData } from '@/lib/db/SiteDataApi'
 
 /**
  * 微信小程序 - 获取分类列表API
@@ -12,7 +12,7 @@ export default async function handler(req, res) {
 
   try {
     // 优化：只获取小程序分类API需要的数据类型
-    const globalData = await getGlobalData({
+    const globalData = await fetchGlobalAllData({
       from: 'miniprogram-categories',
       dataTypes: ['allPages', 'categoryOptions']
     })
@@ -25,7 +25,7 @@ export default async function handler(req, res) {
     }
 
     // 获取已发布的文章
-    const publishedPosts = globalData.allPages?.filter(post => 
+    const publishedPosts = globalData.allPages?.filter(post =>
       post.type === 'Post' && post.status === 'Published'
     ) || []
 

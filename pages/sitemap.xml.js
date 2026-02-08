@@ -1,10 +1,9 @@
-// pages/sitemap.xml.js
 import BLOG from '@/blog.config'
 import { siteConfig } from '@/lib/config'
 import { fetchGlobalAllData } from '@/lib/db/SiteDataApi'
-import { extractLangId, extractLangPrefix } from '@/lib/utils/pageId'
+import { extractLangId } from '@/lib/utils/pageId'
 import { getServerSideSitemap } from 'next-sitemap'
-import { generateSiteAllUrl } from '@/lib/sitemap'
+import { generateSiteAllUrl } from '@/lib/utils/sitemap'
 
 export const getServerSideProps = async ctx => {
   let fields = []

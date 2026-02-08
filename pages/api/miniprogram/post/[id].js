@@ -1,8 +1,5 @@
-import { getGlobalData, getPost } from '@/lib/db/getSiteData'
-import { getPageContentText } from '@/lib/notion/getPageContentText'
-import { getPageContentHtml } from '@/lib/notion/getPageContentHtml'
-import { getPageContentMarkdown } from '@/lib/notion/getPageContentMarkdown'
-import { idToUuid } from 'notion-utils'
+import { fetchGlobalAllData, getPost } from '@/lib/db/SiteDataApi'
+import { getPageContentMarkdown } from '@/lib/db/notion/getPageContentMarkdown'
 
 /**
  * 微信小程序 - 获取文章详情API
@@ -31,7 +28,7 @@ export default async function handler(req, res) {
     let fullPost = null
     let globalData = null
     try {
-      globalData = await getGlobalData({
+      globalData = await fetchGlobalAllData({
         from: 'miniprogram-post-detail',
         dataTypes: ['allPages', 'siteInfo', 'tagOptions', 'categoryOptions', 'latestPosts']
       })
