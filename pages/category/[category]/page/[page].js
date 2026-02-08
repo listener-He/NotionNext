@@ -63,8 +63,8 @@ export async function getStaticProps({ params: { category, page } }) {
 export async function getStaticPaths() {
   const from = 'category-paths'
   const { categoryOptions, allPages, NOTION_CONFIG } = await fetchGlobalAllData({
-     from
-    })
+    from
+  })
   // const from = 'category-page-paths'
   // // 优化：只获取分类分页路径生成需要的数据类型
   // const { categoryOptions, allPages } = await getGlobalData({
