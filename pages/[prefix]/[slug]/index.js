@@ -67,7 +67,7 @@ export async function getStaticProps({ params: { prefix, slug }, locale }) {
 
   // 在列表内查找文章
   // 添加额外检查确保 allPages 存在且为数组
-  if (Array.isArray(props?.allPages)) {
+  if (!props.post && Array.isArray(props?.allPages)) {
     props.post = props.allPages.find(p => {
       return (
         p.type.indexOf('Menu') < 0 &&
@@ -82,7 +82,10 @@ export async function getStaticProps({ params: { prefix, slug }, locale }) {
   if (!props?.post) {
     const pageId = slug.slice(-1)[0]
     if (pageId && pageId.length >= 32) {
-      props.post = await getPost(pageId)
+      const postProps = await resolvePostProps({prefix, pageId, locale})
+      if (postProps) {
+        props.post = postProps.post
+      }
     }
   }
 
