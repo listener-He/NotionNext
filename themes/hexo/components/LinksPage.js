@@ -55,8 +55,6 @@ const extractLinksFromNotionPage = (post) => {
   }
 
   const { block: blocks, collection } = post.blockMap
-  console.log('[DEBUG] LinksPage - blocks数量:', blocks ? Object.keys(blocks).length : 0)
-  console.log('[DEBUG] LinksPage - collection数据:', collection)
 
   const links = []
 
@@ -246,7 +244,6 @@ const extractLinksFromNotionPage = (post) => {
     return nameA.localeCompare(nameB)
   })
 
-  console.log(`[DEBUG] LinksPage - 排序后返回 ${sortedLinks.length} 个链接`)
   return sortedLinks
 }
 
@@ -256,11 +253,9 @@ const extractLinksFromNotionPage = (post) => {
  * @returns {JSX.Element}
  */
 const LinksPage = ({ post }) => {
-  console.log('[DEBUG] LinksPage组件接收的post:', post)
 
   // 直接计算链接数据，避免状态管理导致的水合错误
   const links = post ? extractLinksFromNotionPage(post) : []
-  console.log('[DEBUG] LinksPage提取到的链接数量:', links.length)
   const siteTitle = siteConfig('TITLE') || siteConfig('AUTHOR') || 'Honesty'
   const siteLink = siteConfig('LINK') || 'https://www.hehouhui.cn'
   const siteDescription = siteConfig('BIO') || '请提供一句简洁的介绍'
