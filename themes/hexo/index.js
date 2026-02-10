@@ -288,29 +288,42 @@ const LayoutSlug = props => {
   const waiting404 = siteConfig('POST_WAITING_TIME_FOR_404') * 1000
 
 
-  // 检查是否为友情链接页面 - 从路由和post数据中判断
   const isLinksPage = router.asPath === '/links' || router.asPath.startsWith('/links?') ||
                       post?.slug === 'links' || post?.title === '友链' || post?.title === '友情链接'
 
+
   useEffect(() => {
+    console.log('[DEBUG] 404检测启动 - post:', !!post, 'isLinksPage:', isLinksPage, 'waiting404:', waiting404)
+
     // 404检测 - 但排除友情链接页面
     if (!post && !isLinksPage) {
+      console.log('[DEBUG] 开始404检测定时器')
       const timeoutId = setTimeout(
         () => {
           if (isBrowser) {
+            console.log('[DEBUG] 404检测执行 - 检查元素存在性')
             const article = document.querySelector('#article-wrapper #notion-article')
+            console.log('[DEBUG] notion-article元素:', !!article)
             if (!article) {
+              console.warn('[DEBUG] 页面未找到，跳转到404:', router.asPath)
               router.push('/404').then(() => {
                 console.warn('找不到页面', router.asPath)
               })
+            } else {
+              console.log('[DEBUG] 找到文章内容，不跳转404')
             }
           }
         },
         waiting404
       )
-      return () => clearTimeout(timeoutId) // 清理定时器
+      return () => {
+        console.log('[DEBUG] 清理404检测定时器')
+        clearTimeout(timeoutId)
+      }
+    } else {
+      console.log('[DEBUG] 跳过404检测 - post存在或为链接页面')
     }
-  }, [post, isLinksPage])
+  }, [post, isLinksPage, waiting404])
 
   // 如果是友情链接页面，使用特殊的LinksPage组件
   if (isLinksPage) {
