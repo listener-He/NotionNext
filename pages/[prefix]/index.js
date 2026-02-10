@@ -141,51 +141,8 @@ export async function getStaticProps({ params: { prefix }, locale }) {
       fullSlug += '.html'
     }
   }
-  if (props.post) {
-    console.log('[Slug]', fullSlug)
-  }
 
-  // 在列表内查找文章
-  // 添加额外检查确保 allPages 存在且为数组
-  if (!props.post && Array.isArray(props?.allPages)) {
-    props.post = props.allPages.find(p => {
-      return (
-        p.type.indexOf('Menu') < 0 &&
-        (p.slug === prefix || p.id === idToUuid(prefix))
-      )
-    })
-  } else {
-    props.post = null
-  }
 
-  // 处理非列表内文章的内信息
-  if (!props?.post) {
-    const pageId = prefix
-    if (pageId.length >= 32) {
-      const postProps = await resolvePostProps(prefix, pageId, null, locale, from)
-      if (postProps) {
-        props.post = postProps.post
-      }
-    }
-  }
-  if (!props?.post) {
-    // 无法获取文章
-    props.post = null
-  } else {
-    // 确保在处理文章数据前 allPages 是有效数组
-    if (!Array.isArray(props.allPages)) {
-      props.allPages = []
-    }
-    await processPostData(props, from)
-  }
-
-  // 确保 prev 和 next 不是 undefined，防止序列化错误
-  if (!props.prev) {
-    props.prev = null
-  }
-  if (!props.next) {
-    props.next = null
-  }
 
   // 计算文章缓存时间
   let revalidate = process.env.EXPORT

@@ -331,7 +331,7 @@ const LayoutSlug = props => {
       <>
         <div className='w-full lg:hover:shadow rounded-t-xl lg:rounded-xl lg:px-2 lg:py-4 glass-layer-strong article'>
           {lock && <ArticleLock validPassword={validPassword} />}
-          {!lock && <LinksPage post={post || { title: '友情链接', slug: 'links' }} />}
+          {!lock && <LinksPage post={post} />}
         </div>
       </>
     )
