@@ -14,6 +14,7 @@ import { getQueryParam } from '@/lib/utils'
 // 各种扩展插件 这个要阻塞引入
 import BLOG from '@/blog.config'
 import ExternalPlugins from '@/components/ExternalPlugins'
+import ErrorBoundary from '@/components/ErrorBoundary'
 import SEO from '@/components/SEO'
 import DarkModeAutoSwitch from '@/components/DarkModeAutoSwitch'
 
@@ -62,16 +63,18 @@ const MyApp = ({ Component, pageProps }) => {
   )
 
   return (
-    <div className={bitter.className || BLOG?.FONT_STYLE || 'font-sans font-light'}>
-      <GlobalContextProvider {...pageProps}>
-        <DarkModeAutoSwitch />
-        <GLayout {...pageProps}>
-          <SEO {...pageProps} />
-          <Component {...pageProps} />
-        </GLayout>
-        <ExternalPlugins {...pageProps} />
-      </GlobalContextProvider>
-    </div>
+    <ErrorBoundary>
+      <div className={bitter.className || BLOG?.FONT_STYLE || 'font-sans font-light'}>
+        <GlobalContextProvider {...pageProps}>
+          <DarkModeAutoSwitch />
+          <GLayout {...pageProps}>
+            <SEO {...pageProps} />
+            <Component {...pageProps} />
+          </GLayout>
+          <ExternalPlugins {...pageProps} />
+        </GlobalContextProvider>
+      </div>
+    </ErrorBoundary>
   )
 }
 

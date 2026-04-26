@@ -35,15 +35,6 @@ const Style = () => {
             color: var(--theme-color);
         }
 
-        /* 高清悬浮效果 */
-        #theme-hexo .hover-scale {
-            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-        }
-        #theme-hexo .hover-scale:hover {
-            transform: translateY(-4px);
-            filter: brightness(1.02);
-        }
-
         /* 自定义滚动条 - 极简透明 */
         ::-webkit-scrollbar {
             width: 4px;
@@ -182,19 +173,6 @@ const Style = () => {
         #theme-hexo .bg-indigo-500,
         #theme-hexo .bg-indigo-600 {
             background-color: var(--theme-color) !important;
-        }
-        
-        /* Card Shadows - Diffused & Soft */
-        #theme-hexo .card-shadow {
-            box-shadow: var(--shadow-elevation-sm);
-            border: 1px solid var(--color-border);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        #theme-hexo .card-shadow:hover {
-            box-shadow: var(--shadow-elevation-md);
-            transform: translateY(-2px);
-            border-color: var(--color-neutral-300);
         }
 
     `}</style>

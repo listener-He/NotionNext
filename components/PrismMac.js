@@ -52,16 +52,59 @@ const PrismMac = () => {
       prismThemeLightPath,
       prismThemePrefixPath
     )
+
+    let observer = null
+
     // 折叠代码
     loadExternalResource(prismjsAutoLoader, 'js').then(url => {
       if (window?.Prism?.plugins?.autoloader) {
         window.Prism.plugins.autoloader.languages_path = prismjsPath
       }
 
+      // 首次渲染
       renderPrismMac(codeLineNumbers)
       renderMermaid(mermaidCDN, isDarkMode)
       renderCollapseCode(codeCollapse, codeCollapseExpandDefault)
+
+      // 监听可能因异步加载 Code 组件而延迟出现的代码块
+      observer = new MutationObserver((mutationsList) => {
+        let hasNewCodeBlock = false
+        for (const m of mutationsList) {
+          if (m.type === 'childList' && m.addedNodes.length > 0) {
+            for (let i = 0; i < m.addedNodes.length; i++) {
+              const node = m.addedNodes[i]
+              // 检查节点本身或其子节点是否包含代码块
+              if (node.nodeType === 1 && (node.nodeName === 'PRE' || node?.querySelector?.('pre'))) {
+                hasNewCodeBlock = true
+                break
+              }
+            }
+          }
+          if (hasNewCodeBlock) break
+        }
+
+        if (hasNewCodeBlock) {
+          // 节流重新渲染
+          clearTimeout(window.prismRenderTimer)
+          window.prismRenderTimer = setTimeout(() => {
+            renderPrismMac(codeLineNumbers)
+            renderMermaid(mermaidCDN, isDarkMode)
+            renderCollapseCode(codeCollapse, codeCollapseExpandDefault)
+          }, 300)
+        }
+      })
+
+      const articleNode = document.getElementById('notion-article')
+      if (articleNode) {
+        observer.observe(articleNode, { childList: true, subtree: true })
+      }
     })
+
+    return () => {
+      if (observer) {
+        observer.disconnect()
+      }
+    }
   }, [router, isDarkMode])
 
   return <></>
@@ -301,11 +344,11 @@ function renderPrismMac(codeLineNumbers) {
   if (codeToolBars) {
     Array.from(codeToolBars).forEach(item => {
       const existPreMac = item.getElementsByClassName('pre-mac')
-      if (existPreMac.length < codeToolBars.length) {
+      if (existPreMac.length === 0) {
         const preMac = document.createElement('div')
         preMac.classList.add('pre-mac')
         preMac.innerHTML = '<span></span><span></span><span></span>'
-        item?.appendChild(preMac, item)
+        item?.appendChild(preMac)
       }
     })
   }

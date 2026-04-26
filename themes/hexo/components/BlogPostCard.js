@@ -59,7 +59,7 @@ const BlogPostCard = ({ index, post, showSummary, siteInfo }) => {
   // 根据设备性能调整悬停效果 - 更加优雅的上浮效果
   const hovereffectclass = !shouldUseAdvancedEffects
     ? ''
-    : 'hover:-translate-y-2 hover:shadow-elevation-xl transition-all duration-300 ease-out'
+    : 'hover:-translate-y-1.5 hover:shadow-xl duration-300 ease-out'
 
   const containerRef = useRef(null)
   const [visible, setVisible] = useState(false)
@@ -101,7 +101,7 @@ const BlogPostCard = ({ index, post, showSummary, siteInfo }) => {
         id='blog-post-card'
         className={`group w-full flex flex-col sm:flex-row justify-between items-stretch 
                     ${HEXO_POST_LIST_IMG_CROSSOVER && index % 2 === 1 ? 'sm:flex-row-reverse' : ''}
-                    overflow-hidden rounded-xl card-base shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 dark:border-white/10 bg-white/90 dark:bg-hexo-black-gray/60 backdrop-blur-md transition-all duration-300 ease-standard transform-gpu relative`}>
+                    overflow-hidden rounded-xl card-base shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 dark:border-gray-800 ${isLowEndDevice ? 'bg-white dark:bg-[#1e1e1e]' : 'bg-white/70 dark:bg-black/60 backdrop-blur-md'} transition-all duration-300 ease-out transform-gpu relative`}>
         
         {/* 图片封面  */}
         {showPageCover && (

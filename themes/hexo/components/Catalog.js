@@ -15,18 +15,11 @@ const Catalog = ({ toc }) => {
   const { locale } = useGlobal()
   // 获取设备性能信息
   const { isLowEndDevice } = getDevicePerformance()
-  // 监听滚动事件
-  useEffect(() => {
-    window.addEventListener('scroll', actionSectionScrollSpy)
-    actionSectionScrollSpy()
-    return () => {
-      window.removeEventListener('scroll', actionSectionScrollSpy)
-    }
-  }, [])
-
   // 目录自动滚动
   const tRef = useRef(null)
-  const tocIds = []
+  
+  // 使用 useRef 缓存 tocIds，避免在 scroll 回调中获取到旧的闭包值
+  const tocIdsRef = useRef([])
 
   // 同步选中目录事件
   const [activeSection, setActiveSection] = useState(null)
@@ -36,7 +29,7 @@ const Catalog = ({ toc }) => {
     throttle(() => {
       const sections = document.getElementsByClassName('notion-h')
       let prevBBox = null
-      let currentSectionId = activeSection
+      let currentSectionId = null
       for (let i = 0; i < sections.length; ++i) {
         const section = sections[i]
         if (!section || !(section instanceof Element)) continue
@@ -55,11 +48,31 @@ const Catalog = ({ toc }) => {
         // No need to continue loop, if last element has been detected
         break
       }
-      setActiveSection(currentSectionId)
-      const index = tocIds.indexOf(currentSectionId) || 0
-      tRef?.current?.scrollTo({ top: 28 * index, behavior: 'smooth' })
-    }, throttleMs)
+      
+      setActiveSection(prev => {
+        // 仅在发生变化时更新状态，避免不必要的重渲染
+        if (prev !== currentSectionId) {
+          return currentSectionId
+        }
+        return prev
+      })
+      
+      const index = tocIdsRef.current.indexOf(currentSectionId)
+      if (index > -1) {
+        tRef?.current?.scrollTo({ top: 28 * index, behavior: 'smooth' })
+      }
+    }, throttleMs),
+    [throttleMs]
   )
+
+  // 监听滚动事件
+  useEffect(() => {
+    window.addEventListener('scroll', actionSectionScrollSpy)
+    actionSectionScrollSpy()
+    return () => {
+      window.removeEventListener('scroll', actionSectionScrollSpy)
+    }
+  }, [actionSectionScrollSpy])
 
   // 无目录就直接返回空
   if (!toc || toc.length < 1) {
@@ -76,12 +89,15 @@ const Catalog = ({ toc }) => {
         <Progress />
       </div>
       <div
-        className='overflow-y-auto max-h-36 lg:max-h-96 overscroll-none scroll-hidden'
+        className='overflow-y-auto max-h-96 overscroll-none scroll-hidden'
         ref={tRef}>
         <nav className='h-full text-black bg-transparent'>
-          {toc.map(tocItem => {
+          {toc.map((tocItem, index) => {
             const id = uuidToId(tocItem.id)
-            tocIds.push(id)
+            if (index === 0) {
+              tocIdsRef.current = [] // 重置重填
+            }
+            tocIdsRef.current.push(id)
             return (
               <a
                 key={id}

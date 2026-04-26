@@ -26,7 +26,7 @@ export const BlogPostCardInfo = ({
       <div>
         <header className="relative py-2 bg-transparent">
           <div className={`flex ${showPreview ? 'justify-center' : 'justify-start'} items-start bg-transparent`}>
-            <h2 className="mr-3 bg-transparent">
+            <h2 className="mr-3 bg-transparent mb-0">
               {/* 标题 */}
               <SmartLink
                 href={post?.href}

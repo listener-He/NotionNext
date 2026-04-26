@@ -14,6 +14,11 @@ module.exports = {
   DIFY_CHATBOT_BASE_URL: process.env.NEXT_PUBLIC_DIFY_CHATBOT_BASE_URL || '',
   DIFY_CHATBOT_TOKEN: process.env.NEXT_PUBLIC_DIFY_CHATBOT_TOKEN || '',
 
+  // Coze 机器人 @see https://www.coze.com/
+  COZE_BOT_ID: process.env.NEXT_PUBLIC_COZE_BOT_ID || null,
+  COZE_BOT_TOKEN: process.env.NEXT_PUBLIC_COZE_BOT_TOKEN || null,
+  COZE_TITLE: process.env.NEXT_PUBLIC_COZE_TITLE || 'Honesty',
+
   // 悬浮挂件
   WIDGET_PET: process.env.NEXT_PUBLIC_WIDGET_PET || true, // 是否显示宠物挂件
   WIDGET_PET_LINK:

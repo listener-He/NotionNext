@@ -48,7 +48,15 @@ export async function getStaticProps({ params: { tag }, locale }) {
   delete props.latestPosts
   delete props.allNavPages
   return {
-    props,
+    props: {
+      ...props,
+      posts: props.posts || [],
+      tags: props.tags || [],
+      tagOptions: props.tagOptions || [],
+      categoryOptions: props.categoryOptions || [],
+      siteInfo: props.siteInfo || null,
+      NOTION_CONFIG: props.NOTION_CONFIG || null
+    },
     revalidate: process.env.EXPORT
       ? undefined
       : siteConfig(

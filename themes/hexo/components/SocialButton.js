@@ -170,7 +170,7 @@ const SocialButton = () => {
                 id='pop'
                 className={
                   (qrCodeShow ? 'opacity-100 ' : ' invisible opacity-0') +
-                  ' z-40 absolute bottom-10 -left-10 bg-white shadow-xl transition-all duration-200 text-center glass-morphism dark:glass-morphism-dark rounded-xl p-2'
+                  ' z-40 absolute bottom-10 -left-10 bg-white/70 dark:bg-black/60 backdrop-blur-md shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:border dark:border-gray-800 transition-all duration-200 text-center rounded-xl p-2'
                 }>
                 <div className='w-28 h-28'>
                   {qrCodeShow && <QrCode value={CONTACT_WEHCHAT_PUBLIC} />}

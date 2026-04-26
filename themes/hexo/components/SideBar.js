@@ -15,7 +15,7 @@ const SideBar = props => {
   const { siteInfo } = props
   const router = useRouter()
   return (
-    <div id='side-bar' className="relative w-full glass-morphism dark:glass-morphism-dark rounded-xl overflow-hidden shadow-elevation-lg">
+    <div id='side-bar' className="relative w-full bg-white/70 dark:bg-black/60 backdrop-blur-md rounded-xl overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:border dark:border-gray-800">
       <div className='h-52 w-full flex justify-center items-center bg-day-gradient dark:bg-night-gradient bg-noise'>
         <div className='flex flex-col items-center relative z-10'>
           <div

@@ -1,6 +1,5 @@
 import { compressImage, mapImgUrl } from '@/lib/db/notion/mapImage'
 import { isBrowser, loadExternalResource } from '@/lib/utils'
-import mediumZoom from '@fisch0920/medium-zoom'
 import 'katex/dist/katex.min.css'
 import dynamic from 'next/dynamic'
 import { useEffect, useRef } from 'react'
@@ -19,16 +18,9 @@ const NotionPage = ({ post, className }) => {
   const POST_DISABLE_DATABASE_CLICK = siteConfig('POST_DISABLE_DATABASE_CLICK')
   const SPOILER_TEXT_TAG = siteConfig('SPOILER_TEXT_TAG')
 
-  const zoom =
-    isBrowser &&
-    mediumZoom({
-      //   container: '.notion-viewport',
-      background: 'rgba(0, 0, 0, 0.2)',
-      margin: getMediumZoomMargin()
-    })
-
-  const zoomRef = useRef(zoom ? zoom.clone() : null)
+  const zoomRef = useRef(null)
   const IMAGE_ZOOM_IN_WIDTH = siteConfig('IMAGE_ZOOM_IN_WIDTH', 1200)
+  
   // 页面首次打开时执行的勾子
   useEffect(() => {
     // 检测当前的url并自动滚动到对应目标
@@ -37,10 +29,20 @@ const NotionPage = ({ post, className }) => {
 
   // 页面文章发生变化时会执行的勾子
   useEffect(() => {
-    // 相册视图点击禁止跳转，只能放大查看图片
-    if (POST_DISABLE_GALLERY_CLICK) {
-      // 针对页面中的gallery视图，点击后是放大图片还是跳转到gallery的内部页面
-      processGalleryImg(zoomRef?.current)
+    // 动态按需加载 medium-zoom，防止阻塞首屏 FCP
+    if (isBrowser) {
+      import('@fisch0920/medium-zoom').then(({ default: mediumZoom }) => {
+        const zoom = mediumZoom({
+          background: 'rgba(0, 0, 0, 0.2)',
+          margin: getMediumZoomMargin()
+        })
+        zoomRef.current = zoom.clone()
+        
+        // 相册视图点击禁止跳转，只能放大查看图片
+        if (POST_DISABLE_GALLERY_CLICK) {
+          processGalleryImg(zoomRef.current)
+        }
+      })
     }
 
     // 页内数据库点击禁止跳转，只能查看
@@ -126,6 +128,16 @@ const NotionPage = ({ post, className }) => {
 
   // const cleanBlockMap = cleanBlocksWithWarn(post?.blockMap);
   // console.log('NotionPage render with post:', post);
+
+  if (!post || !post.blockMap) {
+    return (
+      <div className="flex flex-col items-center justify-center py-20 text-gray-500 dark:text-gray-400">
+        <i className="fas fa-file-excel text-4xl mb-4 opacity-50"></i>
+        <h2 className="text-xl font-bold mb-2">文章内容丢失或权限受限</h2>
+        <p className="text-sm opacity-80">无法从 Notion 获取到有效的 Block 数据</p>
+      </div>
+    )
+  }
 
   return (
     <div

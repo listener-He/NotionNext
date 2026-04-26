@@ -37,12 +37,12 @@ export default function PostHero({ post, siteInfo }) {
             <div className={`${isDarkMode ? 'bg-black/30 dark:bg-black/50' : 'bg-white/60'} backdrop-blur-sm rounded-xl py-4 px-6 inline-block`}>
               <div className='text-xl text-white font-light'>
                 {/* 文章Title */}
-                <div className={`leading-tight font-bold tracking-tight text-xl md:text-2xl lg:text-3xl text-center ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                <h1 className={`leading-tight font-bold tracking-tight text-xl md:text-2xl lg:text-3xl text-center ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                   {siteConfig('POST_TITLE_ICON') && (
                     <NotionIcon icon={post.pageIcon} className='text-2xl mx-1' />
                   )}
                   {post.title}
-                </div>
+                </h1>
               </div>
             </div>
           </div>
