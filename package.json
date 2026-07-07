@@ -50,7 +50,7 @@
   "dependencies": {
     "@fisch0920/medium-zoom": "^1.0.7",
     "@headlessui/react": "^1.7.19",
-    "@next/bundle-analyzer": "^15.0.0",
+    "@next/bundle-analyzer": "^15.5.20",
     "@vercel/analytics": "^1.5.0",
     "algoliasearch": "^4.25.2",
     "axios": "^1.7.2",
