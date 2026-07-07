@@ -1,12 +1,12 @@
 'user client'
-import { useGlobal } from '@/lib/global'
+import { useLoading } from '@/lib/global'
 import { useEffect, useState } from 'react'
 /**
  * @see https://css-loaders.com/
  * @returns 加载动画
  */
 export default function LoadingCover() {
-  const { onLoading, setOnLoading } = useGlobal()
+  const { onLoading, setOnLoading } = useLoading()
   const [isVisible, setIsVisible] = useState(false) // 初始状态设置为false，避免服务端渲染与客户端渲染不一致
 
   useEffect(() => {

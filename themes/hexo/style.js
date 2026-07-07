@@ -7,14 +7,25 @@ import CONFIG from './config'
  * 主题客制化css
  * @returns
  */
+// 将 hex 主题色转为 "R G B" 通道，供 Tailwind 的 rgb(var(...) / <alpha-value>) 使用（支持透明度修饰）
+const hexToRgbChannels = hex => {
+  const m = String(hex || '').trim().replace('#', '')
+  const full = m.length === 3 ? m.split('').map(c => c + c).join('') : m
+  const int = parseInt(full, 16)
+  if (full.length !== 6 || Number.isNaN(int)) return '99 102 241' // 回退 indigo-500
+  return `${(int >> 16) & 255} ${(int >> 8) & 255} ${int & 255}`
+}
+
 const Style = () => {
   // Crystal Sky Blue as default fallback
   const themeColor = siteConfig('HEXO_THEME_COLOR', '#38BDF8', CONFIG)
+  const themeColorRgb = hexToRgbChannels(themeColor)
 
   return (
     <style jsx global>{`
         :root {
             --theme-color: ${themeColor};
+            --theme-color-rgb: ${themeColorRgb};
         }
 
         /* 菜单下划线动画 - 极细极简 */
@@ -161,20 +172,12 @@ const Style = () => {
             background: linear-gradient(90deg, transparent 0%, var(--theme-color) 100%);
         }
 
-        /* Override Tailwind Colors to Sky Blue */
-        #theme-hexo .text-indigo-400,
-        #theme-hexo .text-indigo-500,
-        #theme-hexo .text-indigo-600,
-        #theme-hexo .text-indigo-800 {
-            color: var(--theme-color) !important;
-        }
-
-        #theme-hexo .bg-indigo-400,
-        #theme-hexo .bg-indigo-500,
-        #theme-hexo .bg-indigo-600 {
-            background-color: var(--theme-color) !important;
-        }
-
+        /*
+         * 已移除此前 .text-indigo-* / .bg-indigo-* → --theme-color 的 !important 补丁。
+         * 改为在 tailwind.config.js 里把 indigo 强调档（400-800）直接定义为
+         * rgb(var(--theme-color-rgb) / <alpha-value>)，从源头让 indigo 跟随主题色（含透明度），
+         * 无需 !important 覆盖，主题色变更可自动传播。
+         */
     `}</style>
   )
 }

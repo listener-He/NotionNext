@@ -86,6 +86,21 @@ module.exports = {
           800: '#1e293b',
           900: '#0f172a',
         },
+        // 让 indigo 强调档（400-800）跟随主题色 --theme-color（含透明度修饰），
+        // 从源头取代 style.js 的 !important 补丁；浅/深档保留真实 indigo 供背景/渐变/暗色文字
+        indigo: {
+          50: '#eef2ff',
+          100: '#e0e7ff',
+          200: '#c7d2fe',
+          300: '#a5b4fc',
+          400: 'rgb(var(--theme-color-rgb, 99 102 241) / <alpha-value>)',
+          500: 'rgb(var(--theme-color-rgb, 99 102 241) / <alpha-value>)',
+          600: 'rgb(var(--theme-color-rgb, 99 102 241) / <alpha-value>)',
+          700: 'rgb(var(--theme-color-rgb, 99 102 241) / <alpha-value>)',
+          800: 'rgb(var(--theme-color-rgb, 99 102 241) / <alpha-value>)',
+          900: '#312e81',
+          950: '#1e1b4b'
+        },
         // Modern Aurora Palette
         aurora: {
           pink: '#FFF1F2', // Rose 50

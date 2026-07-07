@@ -3,7 +3,7 @@ import NotionPage from '@/components/NotionPage'
 import LazyNotionPage from '@/components/LazyNotionPage'
 import ShareBar from '@/components/ShareBar'
 import { siteConfig } from '@/lib/config'
-import { useGlobal } from '@/lib/global'
+import { useGlobal, useLoading } from '@/lib/global'
 import { isBrowser } from '@/lib/utils'
 import { Transition } from '@headlessui/react'
 import dynamic from 'next/dynamic'
@@ -65,7 +65,8 @@ export const useHexoGlobal = () => useContext(ThemeGlobalHexo)
  */
 const LayoutBase = props => {
   const { post, children, slotTop, className } = props
-  const { onLoading, fullWidth } = useGlobal()
+  const { fullWidth } = useGlobal()
+  const { onLoading } = useLoading()
   const router = useRouter()
   const showRandomButton = siteConfig('HEXO_MENU_RANDOM', false, CONFIG)
   const homeBannerEnable = siteConfig('HEXO_HOME_BANNER_ENABLE', null, CONFIG)
