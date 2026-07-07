@@ -1,6 +1,6 @@
 {
   "name": "notion-next",
-  "version": "4.9.3",
+  "version": "4.10.4",
   "homepage": "https://github.com/tangly1024/NotionNext.git",
   "license": "MIT",
   "engines": {
@@ -57,12 +57,14 @@
     "feed": "^4.2.2",
     "ioredis": "^5.6.1",
     "js-md5": "^0.8.3",
+    "js-sha256": "^0.11.1",
     "katex": "^0.16.22",
     "lodash.throttle": "^4.1.1",
     "memory-cache": "^0.2.0",
     "next": "^15.5.0",
     "notion-client": "7.10.0",
     "notion-utils": "7.10.0",
+    "p-limit": "^7.3.0",
     "prismjs": "^1.30.0",
     "react": "^18.3.0",
     "react-dom": "^18.3.0",

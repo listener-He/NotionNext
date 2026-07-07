@@ -1,149 +1,149 @@
+// pages/sitemap.xml.js
 import BLOG from '@/blog.config'
 import { siteConfig } from '@/lib/config'
 import { fetchGlobalAllData } from '@/lib/db/SiteDataApi'
-import { extractLangId } from '@/lib/utils/pageId'
+import {
+  buildSitemapLoc,
+  normalizeSitemapBaseUrl,
+  normalizeSitemapLocale,
+  toSitemapDateString
+} from '@/lib/sitemap-utils'
+import { extractLangId, extractLangPrefix } from '@/lib/utils/pageId'
 import { getServerSideSitemap } from 'next-sitemap'
-import { generateSiteAllUrl } from '@/lib/utils/sitemap'
 
 export const getServerSideProps = async ctx => {
   let fields = []
   const siteIds = BLOG.NOTION_PAGE_ID.split(',')
+
   for (let index = 0; index < siteIds.length; index++) {
     const siteId = siteIds[index]
     const id = extractLangId(siteId)
-    //const locale = extractLangPrefix(siteId)
+    const locale = extractLangPrefix(siteId)
     // 第一个id站点默认语言
     const siteData = await fetchGlobalAllData({
       pageId: id,
-      from: 'sitemap.xml',
-      dataTypes: ['allPages', 'siteInfo', 'NOTION_CONFIG']
+      from: 'sitemap.xml'
     })
     const link = siteConfig(
       'LINK',
       siteData?.siteInfo?.link,
       siteData.NOTION_CONFIG
     )
-    const urls = generateSiteAllUrl(link, new Date().toISOString(), siteData.allPages) || []
-    const localeFields = urls.map(u => ({
-      loc: u.url,
-      lastmod: (typeof u.lastmod === 'string' ? u.lastmod.split('T')[0] : new Date().toISOString().split('T')[0]),
-      changefreq: u.changefreq,
-      priority: u.priority
-    }))
+    const localeFields = generateLocalesSitemap(link, siteData.allPages, locale)
     fields = fields.concat(localeFields)
   }
 
-  fields = getUniqueFields(fields);
+  fields = getUniqueFields(fields)
 
   // 缓存
   ctx.res.setHeader(
     'Cache-Control',
-    'public, max-age=7200, stale-while-revalidate=59'
+    'public, max-age=3600, stale-while-revalidate=59'
   )
   return getServerSideSitemap(ctx, fields)
 }
 
 function generateLocalesSitemap(link, allPages, locale) {
-  // 确保链接不以斜杠结尾
-  if (link && link.endsWith('/')) {
-    link = link.slice(0, -1)
-  }
-
-  if (locale && locale.length > 0 && locale.indexOf('/') !== 0) {
-    locale = '/' + locale
-  }
-
-  // 更安全地获取当前日期的ISO字符串
-  let dateNow = new Date().toISOString();
-  try {
-    dateNow = dateNow.split('T')[0];
-  } catch (error) {
-    console.warn('Failed to format current date:', error);
-    dateNow = new Date().toISOString(); // 回退到完整ISO格式
-  }
+  const normalizedLink = normalizeSitemapBaseUrl(link)
+  const normalizedLocale = normalizeSitemapLocale(locale)
+  const dateNow = toSitemapDateString(new Date())
 
   const defaultFields = [
     {
-      loc: `${link}${locale}`,
+      loc: buildSitemapLoc({ baseUrl: normalizedLink, locale: normalizedLocale }),
       lastmod: dateNow,
       changefreq: 'daily',
       priority: '0.7'
     },
     {
-      loc: `${link}${locale}/archive`,
+      loc: buildSitemapLoc({
+        baseUrl: normalizedLink,
+        locale: normalizedLocale,
+        slug: 'archive'
+      }),
       lastmod: dateNow,
       changefreq: 'daily',
       priority: '0.7'
     },
     {
-      loc: `${link}${locale}/category`,
+      loc: buildSitemapLoc({
+        baseUrl: normalizedLink,
+        locale: normalizedLocale,
+        slug: 'category'
+      }),
       lastmod: dateNow,
       changefreq: 'daily',
       priority: '0.7'
     },
     {
-      loc: `${link}${locale}/rss/feed.xml`,
+      loc: buildSitemapLoc({
+        baseUrl: normalizedLink,
+        locale: normalizedLocale,
+        slug: 'rss/feed.xml'
+      }),
       lastmod: dateNow,
       changefreq: 'daily',
       priority: '0.7'
     },
     {
-      loc: `${link}${locale}/search`,
+      loc: buildSitemapLoc({
+        baseUrl: normalizedLink,
+        locale: normalizedLocale,
+        slug: 'search'
+      }),
       lastmod: dateNow,
       changefreq: 'daily',
       priority: '0.7'
     },
     {
-      loc: `${link}${locale}/tag`,
+      loc: buildSitemapLoc({
+        baseUrl: normalizedLink,
+        locale: normalizedLocale,
+        slug: 'tag'
+      }),
       lastmod: dateNow,
       changefreq: 'daily',
       priority: '0.7'
     }
-  ]
+  ].filter(field => Boolean(field?.loc))
+
   const postFields =
     allPages
       ?.filter(p => p.status === BLOG.NOTION_PROPERTY_NAME.status_publish)
+      // 过滤掉外部链接(http开头)和锚点链接(#开头)
+      ?.filter(p => p.slug && !p.slug.startsWith('http') && !p.slug.startsWith('#'))
       ?.map(post => {
-        const slugWithoutLeadingSlash = post?.slug.startsWith('/')
-          ? post?.slug?.slice(1)
-          : post.slug
-
-        // 更安全地处理文章发布日期
-        let postDate = new Date().toISOString().split('T')[0]; // 默认使用当前日期
-        if (post?.publishDay) {
-          try {
-            const date = new Date(post.publishDay);
-            if (date instanceof Date && !isNaN(date.getTime())) {
-              postDate = date.toISOString().split('T')[0];
-            }
-          } catch (error) {
-            console.warn('Failed to format post publish date:', post?.publishDay, error);
-          }
-        }
+        const loc = buildSitemapLoc({
+          baseUrl: normalizedLink,
+          locale: normalizedLocale,
+          slug: post?.slug
+        })
+        if (!loc) return null
 
         return {
-          loc: `${link}${locale}/${slugWithoutLeadingSlash}`,
-          lastmod: postDate,
+          loc,
+          lastmod: toSitemapDateString(post?.publishDay, dateNow),
           changefreq: 'daily',
           priority: '0.7'
         }
-      }) ?? []
+      })
+      ?.filter(Boolean) ?? []
 
   return defaultFields.concat(postFields)
 }
 
 function getUniqueFields(fields) {
-  const uniqueFieldsMap = new Map();
+  const uniqueFieldsMap = new Map()
 
   fields.forEach(field => {
-    const existingField = uniqueFieldsMap.get(field.loc);
+    const existingField = uniqueFieldsMap.get(field.loc)
 
     if (!existingField || new Date(field.lastmod) > new Date(existingField.lastmod)) {
-      uniqueFieldsMap.set(field.loc, field);
+      uniqueFieldsMap.set(field.loc, field)
     }
-  });
+  })
 
-  return Array.from(uniqueFieldsMap.values());
+  return Array.from(uniqueFieldsMap.values())
 }
 
-export default () => {}
+export default () => { }

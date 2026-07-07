@@ -7,8 +7,8 @@ FROM node:24-alpine AS base
 FROM base AS deps
 RUN apk add --no-cache python3 make g++ pkgconfig pixman-dev cairo-dev
 WORKDIR /app
-COPY package.json ./
-RUN yarn install --frozen-lockfile
+COPY package.json yarn.lock ./
+RUN yarn install --frozen-lockfile --network-timeout 600000
 
 # 2. Rebuild the source code only when needed
 FROM base AS builder
@@ -32,5 +32,10 @@ COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 
 EXPOSE 3000
+
+# Next.js collects completely anonymous telemetry data about general usage.
+# Learn more here: https://nextjs.org/telemetry
+# Uncomment the following line in case you want to disable telemetry.
+# ENV NEXT_TELEMETRY_DISABLED 1
 
 CMD ["node", "server.js"]

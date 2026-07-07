@@ -183,7 +183,9 @@ export async function getStaticProps({
   delete props.tagOptions
   return {
     props,
-    revalidate
+    revalidate,
+    // 上游：文章不存在时返回 404，避免渲染空白页（利于 SEO）
+    notFound: !props.post
   }
 }
 

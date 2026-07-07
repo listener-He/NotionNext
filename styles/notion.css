@@ -89,6 +89,24 @@
   --bg-tertiary-dark: #374151;
 }
 
+/* Dark mode: override Notion CSS variables so tags, mentions, etc. are readable */
+html.dark {
+  --fg-color: rgba(255, 255, 255, 0.9) !important;
+  --fg-color-0: rgba(255, 255, 255, 0.09);
+  --fg-color-1: rgba(255, 255, 255, 0.16);
+  --fg-color-2: rgba(255, 255, 255, 0.4);
+  --fg-color-3: rgba(255, 255, 255, 0.6);
+  --fg-color-4: #fff;
+  --fg-color-5: rgba(255, 255, 255, 0.024);
+  --fg-color-6: rgba(255, 255, 255, 0.8);
+  --fg-color-icon: var(--fg-color);
+
+  --bg-color: #191919;
+  --bg-color-0: rgba(200, 200, 200, 0.15);
+  --bg-color-1: rgb(30, 30, 30);
+  --bg-color-2: rgba(200, 200, 200, 0.15);
+}
+
 .notion {
   font-size: 16px;
   line-height: 1.6;
@@ -420,6 +438,32 @@
 
 summary > .notion-h {
   display: inline;
+}
+
+.notion details {
+  width: 100%;
+  padding: 3px 2px;
+}
+
+.notion details > summary {
+  cursor: pointer;
+  outline: none;
+  font-size: 1em;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.notion details > summary::marker {
+  font-size: 0.8em;
+}
+
+.notion details > summary::-webkit-details-marker {
+  font-size: 0.8em;
+}
+
+.notion details > :not(summary) {
+  margin-left: 1.1em;
 }
 
 .notion-h {
@@ -2245,6 +2289,34 @@ svg + .notion-page-title-text {
   /* color: var(--notion-gray); */
 }
 
+/* 深色模式下优化 quote / callout 对比度与层次 */
+html.dark .notion-quote {
+  border-left-color: #60a5fa !important;
+  border-color: rgba(96, 165, 250, 0.45) !important;
+  background: linear-gradient(
+    135deg,
+    rgba(37, 99, 235, 0.22),
+    rgba(30, 64, 175, 0.14)
+  ) !important;
+  color: #dbeafe !important;
+}
+
+html.dark .notion-callout {
+  border: 1px solid rgba(129, 140, 248, 0.38) !important;
+  background: linear-gradient(
+    135deg,
+    rgba(99, 102, 241, 0.18),
+    rgba(30, 41, 59, 0.5)
+  ) !important;
+  color: #e2e8f0 !important;
+  border-radius: 10px;
+}
+
+html.dark .notion-callout .notion-callout-text,
+html.dark .notion-callout .notion-text {
+  color: #e2e8f0 !important;
+}
+
 /* .notion-asset-wrapper-pdf > div {
   width: unset !important;
 } */
@@ -2279,7 +2351,24 @@ tbody tr {
 }
 
 pre[class*='language-mermaid'] {
+  /* 本 fork 由 PrismMac.js 中的 mermaid themeVariables 控制明暗配色，这里保持透明 */
   background-color: transparent !important;
+}
+
+/* 上游：隐藏 collection 页面属性 */
+.notion-collection-page-properties {
+  display: none !important;
+}
+
+/* 上游：Mermaid 图表区右上角 toolbar 加深色衬条，避免与浅底糊在一起 */
+html.light .code-toolbar:has(pre.language-mermaid) > .toolbar,
+html.light .code-toolbar:has(pre[class*='language-mermaid']) > .toolbar,
+html.dark .code-toolbar:has(pre.language-mermaid) > .toolbar,
+html.dark .code-toolbar:has(pre[class*='language-mermaid']) > .toolbar {
+  background-color: rgba(15, 15, 18, 0.98) !important;
+  border-bottom-left-radius: 12px;
+  padding: 6px 10px 8px 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
 }
 
 /* mermaid 原文隐藏 */
@@ -2377,4 +2466,22 @@ figure.notion-asset-wrapper.notion-asset-wrapper-video > div {
 
 .dark .notion-collection-card {
   @apply text-gray-200 bg-gray-800 hover:bg-black;
+}
+
+/* 上游：Dark mode 数据库属性标签（select / multi_select）文字可读性 */
+html.dark .notion-property-select-item,
+html.dark .notion-property-status-item,
+html.dark .notion-property-multi_select-item {
+  color: #fff !important;
+  text-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
+}
+
+/* 上游：link-mention 文字可读性 */
+html.dark .notion-link-mention-title,
+html.dark .notion-link-mention-provider {
+  color: var(--fg-color) !important;
+}
+
+html.dark .notion-link-mention-link {
+  color: inherit;
 }

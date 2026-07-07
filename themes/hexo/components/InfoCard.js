@@ -22,7 +22,7 @@ export function InfoCard(props) {
                 }}
             >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <LazyImage src={siteInfo?.icon} className='rounded-full' width={120} alt={siteConfig('AUTHOR')} />
+                <LazyImage src={siteInfo?.icon} className='rounded-full' width={120} height={120} alt={siteConfig('AUTHOR')} />
             </div>
             <div className='font-medium text-center text-xl pb-md truncate bg-transparent author-name-gradient'>{siteConfig('AUTHOR')}</div>
             <div className='text-sm text-center truncate bg-transparent author-bio-gradient'>{siteConfig('BIO')}</div>

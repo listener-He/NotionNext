@@ -3,7 +3,7 @@ import { getDataFromCache } from '@/lib/cache/cache_manager'
 import { siteConfig } from '@/lib/config'
 import { fetchGlobalAllData } from '@/lib/db/SiteDataApi'
 import { DynamicLayout } from '@/themes/theme'
-import { CACHE_KEY_PAGE_BLOCK } from '@/lib/cache/cache_keys'
+import { getPageBlockCacheKey } from '@/lib/db/notion/getPostBlocks'
 
 const Index = props => {
   const { keyword } = props
@@ -38,20 +38,16 @@ export async function getStaticProps({ params: { keyword, page }, locale }) {
   )
   props.keyword = keyword
   props.page = page
-
-  // 性能优化：清理不必要的数据
   delete props.allPages
-  delete props.latestPosts // 搜索分页页面通常不需要最新文章数据
-  delete props.allNavPages // 搜索分页页面通常不需要导航页面数据
   return {
     props,
     revalidate: process.env.EXPORT
       ? undefined
       : siteConfig(
-        'NEXT_REVALIDATE_SECOND',
-        BLOG.NEXT_REVALIDATE_SECOND,
-        props.NOTION_CONFIG
-      )
+          'NEXT_REVALIDATE_SECOND',
+          BLOG.NEXT_REVALIDATE_SECOND,
+          props.NOTION_CONFIG
+        )
   }
 }
 
@@ -118,7 +114,7 @@ async function filterByMemCache(allPosts, keyword) {
     keyword = keyword.trim()
   }
   for (const post of allPosts) {
-    const cacheKey = CACHE_KEY_PAGE_BLOCK(post.id)
+    const cacheKey = getPageBlockCacheKey(post.id, post.lastEditedDate)
     const page = await getDataFromCache(cacheKey, true)
     const tagContent =
       post?.tags && Array.isArray(post?.tags) ? post?.tags.join(' ') : ''

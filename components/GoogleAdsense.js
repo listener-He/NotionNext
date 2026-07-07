@@ -15,7 +15,7 @@ function requestAd(ads) {
   if (adsbygoogle && ads.length > 0) {
     const observerOptions = {
       root: null, // use the viewport as the root
-      threshold: 0.3 // element is considered visible when 70% visible
+      threshold: 0.5 // element is considered visible when 50% visible
     }
 
     const observer = new IntersectionObserver(entries => {
@@ -67,16 +67,10 @@ export const initGoogleAdsense = ADSENSE_GOOGLE_ID => {
     'js'
   ).then(url => {
     setTimeout(() => {
-      // 检查是否已经初始化过，避免重复推送
-      if (window.adsbygoogle && !window.adsbygoogle.initialized) {
-        // 标记为已初始化
-        window.adsbygoogle.initialized = true
-
-        // 页面加载完成后加载一次广告
-        const ads = document.querySelectorAll('ins.adsbygoogle')
-        if (ads.length > 0) {
-          requestAd(Array.from(ads))
-        }
+      // 页面加载完成后加载一次广告
+      const ads = document.querySelectorAll('ins.adsbygoogle')
+      if (window.adsbygoogle && ads.length > 0) {
+        requestAd(Array.from(ads))
       }
 
       // 创建一个 MutationObserver 实例，监听页面上新出现的广告单元
@@ -117,34 +111,29 @@ export const initGoogleAdsense = ADSENSE_GOOGLE_ID => {
  * 修改下面广告单元中的 data-ad-slot data-ad-format data-ad-layout-key(如果有)
  * 添加 可以在本地调试
  */
-const AdSlot = ({ type = 'show', slotId = null, styleCustomize = {} }) => {
+const AdSlot = ({ type = 'show' }) => {
   const ADSENSE_GOOGLE_ID = siteConfig('ADSENSE_GOOGLE_ID')
   const ADSENSE_GOOGLE_TEST = siteConfig('ADSENSE_GOOGLE_TEST')
+  // ponytail: coarse ad slots; tune per slot if fill sizes differ.
+  const reservedAdStyle = {
+    display: 'block',
+    textAlign: 'center',
+    minHeight: type === 'flow' || type === 'native' ? '180px' : '90px'
+  }
   if (!ADSENSE_GOOGLE_ID) {
     return null
-  }
-  let insStyle = {
-    display: 'block',
-  }
-  if (type === 'native' || type === 'adsbygoogle') {
-    insStyle.textAlign = 'center'
-  }
-  if (styleCustomize) {
-    for (const key in styleCustomize) {
-      insStyle[key] = styleCustomize[key]
-    }
   }
   // 文章内嵌广告
   if (type === 'in-article') {
     return (
       <ins
         className='adsbygoogle'
-        style={insStyle}
+        style={reservedAdStyle}
         data-ad-layout='in-article'
         data-ad-format='fluid'
         data-adtest={ADSENSE_GOOGLE_TEST ? 'on' : 'off'}
         data-ad-client={ADSENSE_GOOGLE_ID}
-        data-ad-slot={slotId || siteConfig('ADSENSE_GOOGLE_SLOT_IN_ARTICLE')}></ins>
+        data-ad-slot={siteConfig('ADSENSE_GOOGLE_SLOT_IN_ARTICLE')}></ins>
     )
   }
 
@@ -155,10 +144,10 @@ const AdSlot = ({ type = 'show', slotId = null, styleCustomize = {} }) => {
         className='adsbygoogle'
         data-ad-format='fluid'
         data-ad-layout-key='-5j+cz+30-f7+bf'
-        style={insStyle}
+        style={reservedAdStyle}
         data-adtest={ADSENSE_GOOGLE_TEST ? 'on' : 'off'}
         data-ad-client={ADSENSE_GOOGLE_ID}
-        data-ad-slot={slotId || siteConfig('ADSENSE_GOOGLE_SLOT_FLOW')}></ins>
+        data-ad-slot={siteConfig('ADSENSE_GOOGLE_SLOT_FLOW')}></ins>
     )
   }
 
@@ -167,11 +156,11 @@ const AdSlot = ({ type = 'show', slotId = null, styleCustomize = {} }) => {
     return (
       <ins
         className='adsbygoogle'
-        style={insStyle}
+        style={reservedAdStyle}
         data-ad-format='autorelaxed'
         data-adtest={ADSENSE_GOOGLE_TEST ? 'on' : 'off'}
         data-ad-client={ADSENSE_GOOGLE_ID}
-        data-ad-slot={slotId || siteConfig('ADSENSE_GOOGLE_SLOT_NATIVE')}></ins>
+        data-ad-slot={siteConfig('ADSENSE_GOOGLE_SLOT_NATIVE')}></ins>
     )
   }
 
@@ -179,10 +168,10 @@ const AdSlot = ({ type = 'show', slotId = null, styleCustomize = {} }) => {
   return (
     <ins
       className='adsbygoogle'
-      style={insStyle}
+      style={reservedAdStyle}
       data-ad-client={ADSENSE_GOOGLE_ID}
       data-adtest={ADSENSE_GOOGLE_TEST ? 'on' : 'off'}
-      data-ad-slot={slotId || siteConfig('ADSENSE_GOOGLE_SLOT_AUTO')}
+      data-ad-slot={siteConfig('ADSENSE_GOOGLE_SLOT_AUTO')}
       data-ad-format='auto'
       data-full-width-responsive='true'></ins>
   )
