@@ -102,6 +102,9 @@ export default function LazyImage({
       img.decoding = 'async'
     }
 
+    // 与渲染 img 保持一致：预加载也不发 Referer，避免图床防盗链 403 导致 onerror 停在占位图
+    img.referrerPolicy = 'no-referrer'
+
     img.src = targetSrc
 
     img.onload = () => {
@@ -185,6 +188,9 @@ export default function LazyImage({
     loading: priority ? 'eager' : 'lazy',
     fetchpriority: priority ? 'high' : 'low',
     decoding: 'async',
+    // 不发送 Referer：图床 CDN 常有 Referer 防盗链，localhost/跨域会被 403 拦截，
+    // 导致本地开发（以及某些代理场景）图片全部加载失败。no-referrer 在 dev 与生产均可正常加载。
+    referrerPolicy: 'no-referrer',
     // 数据属性
     'data-src': src,
     ...(siteConfig('WEBP_SUPPORT') && { 'data-webp': 'true' }),
