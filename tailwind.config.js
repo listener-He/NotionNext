@@ -199,11 +199,16 @@ module.exports = {
           minWidth: '44px',
           minHeight: '44px'
         },
+        // 统一卡片：使用设计系统 intent 变量，暗色自动自适应（消除各处硬编码 #1e1e1e / gray-* / shadow-[...]）
         '.card-base': {
           borderRadius: theme('borderRadius.xl'),
-          boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.02)',
-          backgroundColor: '#FFFFFF', // Pure White for sharp contrast
-          border: '1px solid rgba(0, 0, 0, 0.02)' // Extremely subtle border
+          boxShadow: 'var(--shadow-elevation-sm)',
+          backgroundColor: 'var(--color-bg-card)',
+          border: '1px solid var(--color-border)',
+          transition: 'box-shadow 0.3s ease, transform 0.3s ease'
+        },
+        '.card-base:hover': {
+          boxShadow: 'var(--shadow-elevation-md)'
         },
         '.ellipsis': {
           overflow: 'hidden',

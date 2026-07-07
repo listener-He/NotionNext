@@ -57,9 +57,9 @@ const Wave = () => {
           {/* Layer 4: Content Transition - Transparent to Blend */}
           <g className="wave-layer layer-4">
              {/* Use opacity 0.6 to allow background gradient to bleed through, eliminating the 'cut' */}
-            <use href="#gentle-wave" x="0" y="7" className="fill-[#F8FAFC] dark:fill-[#020617] opacity-60" />
-            <use href="#gentle-wave" x="-1200" y="7" className="fill-[#F8FAFC] dark:fill-[#020617] opacity-60" />
-            <use href="#gentle-wave" x="1200" y="7" className="fill-[#F8FAFC] dark:fill-[#020617] opacity-60" />
+            <use href="#gentle-wave" x="0" y="7" className="fill-[#F9FAFB] dark:fill-[#020617] opacity-60" />
+            <use href="#gentle-wave" x="-1200" y="7" className="fill-[#F9FAFB] dark:fill-[#020617] opacity-60" />
+            <use href="#gentle-wave" x="1200" y="7" className="fill-[#F9FAFB] dark:fill-[#020617] opacity-60" />
           </g>
         </g>
       </svg>
