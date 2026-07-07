@@ -1,9 +1,23 @@
+# Netlify 部署配置 —— Next.js (NotionNext)
+
 [build]
   command = "yarn run build"
+  # Next.js 运行时（OpenNext 适配器）会接管实际产物；保留 .next 兼容现有部署。
   publish = ".next"
 
 [build.environment]
-  NODE_VERSION = "20"
+  # 必须满足 package.json 的 engines(">=22")。此前的 "20" 会违反该约束。
+  # Netlify 默认/推荐 Node 22（LTS），最稳。本地 .nvmrc 为 24；若希望生产也用 24，
+  # 可将此处改为 "24"（Netlify 已支持 22 与 24）。
+  NODE_VERSION = "22"
+  # 如遇大站构建内存不足（sharp/canvas + 大量文章）可解开下一行：
+  # NODE_OPTIONS = "--max-old-space-size=4096"
 
+# Next.js 适配器：自动处理 SSR / ISR(按需再生成) / 图片优化 / Serverless & Edge 函数。
+# 不锁版本，Netlify 每次构建自动使用最新适配器（官方推荐做法）。
 [[plugins]]
   package = "@netlify/plugin-nextjs"
+
+# 说明：本站为 Next.js SSG/SSR，页面已输出完整 HTML，无需 Netlify 的 legacy Prerendering
+# （该功能已弃用）。请在后台关闭：
+#   Project configuration → Build & deploy → Post processing → Prerendering
