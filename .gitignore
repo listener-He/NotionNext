@@ -69,3 +69,5 @@ package-lock.json
 .perf/
 tsconfig.tsbuildinfo
 webpack-internal:/
+.agents/
+AGENTS.md
