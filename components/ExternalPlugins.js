@@ -135,40 +135,35 @@ const ExternalPlugin = props => {
 
   // 引入AOS动画
   const ENABLE_AOS = siteConfig('ENABLE_AOS', false)
-  // 自定义样式css和js引入
-  if (isBrowser) {
-    // 初始化AOS动画
-    // 静态导入本地自定义样式
-    if (siteConfig('CUSTOM_CSS_ENABLED', true)) {
+  const CUSTOM_CSS_ENABLED = siteConfig('CUSTOM_CSS_ENABLED', true)
+
+  const router = useRouter()
+
+  // 自定义样式/脚本引入：移入 useEffect，避免在渲染期加载外部资源（SSR/重渲染副作用）
+  useEffect(() => {
+    if (!isBrowser) return
+    if (CUSTOM_CSS_ENABLED) {
       loadExternalResource('/css/custom.css', 'css')
       loadExternalResource('/js/custom.js', 'js')
     }
-
-    // 自动添加图片阴影
     if (IMG_SHADOW) {
       loadExternalResource('/css/img-shadow.css', 'css')
     }
-
     if (ANIMATE_CSS_URL) {
       loadExternalResource(ANIMATE_CSS_URL, 'css')
     }
-
-    // 导入外部自定义脚本
     if (CUSTOM_EXTERNAL_JS && CUSTOM_EXTERNAL_JS.length > 0) {
       for (const url of CUSTOM_EXTERNAL_JS) {
         loadExternalResource(url, 'js')
       }
     }
-
-    // 导入外部自定义样式
     if (CUSTOM_EXTERNAL_CSS && CUSTOM_EXTERNAL_CSS.length > 0) {
       for (const url of CUSTOM_EXTERNAL_CSS) {
         loadExternalResource(url, 'css')
       }
     }
-  }
+  }, [CUSTOM_CSS_ENABLED, IMG_SHADOW, ANIMATE_CSS_URL, CUSTOM_EXTERNAL_JS, CUSTOM_EXTERNAL_CSS])
 
-  const router = useRouter()
   useEffect(() => {
     // 异步渲染谷歌广告
     if (ADSENSE_GOOGLE_ID) {
@@ -184,14 +179,13 @@ const ExternalPlugin = props => {
     return () => clearTimeout(timer)
   }, [router, props?.allNavPages, lang])
 
+  // 执行注入脚本：仅在 GLOBAL_JS 变化时执行，避免每次渲染都 eval（性能+安全）
   useEffect(() => {
-    // 执行注入脚本
-    // eslint-disable-next-line no-eval
     if (GLOBAL_JS && GLOBAL_JS.trim() !== '') {
-      // console.log('Inject JS:', GLOBAL_JS);
+      // eslint-disable-next-line no-eval
+      eval(GLOBAL_JS)
     }
-    eval(GLOBAL_JS)
-  })
+  }, [GLOBAL_JS])
 
   if (DISABLE_PLUGIN) {
     return null

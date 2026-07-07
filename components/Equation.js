@@ -2,6 +2,8 @@ import * as React from 'react'
 
 import Katex from '@/components/KatexReact'
 import { getBlockTitle } from 'notion-utils'
+// katex 样式随本组件（动态导入）按需加载，避免打进所有文章页的核心 CSS
+import 'katex/dist/katex.min.css'
 
 const katexSettings = {
   throwOnError: false,

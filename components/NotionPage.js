@@ -1,6 +1,6 @@
 import { compressImage, mapImgUrl } from '@/lib/db/notion/mapImage'
 import { isBrowser, loadExternalResource } from '@/lib/utils'
-import 'katex/dist/katex.min.css'
+// katex CSS 已移入 @/components/Equation（动态导入边界），仅在文章含公式时随 Equation chunk 加载
 import dynamic from 'next/dynamic'
 import { useEffect, useRef } from 'react'
 import { NotionRenderer } from 'react-notion-x'
@@ -37,11 +37,23 @@ const NotionPage = ({ post, className }) => {
           margin: getMediumZoomMargin()
         })
         zoomRef.current = zoom.clone()
-        
+
         // 相册视图点击禁止跳转，只能放大查看图片
         if (POST_DISABLE_GALLERY_CLICK) {
           processGalleryImg(zoomRef.current)
         }
+
+        // 放大查看时替换为高清图：用 medium-zoom 自带 opened 事件，
+        // 替代此前监听整个 document.body class 变化的广域 MutationObserver（每次暗色/hover/过渡都触发）
+        zoomRef.current.on('opened', () => {
+          const opened = document.querySelector('.medium-zoom-image--opened')
+          const src = opened?.getAttribute('src')
+          if (opened && src) {
+            setTimeout(() => {
+              opened.setAttribute('src', compressImage(src, IMAGE_ZOOM_IN_WIDTH))
+            }, 800)
+          }
+        })
       })
     }
 
@@ -50,48 +62,9 @@ const NotionPage = ({ post, className }) => {
       processDisableDatabaseUrl()
     }
 
-    /**
-     * 放大查看图片时替换成高清图像
-     */
-    let observer = null;
-
-    // 只在浏览器环境中创建MutationObserver
-    if (isBrowser) {
-      observer = new MutationObserver((mutationsList, observer) => {
-        mutationsList.forEach(mutation => {
-          if (
-            mutation.type === 'attributes' &&
-            mutation.attributeName === 'class'
-          ) {
-            if (mutation.target.classList.contains('medium-zoom-image--opened')) {
-              // 等待动画完成后替换为更高清的图像
-              setTimeout(() => {
-                // 获取该元素的 src 属性
-                const src = mutation?.target?.getAttribute('src')
-                //   替换为更高清的图像
-                mutation?.target?.setAttribute(
-                  'src',
-                  compressImage(src, IMAGE_ZOOM_IN_WIDTH)
-                )
-              }, 800)
-            }
-          }
-        })
-      })
-
-      // 监视页面元素和属性变化
-      observer.observe(document.body, {
-        attributes: true,
-        subtree: true,
-        attributeFilter: ['class']
-      })
-    }
-
     return () => {
-      // 确保在组件卸载时断开MutationObserver连接
-      if (observer) {
-        observer.disconnect();
-      }
+      // 卸载时分离 medium-zoom 实例
+      zoomRef.current?.detach?.()
     }
   }, [post])
 

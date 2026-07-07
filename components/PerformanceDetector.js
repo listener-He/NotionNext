@@ -240,6 +240,10 @@ function detectNetworkPerformance() {
  * @property {number} score - 性能总分 (0-100)
  * @property {Object} details - 详细评分信息
  */
+// 进程内缓存：避免在渲染路径被反复调用时每次都读 localStorage + JSON.parse。
+// 仅缓存"检测已完成的真实值"，检测完成前返回 default 但不缓存，以便后续调用拿到真实值。
+let _cachedDevicePerformance = null
+
 export function getDevicePerformance() {
   // 默认值
   const defaultInfo = {
@@ -255,19 +259,25 @@ export function getDevicePerformance() {
     return defaultInfo
   }
 
+  if (_cachedDevicePerformance) {
+    return _cachedDevicePerformance
+  }
+
   try {
     // 首先尝试从localStorage获取缓存数据
     const cached = getStoredPerformance()
     if (cached) {
-      return {
+      _cachedDevicePerformance = {
         performanceLevel: cached.performanceLevel,
         isLowEndDevice: cached.performanceLevel === 'low',
         isHighEndDevice: cached.performanceLevel === 'high',
         score: cached.score,
         details: cached.details
       }
+      return _cachedDevicePerformance
     }
 
+    // 检测尚未完成：返回 default，但不缓存，等检测写入后下次调用再读取真实值
     return defaultInfo
   } catch (e) {
     console.warn('Error getting device performance info:', e)

@@ -3,7 +3,7 @@ import LazyImage from '@/components/LazyImage'
 import { siteConfig } from '@/lib/config'
 import { useGlobal } from '@/lib/global'
 import { loadExternalResource } from '@/lib/utils'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import CONFIG from '../config'
 import NavButtonGroup from './NavButtonGroup'
 import Wave from './Wave'
@@ -24,7 +24,11 @@ const Hero = props => {
     }
   }
 
-  const GREETING_WORDS = siteConfig('GREETING_WORDS').split(',')
+  // useMemo：避免每次渲染重新 split 生成新数组，导致下方 typed effect 反复执行
+  const GREETING_WORDS = useMemo(
+    () => (siteConfig('GREETING_WORDS') || '').split(','),
+    []
+  )
   // 添加状态来检测是否在客户端
   const [isClient, setIsClient] = useState(false)
 

@@ -210,6 +210,8 @@ module.exports = {
           textOverflow: 'ellipsis',
           whiteSpace: 'nowrap'
         },
+        // 静态渐变：移除 aurora-shift 的 background-position 动画（全屏持续重绘的最大帧开销）。
+        // 视觉与原动画中间态基本一致；如需"呼吸感"可在 Phase D 用 transform 合成层重加。
         '.bg-day-gradient': {
           backgroundColor: '#F9FAFB', // Cool Gray-50 Base
           backgroundImage: `
@@ -218,8 +220,8 @@ module.exports = {
             radial-gradient(at 50% 100%, rgba(240, 253, 250, 0.5) 0%, transparent 50%),
             radial-gradient(at 50% 50%, rgba(255, 255, 255, 0.6) 0%, transparent 60%)
           `,
-          backgroundSize: '180% 180%',
-          animation: 'aurora-shift 30s ease-in-out infinite alternate'
+          backgroundSize: '100% 100%',
+          backgroundAttachment: 'fixed'
         },
         '.bg-night-gradient': {
           backgroundColor: '#020617', // Deep Black
@@ -228,8 +230,8 @@ module.exports = {
             radial-gradient(circle at 80% 0%, rgba(30, 58, 138, 0.4) 0%, transparent 50%),
             radial-gradient(circle at 50% 100%, rgba(2, 6, 23, 0.9) 0%, transparent 50%)
           `,
-          backgroundSize: '150% 150%',
-          animation: 'aurora-shift 30s ease-in-out infinite alternate'
+          backgroundSize: '100% 100%',
+          backgroundAttachment: 'fixed'
         },
         '.tag-badge-day': {
           backgroundColor: '#F0F9FF', // Sky tint
