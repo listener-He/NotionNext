@@ -70,7 +70,7 @@ const Footer = ({ title }) => {
         </div>
       </div>
 
-      <div className='flex justify-center items-center gap-1 flex-wrap pt-1 mt-1 border-t border-neutral-200 dark:border-neutral-700'>
+      <div className='footer-badges flex justify-center items-center gap-1.5 flex-wrap pt-2 mt-1 border-t border-neutral-200 dark:border-neutral-700'>
         <a href="https://blogscn.fun/random.html" title="BLOGS·CN" target="_blank"
            className="transition-transform hover:scale-105">
           <LazyImage src="https://photo.xiangming.site/img/blogscn.png" alt="本站已加入BLOGS·CN"

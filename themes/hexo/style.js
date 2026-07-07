@@ -178,6 +178,20 @@ const Style = () => {
          * rgb(var(--theme-color-rgb) / <alpha-value>)，从源头让 indigo 跟随主题色（含透明度），
          * 无需 !important 覆盖，主题色变更可自动传播。
          */
+
+        /* 底部友链徽章：统一高度、等比缩放、垂直居中，消除上下错乱与大小不一致 */
+        #theme-hexo .footer-badges > a {
+            display: inline-flex;
+            align-items: center;
+            height: 20px;
+        }
+        #theme-hexo .footer-badges img {
+            height: 20px !important;
+            width: auto !important;
+            max-width: 120px;
+            object-fit: contain !important;
+            border-radius: 4px;
+        }
     `}</style>
   )
 }

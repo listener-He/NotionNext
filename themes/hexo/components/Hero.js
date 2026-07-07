@@ -124,6 +124,7 @@ const Hero = props => {
 
         {!isDarkMode && siteInfo?.pageCover && (
           <LazyImage
+            priority
             id='header-cover'
             alt={siteInfo?.title}
             src={siteInfo?.pageCover}
@@ -177,7 +178,8 @@ const Hero = props => {
         )}
       </div>
 
-      {!isDarkMode && <LazyImage
+      {!isDarkMode && siteInfo?.pageCover && <LazyImage
+        priority
         id='header-cover'
         alt={siteInfo?.title}
         src={siteInfo?.pageCover}
