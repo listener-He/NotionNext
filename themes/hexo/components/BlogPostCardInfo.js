@@ -31,7 +31,7 @@ export const BlogPostCardInfo = ({
               <SmartLink
                 href={post?.href}
                 passHref
-                className={`line-clamp-2 replace cursor-pointer text-xl leading-tight font-semibold text-gray-700 dark:text-gray-100 hover:text-indigo-700 dark:hover:text-indigo-400`}>
+                className={`line-clamp-2 replace cursor-pointer text-2xl leading-tight font-bold tracking-tight text-[color:var(--color-text-primary)] hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-300`}>
                 {siteConfig('POST_TITLE_ICON') && (
                   <NotionIcon icon={post.pageIcon} />
                 )}

@@ -5,7 +5,6 @@ import { isBrowser } from '@/lib/utils'
 import { formatDateFmt } from '@/lib/utils/formatDate'
 import { DynamicLayout } from '@/themes/theme'
 import { useEffect } from 'react'
-import { leanListPost } from '@/lib/utils/leanPost'
 
 /**
  * 归档首页
@@ -46,8 +45,19 @@ export async function getStaticProps({ locale }) {
       )
     : []
 
-  // 确保 postsSortByDate 是数组（避免 forEach 报错）
-  const postsSortByDate = Array.isArray(props.posts) ? props.posts.map(leanListPost) : [];
+  // 归档页仅展示标题/日期/链接，用更精简的映射（丢弃 summary/cover/tags 等），
+  // 大幅缩小 archivePosts 体积
+  const leanArchivePost = p => ({
+    id: p?.id ?? null,
+    title: p?.title ?? null,
+    slug: p?.slug ?? null,
+    prefix: p?.prefix ?? null,
+    href: p?.href ?? null,
+    date: p?.date ?? null,
+    publishDate: p?.publishDate ?? null,
+    publishDay: p?.publishDay ?? null
+  })
+  const postsSortByDate = Array.isArray(props.posts) ? props.posts.map(leanArchivePost) : [];
 
   postsSortByDate.sort((a, b) => {
     return b?.publishDate - a?.publishDate

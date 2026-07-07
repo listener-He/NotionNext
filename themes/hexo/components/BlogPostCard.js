@@ -137,7 +137,7 @@ const BlogPostCard = ({ index, post, showSummary, siteInfo }) => {
                 containerRef={infoRef}
             />
             ) : (
-            <div className='w-full min-h-[160px] animate-pulse bg-gray-100 dark:bg-gray-800 rounded-lg' />
+            <div className='w-full min-h-[160px] animate-pulse bg-[color:var(--color-neutral-100)] dark:bg-[color:var(--color-neutral-800)] rounded-lg' />
             )}
         </div>
       </div>
