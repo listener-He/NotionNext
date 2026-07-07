@@ -39,66 +39,33 @@ const BlogPostListScroll = ({
     updatePage(page + 1)
   }
 
-  // 监听滚动自动分页加载（保留作为后备）
-  const scrollTrigger = () => {
-    requestAnimationFrame(() => {
-      const scrollS = window.scrollY + window.outerHeight
-      const clientHeight = targetRef
-        ? targetRef.current
-          ? targetRef.current.clientHeight
-          : 0
-        : 0
-      if (scrollS > clientHeight + 100) {
-        handleGetMore()
-      }
-    })
-  }
+  // 用 ref 保存最新的 handleGetMore：避免下方空依赖 effect 里的 observer 捕获首渲染闭包
+  // （page 恒为 1 → updatePage(2)，翻页卡在第 2 页的 stale-closure bug）
+  const getMoreRef = useRef(handleGetMore)
+  getMoreRef.current = handleGetMore
 
-  // 根据设备性能优化滚动事件处理
-  const throttleScroll = (() => {
-    let lastTime = 0
-    // 根据设备性能调整节流延迟
-    const { isLowEndDevice, performanceLevel } = getDevicePerformance()
-    let throttleDelay = 100
-    
-    if (isLowEndDevice) {
-      throttleDelay = 300
-    } else if (performanceLevel === 'high') {
-      throttleDelay = 50
-    }
-    
-    return function () {
-      const now = Date.now()
-      if (now - lastTime >= throttleDelay) {
-        lastTime = now
-        scrollTrigger()
-      }
-    }
-  })()
-
-  // 通过 IntersectionObserver 更平滑地分页
+  // 通过 IntersectionObserver 平滑分页：哨兵进入视口即加载下一页。
+  // 移除了此前冗余且同样 stale 的 scroll 监听后备（observer 即主机制）。
   const sentinelRef = useRef(null)
   useEffect(() => {
     const rootMargin = isLowEndDevice ? '1200px' : '600px'
+    const el = sentinelRef.current
     const observer = new IntersectionObserver(
       entries => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
-            handleGetMore()
+            getMoreRef.current?.()
           }
         })
       },
       { root: null, rootMargin, threshold: 0 }
     )
-    if (sentinelRef.current) observer.observe(sentinelRef.current)
-    // 后备滚动处理
-    window.addEventListener('scroll', throttleScroll)
+    if (el) observer.observe(el)
     return () => {
-      if (sentinelRef.current) observer.unobserve(sentinelRef.current)
+      if (el) observer.unobserve(el)
       observer.disconnect()
-      window.removeEventListener('scroll', throttleScroll)
     }
-  }, []) // 添加空依赖数组以避免重复绑定
+  }, [isLowEndDevice])
 
   const targetRef = useRef(null)
   const { locale } = useGlobal()

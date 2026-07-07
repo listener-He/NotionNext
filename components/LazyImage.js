@@ -179,6 +179,8 @@ export default function LazyImage({
     style: {
       objectFit: 'cover',
       objectPosition: 'center',
+      // 已知宽高时用 aspect-ratio 预留盒子，减少图片加载后的布局位移（CLS）
+      ...(width && height ? { aspectRatio: `${width} / ${height}` } : {}),
       ...style // 允许外部样式覆盖默认样式
     },
     onClick,
