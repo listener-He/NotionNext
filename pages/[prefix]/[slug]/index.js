@@ -75,9 +75,10 @@ export async function getStaticProps({ params: { prefix, slug }, locale }) {
       )
 
   // 如果是文章页面，根据最后更新时间计算缓存时间
-  if (props?.post?.lastEditedDate) {
+  // base 与上面一致（优先 Notion 后台配置），EXPORT（revalidate 为 undefined）下不启用
+  if (revalidate !== undefined && props?.post?.lastEditedDate) {
     const lastEditedTimestamp = new Date(props.post.lastEditedDate).getTime()
-    revalidate = calculatePostCacheTime(BLOG.NEXT_REVALIDATE_SECOND, lastEditedTimestamp)
+    revalidate = calculatePostCacheTime(revalidate, lastEditedTimestamp)
   }
   delete props.allPages
   delete props.allNavPages

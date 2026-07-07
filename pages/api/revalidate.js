@@ -1,5 +1,6 @@
 import BLOG from '@/blog.config'
-import { cleanCache } from '@/lib/cache/local_file_cache'
+import { clearAllCache } from '@/lib/cache/cache_manager'
+import { clearGlobalDataCache } from '@/lib/db/SiteDataApi'
 
 /**
  * On-Demand Revalidation API
@@ -45,9 +46,9 @@ export default async function handler(req, res) {
   const { path, paths, all } = req.body || {}
 
   try {
-    // 全站刷新：清除本地缓存 + revalidate 首页
+    // 全站刷新：清空运行时缓存链（memory/redis/file）+ revalidate 首页
     if (all) {
-      cleanCache()
+      await clearAllCache()
       const results = []
       try {
         await res.revalidate('/')
@@ -62,7 +63,10 @@ export default async function handler(req, res) {
       })
     }
 
-    // 批量刷新
+    // 单页/批量刷新：先失效全局数据缓存（否则列表/首页在 memory TTL 内仍读旧数据），
+    // 再逐个 res.revalidate 重建 HTML。文章正文缓存按 lastEditedDate 版本化 key 天然失效。
+    await clearGlobalDataCache()
+
     const targetPaths = paths || (path ? [path] : ['/'])
     const results = []
 
