@@ -263,7 +263,7 @@ const LayoutSearch = props => {
   return (
     <div className='pt-8'>
       <Card className='w-full'>
-        <div className='mb-md pb-xl bg-day-gradient dark:bg-night-gradient md:p-12 p-sm min-h-full rounded-xl'>
+        <div className='mb-md pb-xl md:p-12 p-sm min-h-full rounded-xl'>
           {Object.keys(archivePosts).map(archiveTitle => (
             <BlogPostArchive
               key={archiveTitle}
