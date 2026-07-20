@@ -4681,14 +4681,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"katex@npm:^0.16.22":
-  version: 0.16.44
-  resolution: "katex@npm:0.16.44"
+"katex@npm:^0.18.1":
+  version: 0.18.1
+  resolution: "katex@npm:0.18.1"
   dependencies:
     commander: ^8.3.0
   bin:
     katex: cli.js
-  checksum: c8d5773de64b775188f70bb9d4856fd628624465d1f0f93d370e9e896c0e826b625df4205405aaed18919bc13b4e5c699915499f6d00978268b191fe51ab72e8
+  checksum: a80a5df1fedc10177b6fd5ad1315a578be9f3d6854f4058573091c4211cf161f01d6742568d4c546d80bdccb0fc77006a87a30daec9163339c8b62985c600f40
   languageName: node
   linkType: hard
 
@@ -5373,7 +5373,7 @@ __metadata:
     jest-junit: ^16.0.0
     js-md5: ^0.8.3
     js-sha256: ^0.11.1
-    katex: ^0.16.22
+    katex: ^0.18.1
     lodash.throttle: ^4.1.1
     memory-cache: ^0.2.0
     next: ^15.5.0
