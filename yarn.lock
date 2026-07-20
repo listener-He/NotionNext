@@ -4535,10 +4535,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"js-sha256@npm:^0.11.1":
-  version: 0.11.1
-  resolution: "js-sha256@npm:0.11.1"
-  checksum: c23821003bd7459d0af0a7aef8de1b93e126f378588a3fb181ee2dd7c4d2531fba19112b518f649601f34332f159efe194c0aada7b35afef030d7a5c295eb645
+"js-sha256@npm:^0.12.0":
+  version: 0.12.0
+  resolution: "js-sha256@npm:0.12.0"
+  checksum: 9553c0886149a6ad65478b10447b9f5f79d62129f9a056cd0cd2c8aeab3c764a38f708e8e58040d7836caee6c0d6e253d3689e1b5d814e2366a3360335d64918
   languageName: node
   linkType: hard
 
@@ -5372,7 +5372,7 @@ __metadata:
     jest-environment-jsdom: ^29.7.0
     jest-junit: ^16.0.0
     js-md5: ^0.8.3
-    js-sha256: ^0.11.1
+    js-sha256: ^0.12.0
     katex: ^0.16.22
     lodash.throttle: ^4.1.1
     memory-cache: ^0.2.0
