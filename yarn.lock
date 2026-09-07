@@ -911,12 +911,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@next/bundle-analyzer@npm:^15.0.0":
-  version: 15.5.14
-  resolution: "@next/bundle-analyzer@npm:15.5.14"
+"@next/bundle-analyzer@npm:^15.5.25":
+  version: 15.5.25
+  resolution: "@next/bundle-analyzer@npm:15.5.25"
   dependencies:
     webpack-bundle-analyzer: 4.10.1
-  checksum: 2bcc5d4e7e8ebb41f5fbacec5a12f0baedee34461a2ef8332056904f87d4a07c7569c945741d173a9e0cd6bac17a3e606dd6ce9e3be7daa2b97847cb1a855bd1
+  checksum: 9da67d15fcc680447be1d67fdc8ccb470908f8e666001185cb55962c731f5f24af5c3665ab6705e9abf519a2b4732f7403e74a61d7e9bc75ca8691a5cd762d3d
   languageName: node
   linkType: hard
 
@@ -5346,7 +5346,7 @@ __metadata:
     "@fisch0920/medium-zoom": ^1.0.7
     "@headlessui/react": ^1.7.19
     "@netlify/plugin-nextjs": ^5.15.3
-    "@next/bundle-analyzer": ^15.0.0
+    "@next/bundle-analyzer": ^15.5.25
     "@testing-library/dom": ^10.4.1
     "@testing-library/jest-dom": ^6.1.4
     "@types/node": 22.15.3
