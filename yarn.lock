@@ -2571,6 +2571,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"commander@npm:^15.0.0":
+  version: 15.0.0
+  resolution: "commander@npm:15.0.0"
+  checksum: e8aaa24591ae09389e83320431d47b44d9b03abe754586b689020b6bb6fc950a0089e9379099efa2e63b6b7c0e1e216bcf6b485754da7a54a74840077f3c6d2b
+  languageName: node
+  linkType: hard
+
 "commander@npm:^4.0.0":
   version: 4.1.1
   resolution: "commander@npm:4.1.1"
@@ -4681,14 +4688,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"katex@npm:^0.16.22":
-  version: 0.16.44
-  resolution: "katex@npm:0.16.44"
+"katex@npm:^0.18.5":
+  version: 0.18.5
+  resolution: "katex@npm:0.18.5"
   dependencies:
-    commander: ^8.3.0
+    commander: ^15.0.0
   bin:
     katex: cli.js
-  checksum: c8d5773de64b775188f70bb9d4856fd628624465d1f0f93d370e9e896c0e826b625df4205405aaed18919bc13b4e5c699915499f6d00978268b191fe51ab72e8
+  checksum: b55af5a23f07633fd6c822f1bac03916840e7b59e9276941789dd7e26990389aa319498e1c439cb6fc0b6c9f6bd31ee5ff05f32a61e021f17f9ae7e5e076e6fc
   languageName: node
   linkType: hard
 
@@ -5373,7 +5380,7 @@ __metadata:
     jest-junit: ^16.0.0
     js-md5: ^0.8.3
     js-sha256: ^0.11.1
-    katex: ^0.16.22
+    katex: ^0.18.5
     lodash.throttle: ^4.1.1
     memory-cache: ^0.2.0
     next: ^15.5.0
