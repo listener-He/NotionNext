@@ -70,7 +70,7 @@
     "react-dom": "^18.3.0",
     "react-facebook": "^10.0.1",
     "react-hotkeys-hook": "^4.6.2",
-    "react-notion-x": "7.10.0",
+    "react-notion-x": "7.12.1",
     "react-share": "^5.2.2",
     "react-tweet-embed": "~2.0.0",
     "web-vitals": "^5.1.0"
